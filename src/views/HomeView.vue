@@ -7,7 +7,7 @@ import ImageStyled from '@/components/ImageStyled.vue'
     <div>
       <ImageStyled
         imageUrl="../images/pizza.jpeg"
-        altText="Uma pizza com uma fatia sendo retirada com uma espátula"
+        altText="Uma pizza com uma fatia sendo retirada com uma espátula."
         width="20rem"
       />
     </div>

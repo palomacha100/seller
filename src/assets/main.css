@@ -1,7 +1,7 @@
 :root {
   --dark-blue: #2c5c8f;
   --white: #fff;
-  --dark-green: #48484d;
+  --dark-gray: #48484d;
   --red: #cc4b4e;
   --yellow: #ede4a1;
   --light_blue: #b8c9e6;
@@ -9,8 +9,6 @@
   --purple: #504c9c;
   --medium-blue: #1bded8;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 *,
 *::before,

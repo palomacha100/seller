@@ -2,8 +2,8 @@
 import { defineProps } from 'vue'
 defineProps<{
   text: string
-  width: string
-  height: string
+  width?: string
+  height?: string
   className: string
 }>()
 </script>

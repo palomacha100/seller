@@ -4,12 +4,28 @@ import UserProfile from '@/components/UserProfile.vue'
 
 <template>
   <main>
-    <UserProfile />
+    <div class="form-container">
+      <UserProfile />
+    </div>
   </main>
 </template>
 
 <style scoped>
-.link-sign {
-  text-decoration: double;
+div {
+  height: 100vh;
+  width: 100%;
+  background-image: url('../../images/pizza.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+</style>
+
+<style>
+.form-container {
+  display: flex;
+  width: 27rem;
+  height: 30rem;
+  background-color: var(--yellow);
 }
 </style>

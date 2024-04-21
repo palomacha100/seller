@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { defineProps } from 'vue'
 
-const { id, type, placeholder, value, borderColor, width, height, label, checked } = defineProps<{
-  id: string
-  type: string
-  placeholder: string | ''
-  value: string | number
-  borderColor?: string
-  width?: string
-  height?: string
-  label?: string
-  checked?: boolean
-}>()
-
-const modelValue = ref<string | number>(value)
-const modelChecked = ref<boolean>(checked || false)
+const { id, placeholder, borderColor, width, height, label } = defineProps({
+  type: String,
+  id: String,
+  placeholder: String,
+  borderColor: String,
+  width: String,
+  height: String,
+  label: String
+})
 </script>
 
 <template>
@@ -25,7 +20,7 @@ const modelChecked = ref<boolean>(checked || false)
       :style="{ width, height, borderColor }"
     >
       <label :for="id">
-        <input :id="id" :type="type" :value="value" v-model="modelChecked" />
+        <input :id="id" :type="type" />
         {{ label }}
       </label>
     </div>
@@ -35,7 +30,6 @@ const modelChecked = ref<boolean>(checked || false)
       :id="id"
       :type="type"
       :placeholder="placeholder"
-      v-model="modelValue"
       :style="{ width, height, borderColor }"
     />
   </div>
@@ -43,10 +37,19 @@ const modelChecked = ref<boolean>(checked || false)
 
 <style scoped>
 input {
-  color: var(--dark-gray);
+  padding: 5px 10px;
   font-size: 1rem;
   background-color: var(--white);
   border-radius: 5px;
+  margin: 5px 0;
+}
+
+input::placeholder {
+  color: var(--dark-gray);
+}
+label {
+  font-size: 1rem;
+  color: var(--dark-gray);
 }
 
 .radio-container {

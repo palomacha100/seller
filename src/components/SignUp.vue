@@ -44,7 +44,7 @@ function onSubmit() {
 }
 </script>
 <template>
-  <div>
+  <div class="form-container">
     <h1>Cadastro</h1>
     <form @submit.prevent="onSubmit">
       <label>E-Mail:</label>

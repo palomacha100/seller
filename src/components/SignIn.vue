@@ -9,8 +9,8 @@ import TextStyled from './TextStyled.vue'
 
 const router = useRouter()
 
-const email = ref('')
-const password = ref('')
+const email = defineModel<string>('email')
+const password = defineModel<string>('password', { default: '' })
 const awaiting = ref(false)
 const checked = ref(true)
 
@@ -27,7 +27,7 @@ const signOut = () => {
 }
 
 const onSubmit = () => {
-  if (!email.value.trim()) {
+  if (!email.value) {
     console.log('Email:', email.value)
     console.log('Password:', password.value)
     return
@@ -35,7 +35,7 @@ const onSubmit = () => {
 
   awaiting.value = true
   auth.signIn(
-    email.value,
+    email.value || '',
     password.value,
     () => {
       awaiting.value = false
@@ -61,78 +61,80 @@ const onSubmit = () => {
   </template>
 
   <template v-else>
-    <div class="form-container">
-      <ImageStyled
-        imageUrl="../../images/logo.png"
-        altText="Logo em azul com nome do app Link to Food"
-        width="11.25rem"
-      />
-      <form @submit.prevent="onSubmit">
-        <InputStyled
-          v-model="email"
-          id="email"
-          type="email"
-          width="22.5rem"
-          height="2.8rem"
-          placeholder="Digite seu email"
-          borderColor="transparent"
+    <div class="background-styled">
+      <div class="form-container">
+        <ImageStyled
+          imageUrl="../../images/logo.png"
+          altText="Logo em azul com nome do app Link to Food"
+          width="11.25rem"
         />
-        <InputStyled
-          v-model="password"
-          id="password"
-          type="password"
-          width="22.5rem"
-          height="2.8rem"
-          placeholder="Digite sua senha"
-          borderColor="transparent"
-        />
+        <form @submit.prevent="onSubmit">
+          <InputStyled
+            v-model="email"
+            id="email"
+            type="email"
+            width="22.5rem"
+            height="2.8rem"
+            placeholder="Digite seu email"
+            borderColor="transparent"
+          />
+          <InputStyled
+            v-model="password"
+            id="password"
+            type="password"
+            width="22.5rem"
+            height="2.8rem"
+            placeholder="Digite sua senha"
+            borderColor="transparent"
+          />
 
-        <InputStyled
-          v-model="checked"
-          id="checked"
-          type="checkbox"
-          width="7rem"
-          height="2.8rem"
-          class="radio-container"
-          label="Lembrar-me"
-          placeholder=""
-        />
+          <InputStyled
+            v-model="checked"
+            id="checked"
+            type="checkbox"
+            width="7rem"
+            height="2.8rem"
+            class="radio-container"
+            label="Lembrar-me"
+            placeholder=""
+          />
 
-        <ButtonStyled
-          type="submit"
-          v-show="!awaiting"
-          className="login-button"
-          label="Entrar"
-          width="22.5rem"
-          height="2.8rem"
-        />
-      </form>
-      <nav>
-        <RouterLink :to="{ name: 'signUp' }"
-          ><ButtonStyled
-            className="transparent-button-blue-text"
-            label="Esqueceu a senha?"
-            width="10rem"
-            height="4rem"
-        /></RouterLink>
-      </nav>
-      <div class="sign-up-container">
-        <TextStyled
-          text="Não tem uma conta?"
-          width="10rem"
-          height="2.8rem"
-          className="grey-bold-text"
-        />
+          <ButtonStyled
+            type="submit"
+            v-show="!awaiting"
+            className="login-button"
+            label="Entrar"
+            width="22.5rem"
+            height="2.8rem"
+          />
+        </form>
         <nav>
-          <RouterLink :to="{ name: 'signUp' }">
-            <ButtonStyled
+          <RouterLink :to="{ name: 'signUp' }"
+            ><ButtonStyled
               className="transparent-button-blue-text"
-              label="Cadastre-se"
-              width="7rem"
-              height="2.8rem"
-            />
-          </RouterLink>
+              label="Esqueceu a senha?"
+              width="10rem"
+              height="4rem"
+          /></RouterLink>
         </nav>
+        <div class="sign-up-container">
+          <TextStyled
+            text="Não tem uma conta?"
+            width="10rem"
+            height="2.8rem"
+            className="grey-bold-text"
+          />
+          <nav>
+            <RouterLink :to="{ name: 'signUp' }">
+              <ButtonStyled
+                className="transparent-button-blue-text"
+                label="Cadastre-se"
+                width="7rem"
+                height="2.8rem"
+              />
+            </RouterLink>
+          </nav>
+        </div>
       </div>
     </div>
   </template>
@@ -148,6 +150,14 @@ nav {
   justify-content: center;
 }
 
+.sign-up-container {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+</style>
+
+<style>
 .form-container {
   padding: 15px;
   display: flex;
@@ -160,10 +170,16 @@ nav {
   margin: auto;
   justify-content: center;
 }
+</style>
 
-.sign-up-container {
+<style>
+.background-styled {
+  height: 100vh;
+  width: 100%;
+  background-image: url('../../images/pizza.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
   display: flex;
-  flex-direction: row;
-  gap: 5px;
+  justify-content: center;
 }
 </style>

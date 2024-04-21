@@ -15,6 +15,10 @@ defineProps<{
 </template>
 
 <style scoped>
+div {
+  display: flex;
+  justify-content: center;
+}
 .text-container {
   display: flex;
   align-items: center;

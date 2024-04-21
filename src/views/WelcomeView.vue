@@ -4,12 +4,20 @@ import UserProfile from '@/components/UserProfile.vue'
 
 <template>
   <main>
-    <UserProfile />
+    <div class="background-styled">
+      <UserProfile />
+    </div>
   </main>
 </template>
 
 <style scoped>
-.link-sign {
-  text-decoration: double;
+.background-styled {
+  height: 100vh;
+  width: 100%;
+  background-image: url('../../images/pizza.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
 }
 </style>

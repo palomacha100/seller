@@ -18,6 +18,8 @@ defineProps<{
 div {
   display: flex;
   justify-content: center;
+  align-items: center; /* Centraliza verticalmente */
+  height: 100vh;
 }
 .text-container {
   display: flex;

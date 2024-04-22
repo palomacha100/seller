@@ -10,9 +10,9 @@ import TextStyled from './TextStyled.vue'
 const router = useRouter()
 
 const email = defineModel<string>('email')
-const password = defineModel<string>('password', { default: '' })
+const password = defineModel<string>('password')
 const awaiting = ref(false)
-const checked = ref(true)
+const checked = defineModel<boolean>('remember', { default: true })
 
 const auth = new Auth()
 
@@ -27,16 +27,13 @@ const signOut = () => {
 }
 
 const onSubmit = () => {
-  if (!email.value) {
-    console.log('Email:', email.value)
-    console.log('Password:', password.value)
-    return
-  }
+  console.log('Email:', email.value)
+  console.log('Password:', password.value)
 
   awaiting.value = true
   auth.signIn(
     email.value || '',
-    password.value,
+    password.value || '',
     () => {
       awaiting.value = false
       isLoggedIn.value = auth.isLoggedIn()

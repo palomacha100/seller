@@ -8,8 +8,11 @@ const { id, placeholder, borderColor, width, height, label } = defineProps({
   borderColor: String,
   width: String,
   height: String,
-  label: String
+  label: String,
+  password: String
 })
+
+const model = defineModel<string | boolean>()
 </script>
 
 <template>
@@ -20,7 +23,7 @@ const { id, placeholder, borderColor, width, height, label } = defineProps({
       :style="{ width, height, borderColor }"
     >
       <label :for="id">
-        <input :id="id" :type="type" />
+        <input :id="id" :type="type" v-model="model" />
         {{ label }}
       </label>
     </div>
@@ -31,6 +34,7 @@ const { id, placeholder, borderColor, width, height, label } = defineProps({
       :type="type"
       :placeholder="placeholder"
       :style="{ width, height, borderColor }"
+      v-model="model"
     />
   </div>
 </template>

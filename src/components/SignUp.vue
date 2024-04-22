@@ -2,14 +2,26 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { Auth } from '../auth'
-const router = useRouter()
-const email = defineModel<string>('email')
-const password = defineModel<string>('password', { default: '' })
-const password_confirmation = defineModel<string>('password_confirmation')
-const error = ref('')
-const isDisabled = ref(true)
+import ImageStyled from './ImageStyled.vue'
+import InputStyled from './InputStyled.vue'
 
-const awaiting = ref(false)
+const router = useRouter()
+const email = ref<string>('')
+const password = ref<string>('')
+const password_confirmation = ref<string>('')
+const error = ref<string>('')
+const isDisabled = ref<boolean>(true)
+const awaiting = ref<boolean>(false)
+
+import { reactive } from 'vue'
+
+const formData = reactive({
+  email: '',
+  password: '',
+  password_confirmation: ''
+})
+
+console.log(formData.email)
 
 function handleChange() {
   if (password.value !== password_confirmation.value || password.value == '') {
@@ -44,24 +56,49 @@ function onSubmit() {
 }
 </script>
 <template>
-  <div class="form-container">
-    <h1>Cadastro</h1>
-    <form @submit.prevent="onSubmit">
-      <label>E-Mail:</label>
-      <input v-model="email" type="email" /><br />
-      <label>Senha: </label>
-      <input @change="handleChange" v-model="password" type="password" /><br />
-      <label for="password_confirmation"
-        >Repetição de senha:
-        <input
+  <div class="background-styled">
+    <div class="form-container">
+      <ImageStyled
+        imageUrl="../../images/logo.png"
+        altText="Logo em azul com nome do app Link to Food"
+        width="11.25rem"
+      />
+      <form @submit.prevent="onSubmit">
+        <InputStyled
+          v-model="formData.email"
+          type="email"
+          id="email"
+          width="22.5rem"
+          height="2.8rem"
+          placeholder="Digite seu email"
+          borderColor="transparent"
+        />
+
+        <InputStyled
           @change="handleChange"
-          v-model="password_confirmation"
+          v-model="formData.password"
+          type="password"
+          id="password"
+          width="22.5rem"
+          height="2.8rem"
+          placeholder="Digite sua senha"
+          borderColor="transparent"
+        />
+
+        <InputStyled
+          @change="handleChange"
+          v-model="formData.password_confirmation"
           type="password"
           id="password_confirmation"
+          width="22.5rem"
+          height="2.8rem"
+          placeholder="Confirme sua senha"
+          borderColor="transparent"
         />
-      </label>
-      <span>{{ error }}</span>
-      <button :disabled="isDisabled" type="submit" v-show="!awaiting">Cadastrar</button>
-    </form>
+
+        <span>{{ error }}</span>
+        <button type="submit" :disabled="isDisabled || awaiting">Cadastrar</button>
+      </form>
+    </div>
   </div>
 </template>

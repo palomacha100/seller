@@ -9,8 +9,8 @@ import TextStyled from './TextStyled.vue'
 
 const router = useRouter()
 
-const email = defineModel<string>('email')
-const password = defineModel<string>('password')
+const email = defineModel<string>('email', { default: '' })
+const password = defineModel<string>('password', { default: '' })
 const awaiting = ref(false)
 const checked = defineModel<boolean>('remember', { default: true })
 
@@ -26,9 +26,19 @@ const signOut = () => {
   })
 }
 
+const errorEmail = ref('')
+const errorPassword = ref('')
+const errorCredential = ref('')
+
 const onSubmit = () => {
   console.log('Email:', email.value)
   console.log('Password:', password.value)
+  if (email.value == '') {
+    return (errorEmail.value = 'É necessário informar um email')
+  }
+  if (password.value == '') {
+    return (errorPassword.value = 'É necessário informar uma senha')
+  }
 
   awaiting.value = true
   auth.signIn(
@@ -43,8 +53,28 @@ const onSubmit = () => {
     () => {
       awaiting.value = false
       console.log('Não foi dessa vez!')
+      errorCredential.value = 'Email ou senha incorretos. Confira-os'
     }
   )
+}
+
+function handleEmail() {
+  console.log('Aqui handleEmail')
+  const re = /\S+@\S+\.\S+/
+  if (!re.test(email.value)) {
+    errorEmail.value = 'Por favor, digite um email válido'
+  } else {
+    errorEmail.value = ''
+  }
+}
+
+function handlePassword() {
+  console.log('Aqui handlePassword')
+  if (password.value.length < 6) {
+    errorPassword.value = 'Por favor, digite um password válido'
+  } else {
+    errorPassword.value = ''
+  }
 }
 </script>
 
@@ -74,7 +104,10 @@ const onSubmit = () => {
             height="2.8rem"
             placeholder="Digite seu email"
             borderColor="transparent"
+            :handleChange="handleEmail"
+            :error="errorEmail"
           />
+
           <InputStyled
             v-model="password"
             id="password"
@@ -83,6 +116,8 @@ const onSubmit = () => {
             height="2.8rem"
             placeholder="Digite sua senha"
             borderColor="transparent"
+            :handleChange="handlePassword"
+            :error="errorPassword"
           />
 
           <InputStyled
@@ -104,6 +139,8 @@ const onSubmit = () => {
             width="22.5rem"
             height="2.8rem"
           />
+
+          <span>{{ errorCredential }}</span>
         </form>
         <nav>
           <RouterLink :to="{ name: 'signUp' }"

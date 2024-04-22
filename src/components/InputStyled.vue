@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, type PropType } from 'vue'
 
-const { id, placeholder, borderColor, width, height, label } = defineProps({
+const { id, placeholder, borderColor, width, height, label, error, handleChange } = defineProps({
   type: String,
   id: String,
   placeholder: String,
@@ -9,7 +9,12 @@ const { id, placeholder, borderColor, width, height, label } = defineProps({
   width: String,
   height: String,
   label: String,
-  password: String
+  password: String,
+  error: String,
+  handleChange: {
+    type: Function as PropType<(event: Event) => void>,
+    default: undefined
+  }
 })
 
 const model = defineModel<string | boolean>()
@@ -35,7 +40,9 @@ const model = defineModel<string | boolean>()
       :placeholder="placeholder"
       :style="{ width, height, borderColor }"
       v-model="model"
+      @blur="handleChange"
     />
+    <span>{{ error }}</span>
   </div>
 </template>
 

@@ -21,7 +21,7 @@ const model = defineModel<string | boolean>()
 </script>
 
 <template>
-  <div>
+  <div class="input-container">
     <div
       v-if="type === 'radio' || type === 'checkbox'"
       class="radio-container"
@@ -47,12 +47,17 @@ const model = defineModel<string | boolean>()
 </template>
 
 <style scoped>
+div {
+  display: flex;
+  flex-direction: column;
+}
 input {
   padding: 5px 10px;
   font-size: 1rem;
   background-color: var(--white);
   border-radius: 5px;
   margin: 5px 0;
+  color: var(--dark-gray);
 }
 
 input::placeholder {
@@ -61,6 +66,15 @@ input::placeholder {
 label {
   font-size: 1rem;
   color: var(--dark-gray);
+}
+
+span {
+  color: var(--red);
+  font-size: 0.875rem;
+}
+
+.input-container {
+  height: 4rem;
 }
 
 .radio-container {

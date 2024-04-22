@@ -125,7 +125,7 @@ function handlePassword() {
             id="checked"
             type="checkbox"
             width="7rem"
-            height="2.8rem"
+            height="2rem"
             class="radio-container"
             label="Lembrar-me"
             placeholder=""
@@ -148,7 +148,7 @@ function handlePassword() {
               className="transparent-button-blue-text"
               label="Esqueceu a senha?"
               width="10rem"
-              height="4rem"
+              height="3rem"
           /></RouterLink>
         </nav>
         <div class="sign-up-container">
@@ -179,9 +179,20 @@ main {
   display: flex;
   justify-content: center;
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  height: 17rem;
+}
 nav {
   display: flex;
   justify-content: center;
+}
+
+span {
+  color: var(--red);
+  font-size: 0.875rem;
 }
 
 .sign-up-container {
@@ -193,16 +204,17 @@ nav {
 
 <style>
 .form-container {
-  padding: 15px;
+  padding: 20px 15px 15px 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 27rem;
-  height: 30rem;
+  height: 33rem;
   background-color: rgba(237, 228, 161, 0.8);
   border-radius: 5px;
   margin: auto;
   justify-content: center;
+  gap: 4px;
 }
 </style>
 

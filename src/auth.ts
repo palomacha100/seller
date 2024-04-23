@@ -1,5 +1,3 @@
-import Swal from 'sweetalert2'
-
 const URL = import.meta.env.VITE_API_URL
 
 import { createStorage, type SimpleStorage } from './storage'
@@ -24,12 +22,6 @@ class Auth {
   }
   failure(response: Response, onFailure: () => void) {
     onFailure()
-    Swal.fire({
-      title: `${response.status}`,
-      text: `${response.statusText}`,
-      icon: 'error',
-      confirmButtonText: 'Cool'
-    })
   }
   currentUser() {
     if (!this.isLoggedIn()) {

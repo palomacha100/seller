@@ -2,8 +2,8 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { Auth } from '../auth'
-import ImageStyled from './ImageStyled.vue'
 import InputStyled from './InputStyled.vue'
+import AuthenticationContainer from './AuthenticationContainer.vue'
 
 const router = useRouter()
 const email = ref<string>('')
@@ -56,49 +56,42 @@ function onSubmit() {
 }
 </script>
 <template>
-  <div class="background-styled">
-    <div class="form-container">
-      <ImageStyled
-        imageUrl="../../images/logo.png"
-        altText="Logo em azul com nome do app Link to Food"
-        width="11.25rem"
+  <AuthenticationContainer>
+    <form @submit.prevent="onSubmit">
+      <InputStyled
+        v-model="formData.email"
+        type="email"
+        id="email"
+        width="22.5rem"
+        height="2.8rem"
+        placeholder="Digite seu email"
+        borderColor="transparent"
       />
-      <form @submit.prevent="onSubmit">
-        <InputStyled
-          v-model="formData.email"
-          type="email"
-          id="email"
-          width="22.5rem"
-          height="2.8rem"
-          placeholder="Digite seu email"
-          borderColor="transparent"
-        />
 
-        <InputStyled
-          @change="handleChange"
-          v-model="formData.password"
-          type="password"
-          id="password"
-          width="22.5rem"
-          height="2.8rem"
-          placeholder="Digite sua senha"
-          borderColor="transparent"
-        />
+      <InputStyled
+        @change="handleChange"
+        v-model="formData.password"
+        type="password"
+        id="password"
+        width="22.5rem"
+        height="2.8rem"
+        placeholder="Digite sua senha"
+        borderColor="transparent"
+      />
 
-        <InputStyled
-          @change="handleChange"
-          v-model="formData.password_confirmation"
-          type="password"
-          id="password_confirmation"
-          width="22.5rem"
-          height="2.8rem"
-          placeholder="Confirme sua senha"
-          borderColor="transparent"
-        />
+      <InputStyled
+        @change="handleChange"
+        v-model="formData.password_confirmation"
+        type="password"
+        id="password_confirmation"
+        width="22.5rem"
+        height="2.8rem"
+        placeholder="Confirme sua senha"
+        borderColor="transparent"
+      />
 
-        <span>{{ error }}</span>
-        <button type="submit" :disabled="isDisabled || awaiting">Cadastrar</button>
-      </form>
-    </div>
-  </div>
+      <span>{{ error }}</span>
+      <button type="submit" :disabled="isDisabled || awaiting">Cadastrar</button>
+    </form>
+  </AuthenticationContainer>
 </template>

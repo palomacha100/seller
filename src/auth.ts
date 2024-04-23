@@ -20,8 +20,10 @@ class Auth {
       onSuccess()
     })
   }
-  failure(response: Response, onFailure: () => void) {
-    onFailure()
+  failure(response: Response, onFailure: (error: string) => void) {
+    response.json().then((json) => {
+      if (json.error == 'User already exists') onFailure('Email já cadastrado')
+    })
   }
   currentUser() {
     if (!this.isLoggedIn()) {

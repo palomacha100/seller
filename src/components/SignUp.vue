@@ -3,37 +3,52 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { Auth } from '../auth'
 import InputStyled from './InputStyled.vue'
+import ButtonStyled from './ButtonStyled.vue'
 import AuthenticationContainer from './AuthenticationContainer.vue'
 
 const router = useRouter()
+
 const email = defineModel<string>('email', { default: '' })
 const password = defineModel<string>('password', { default: '' })
 const password_confirmation = defineModel<string>('password_confirmation', { default: '' })
-const error = ref<string>('')
+const errorEmail = ref<string>('')
+const errorPassword = ref<string>('')
+const errorPasswordConfirmation = ref<string>('')
+const registerError = ref<string>('')
 
 const awaiting = ref<boolean>(false)
 
-function handleChange() {
-  if (password.value !== password_confirmation.value || password.value == '') {
-    error.value = 'As senhas não coincidem'
+const auth = new Auth()
+
+function handleEmail() {
+  const re = /\S+@\S+\.\S+/
+  if (!re.test(email.value)) {
+    errorEmail.value = 'Por favor, digite um email válido'
   } else {
-    error.value = ''
+    errorEmail.value = ''
+  }
+}
+
+function handlePassword() {
+  if (password.value !== password_confirmation.value || password.value == '') {
+    errorPasswordConfirmation.value = 'As senhas não coincidem'
+  } else {
+    errorPasswordConfirmation.value = ''
   }
 }
 
 function onSubmit() {
-  let auth = new Auth()
-  if (password.value.length < 6) {
-    return (error.value = 'A senha deve conter no mínimo 6 caracteres')
-  }
   if (email.value == '') {
-    return (error.value = 'É necessário informar um email')
+    return (errorEmail.value = 'É necessário informar um email')
+  }
+  if (password.value.length < 6) {
+    return (errorPassword.value = 'A senha deve conter no mínimo 6 caracteres')
   }
   if (password.value == '') {
-    return (error.value = 'É necessário informar uma senha')
+    return (errorPassword.value = 'É necessário informar uma senha')
   }
   if (password_confirmation.value == '') {
-    return (error.value = 'É necessário informar uma senha')
+    return (errorPassword.value = 'É necessário confirmar a senha')
   }
   awaiting.value = true
   auth.signUp(
@@ -44,8 +59,9 @@ function onSubmit() {
       awaiting.value = false
       router.push('/')
     },
-    () => {
+    (error = '') => {
       awaiting.value = false
+      registerError.value = error
       console.log('não foi dessa vez!')
     }
   )
@@ -62,10 +78,11 @@ function onSubmit() {
         height="2.8rem"
         placeholder="Digite seu email"
         borderColor="transparent"
+        :handleChange="handleEmail"
+        :error="errorEmail"
       />
 
       <InputStyled
-        @change="handleChange"
         v-model="password"
         type="password"
         id="password"
@@ -73,10 +90,11 @@ function onSubmit() {
         height="2.8rem"
         placeholder="Digite sua senha"
         borderColor="transparent"
+        :handleChange="handlePassword"
+        :error="errorPassword"
       />
 
       <InputStyled
-        @change="handleChange"
         v-model="password_confirmation"
         type="password"
         id="password_confirmation"
@@ -84,10 +102,50 @@ function onSubmit() {
         height="2.8rem"
         placeholder="Confirme sua senha"
         borderColor="transparent"
+        :handleChange="handlePassword"
+        :error="errorPasswordConfirmation"
       />
 
-      <span>{{ error }}</span>
-      <button type="submit" :disabled="awaiting">Cadastrar</button>
+      <span>{{ registerError }}</span>
+
+      <ButtonStyled
+        type="submit"
+        v-show="!awaiting"
+        className="login-button"
+        label="Cadastrar"
+        width="22.5rem"
+        height="2.8rem"
+      />
     </form>
+    <nav>
+      <RouterLink :to="{ name: 'signIn' }">
+        <ButtonStyled
+          className="transparent-button-blue-text"
+          label="Voltar ao login"
+          width="8rem"
+          height="2.8rem"
+        />
+      </RouterLink>
+    </nav>
   </AuthenticationContainer>
 </template>
+
+<style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  height: 17rem;
+}
+span {
+  color: var(--red);
+  font-size: 0.875rem;
+  align-self: center;
+  margin: 10px 0;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+</style>

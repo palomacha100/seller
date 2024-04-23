@@ -69,7 +69,7 @@ function handleEmail() {
 
 function handlePassword() {
   if (password.value.length < 6) {
-    errorPassword.value = 'Por favor, digite um password válido'
+    errorPassword.value = 'Por favor, digite uma senha válido'
   } else {
     errorPassword.value = ''
   }

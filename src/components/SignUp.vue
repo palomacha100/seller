@@ -6,29 +6,17 @@ import InputStyled from './InputStyled.vue'
 import AuthenticationContainer from './AuthenticationContainer.vue'
 
 const router = useRouter()
-const email = ref<string>('')
-const password = ref<string>('')
-const password_confirmation = ref<string>('')
+const email = defineModel<string>('email', { default: '' })
+const password = defineModel<string>('password', { default: '' })
+const password_confirmation = defineModel<string>('password_confirmation', { default: '' })
 const error = ref<string>('')
-const isDisabled = ref<boolean>(true)
+
 const awaiting = ref<boolean>(false)
-
-import { reactive } from 'vue'
-
-const formData = reactive({
-  email: '',
-  password: '',
-  password_confirmation: ''
-})
-
-console.log(formData.email)
 
 function handleChange() {
   if (password.value !== password_confirmation.value || password.value == '') {
     error.value = 'As senhas não coincidem'
-    isDisabled.value = true
   } else {
-    isDisabled.value = false
     error.value = ''
   }
 }
@@ -36,8 +24,16 @@ function handleChange() {
 function onSubmit() {
   let auth = new Auth()
   if (password.value.length < 6) {
-    isDisabled.value = true
     return (error.value = 'A senha deve conter no mínimo 6 caracteres')
+  }
+  if (email.value == '') {
+    return (error.value = 'É necessário informar um email')
+  }
+  if (password.value == '') {
+    return (error.value = 'É necessário informar uma senha')
+  }
+  if (password_confirmation.value == '') {
+    return (error.value = 'É necessário informar uma senha')
   }
   awaiting.value = true
   auth.signUp(
@@ -59,7 +55,7 @@ function onSubmit() {
   <AuthenticationContainer>
     <form @submit.prevent="onSubmit">
       <InputStyled
-        v-model="formData.email"
+        v-model="email"
         type="email"
         id="email"
         width="22.5rem"
@@ -70,7 +66,7 @@ function onSubmit() {
 
       <InputStyled
         @change="handleChange"
-        v-model="formData.password"
+        v-model="password"
         type="password"
         id="password"
         width="22.5rem"
@@ -81,7 +77,7 @@ function onSubmit() {
 
       <InputStyled
         @change="handleChange"
-        v-model="formData.password_confirmation"
+        v-model="password_confirmation"
         type="password"
         id="password_confirmation"
         width="22.5rem"
@@ -91,7 +87,7 @@ function onSubmit() {
       />
 
       <span>{{ error }}</span>
-      <button type="submit" :disabled="isDisabled || awaiting">Cadastrar</button>
+      <button type="submit" :disabled="awaiting">Cadastrar</button>
     </form>
   </AuthenticationContainer>
 </template>

@@ -15,7 +15,7 @@ import ImageStyled from './ImageStyled.vue'
   </div>
 </template>
 
-<style>
+<style scoped>
 .form-container {
   padding: 20px 15px 15px 15px;
   display: flex;

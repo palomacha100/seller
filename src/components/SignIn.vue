@@ -3,7 +3,6 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { Auth } from '../auth'
 import ButtonStyled from './ButtonStyled.vue'
-
 import InputStyled from './InputStyled.vue'
 import TextStyled from './TextStyled.vue'
 import AuthenticationContainer from './AuthenticationContainer.vue'
@@ -60,7 +59,6 @@ const onSubmit = () => {
 }
 
 function handleEmail() {
-  console.log('Aqui handleEmail')
   const re = /\S+@\S+\.\S+/
   if (!re.test(email.value)) {
     errorEmail.value = 'Por favor, digite um email válido'
@@ -70,7 +68,6 @@ function handleEmail() {
 }
 
 function handlePassword() {
-  console.log('Aqui handlePassword')
   if (password.value.length < 6) {
     errorPassword.value = 'Por favor, digite um password válido'
   } else {

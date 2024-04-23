@@ -3,16 +3,16 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { Auth } from '../auth'
 import ButtonStyled from './ButtonStyled.vue'
-import ImageStyled from './ImageStyled.vue'
 import InputStyled from './InputStyled.vue'
 import TextStyled from './TextStyled.vue'
+import AuthenticationContainer from './AuthenticationContainer.vue'
 
 const router = useRouter()
 
-const email = ref('')
-const password = ref('')
+const email = defineModel<string>('email', { default: '' })
+const password = defineModel<string>('password', { default: '' })
 const awaiting = ref(false)
-const checked = ref(true)
+const checked = defineModel<boolean>('remember', { default: true })
 
 const auth = new Auth()
 
@@ -26,17 +26,24 @@ const signOut = () => {
   })
 }
 
+const errorEmail = ref('')
+const errorPassword = ref('')
+const errorCredential = ref('')
+
 const onSubmit = () => {
-  if (!email.value.trim()) {
-    console.log('Email:', email.value)
-    console.log('Password:', password.value)
-    return
+  console.log('Email:', email.value)
+  console.log('Password:', password.value)
+  if (email.value == '') {
+    return (errorEmail.value = 'É necessário informar um email')
+  }
+  if (password.value == '') {
+    return (errorPassword.value = 'É necessário informar uma senha')
   }
 
   awaiting.value = true
   auth.signIn(
-    email.value,
-    password.value,
+    email.value || '',
+    password.value || '',
     () => {
       awaiting.value = false
       isLoggedIn.value = auth.isLoggedIn()
@@ -46,8 +53,26 @@ const onSubmit = () => {
     () => {
       awaiting.value = false
       console.log('Não foi dessa vez!')
+      errorCredential.value = 'Email ou senha incorretos. Confira-os'
     }
   )
+}
+
+function handleEmail() {
+  const re = /\S+@\S+\.\S+/
+  if (!re.test(email.value)) {
+    errorEmail.value = 'Por favor, digite um email válido'
+  } else {
+    errorEmail.value = ''
+  }
+}
+
+function handlePassword() {
+  if (password.value.length < 6) {
+    errorPassword.value = 'Por favor, digite uma senha válido'
+  } else {
+    errorPassword.value = ''
+  }
 }
 </script>
 
@@ -61,12 +86,7 @@ const onSubmit = () => {
   </template>
 
   <template v-else>
-    <div class="form-container">
-      <ImageStyled
-        imageUrl="../../images/logo.png"
-        altText="Logo em azul com nome do app Link to Food"
-        width="11.25rem"
-      />
+    <AuthenticationContainer>
       <form @submit.prevent="onSubmit">
         <InputStyled
           v-model="email"
@@ -76,7 +96,10 @@ const onSubmit = () => {
           height="2.8rem"
           placeholder="Digite seu email"
           borderColor="transparent"
+          :handleChange="handleEmail"
+          :error="errorEmail"
         />
+
         <InputStyled
           v-model="password"
           id="password"
@@ -85,6 +108,8 @@ const onSubmit = () => {
           height="2.8rem"
           placeholder="Digite sua senha"
           borderColor="transparent"
+          :handleChange="handlePassword"
+          :error="errorPassword"
         />
 
         <InputStyled
@@ -92,7 +117,7 @@ const onSubmit = () => {
           id="checked"
           type="checkbox"
           width="7rem"
-          height="2.8rem"
+          height="2rem"
           class="radio-container"
           label="Lembrar-me"
           placeholder=""
@@ -106,6 +131,7 @@ const onSubmit = () => {
           width="22.5rem"
           height="2.8rem"
         />
+        <span>{{ errorCredential }}</span>
       </form>
       <nav>
         <RouterLink :to="{ name: 'signUp' }"
@@ -113,7 +139,7 @@ const onSubmit = () => {
             className="transparent-button-blue-text"
             label="Esqueceu a senha?"
             width="10rem"
-            height="4rem"
+            height="3rem"
         /></RouterLink>
       </nav>
       <div class="sign-up-container">
@@ -134,7 +160,7 @@ const onSubmit = () => {
           </RouterLink>
         </nav>
       </div>
-    </div>
+    </AuthenticationContainer>
   </template>
 </template>
 
@@ -143,22 +169,20 @@ main {
   display: flex;
   justify-content: center;
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  height: 17rem;
+}
 nav {
   display: flex;
   justify-content: center;
 }
 
-.form-container {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 27rem;
-  height: 30rem;
-  background-color: rgba(237, 228, 161, 0.8);
-  border-radius: 5px;
-  margin: auto;
-  justify-content: center;
+span {
+  color: var(--red);
+  font-size: 0.875rem;
 }
 
 .sign-up-container {

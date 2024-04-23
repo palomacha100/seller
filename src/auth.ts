@@ -1,5 +1,3 @@
-import Swal from 'sweetalert2'
-
 const URL = import.meta.env.VITE_API_URL
 
 import { createStorage, type SimpleStorage } from './storage'
@@ -22,13 +20,9 @@ class Auth {
       onSuccess()
     })
   }
-  failure(response: Response, onFailure: () => void) {
-    onFailure()
-    Swal.fire({
-      title: `${response.status}`,
-      text: `${response.statusText}`,
-      icon: 'error',
-      confirmButtonText: 'Cool'
+  failure(response: Response, onFailure: (error: string) => void) {
+    response.json().then((json) => {
+      if (json.error == 'User already exists') onFailure('Email já cadastrado')
     })
   }
   currentUser() {
@@ -63,7 +57,7 @@ class Auth {
     fetch(`${URL}/sign_in`, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)

@@ -1,26 +1,34 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, type PropType } from 'vue'
 
-const { id, placeholder, borderColor, width, height, label } = defineProps({
+const { id, placeholder, borderColor, width, height, label, error, handleChange } = defineProps({
   type: String,
   id: String,
   placeholder: String,
   borderColor: String,
   width: String,
   height: String,
-  label: String
+  label: String,
+  password: String,
+  error: String,
+  handleChange: {
+    type: Function as PropType<(event: Event) => void>,
+    default: undefined
+  }
 })
+
+const model = defineModel<string | boolean>()
 </script>
 
 <template>
-  <div>
+  <div class="input-container">
     <div
       v-if="type === 'radio' || type === 'checkbox'"
       class="radio-container"
       :style="{ width, height, borderColor }"
     >
       <label :for="id">
-        <input :id="id" :type="type" />
+        <input :id="id" :type="type" v-model="model" />
         {{ label }}
       </label>
     </div>
@@ -31,17 +39,25 @@ const { id, placeholder, borderColor, width, height, label } = defineProps({
       :type="type"
       :placeholder="placeholder"
       :style="{ width, height, borderColor }"
+      v-model="model"
+      @blur="handleChange"
     />
+    <span>{{ error }}</span>
   </div>
 </template>
 
 <style scoped>
+div {
+  display: flex;
+  flex-direction: column;
+}
 input {
   padding: 5px 10px;
   font-size: 1rem;
   background-color: var(--white);
   border-radius: 5px;
   margin: 5px 0;
+  color: var(--dark-gray);
 }
 
 input::placeholder {
@@ -50,6 +66,15 @@ input::placeholder {
 label {
   font-size: 1rem;
   color: var(--dark-gray);
+}
+
+span {
+  color: var(--red);
+  font-size: 0.875rem;
+}
+
+.input-container {
+  height: 4rem;
 }
 
 .radio-container {

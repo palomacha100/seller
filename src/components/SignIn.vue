@@ -134,7 +134,7 @@ function handlePassword() {
         <span>{{ errorCredential }}</span>
       </form>
       <nav>
-        <RouterLink :to="{ name: 'signUp' }"
+        <RouterLink :to="{ name: 'rememberPassword' }"
           ><ButtonStyled
             className="transparent-button-blue-text"
             label="Esqueceu a senha?"

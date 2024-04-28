@@ -4,7 +4,8 @@ import { ref } from 'vue'
 import { Auth } from '../auth'
 import InputStyled from './InputStyled.vue'
 import ButtonStyled from './ButtonStyled.vue'
-import AuthenticationContainer from './AuthenticationContainer.vue'
+import AccessControlContainer from './AccessControlContainer.vue'
+import TextStyled from './TextStyled.vue'
 
 const router = useRouter()
 
@@ -68,8 +69,14 @@ function onSubmit() {
 }
 </script>
 <template>
-  <AuthenticationContainer>
+  <AccessControlContainer>
     <form @submit.prevent="onSubmit">
+      <TextStyled
+        text="Cadastre-se para criar sua loja e vender seus produtos."
+        className="gray-text"
+        width="22.5rem"
+        height="2.8rem"
+      />
       <InputStyled
         v-model="email"
         type="email"
@@ -127,25 +134,31 @@ function onSubmit() {
         />
       </RouterLink>
     </nav>
-  </AuthenticationContainer>
+  </AccessControlContainer>
 </template>
 
 <style scoped>
 form {
   display: flex;
   flex-direction: column;
-  height: 17rem;
+  justify-content: center;
+  height: 22rem;
+  gap: 5px;
+  :first-child {
+    text-align: center;
+  }
 }
 span {
   color: var(--red);
   font-size: 0.875rem;
   align-self: center;
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
 nav {
   display: flex;
   justify-content: center;
   gap: 5px;
+  margin: 15px 0 0 0;
 }
 </style>

@@ -40,7 +40,7 @@ export default defineComponent({
 })
 </script>
 <template>
-  <div class="teste">
+  <div class="main-container">
     <div class="background-styled" :class="backgroundStyledClass">
       <div class="apresentation-container">
         <ImageStyled
@@ -140,12 +140,6 @@ export default defineComponent({
   transform: translateY(100%);
 }
 
-.teste {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
 .apresentation-container {
   display: flex;
   justify-content: center;
@@ -178,5 +172,13 @@ export default defineComponent({
     opacity: 0;
     transform: translateY(-20px);
   }
+}
+</style>
+
+<style>
+.main-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 </style>

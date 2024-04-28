@@ -74,7 +74,7 @@ span {
 }
 
 .input-container {
-  height: 4rem;
+  height: 5rem;
 }
 
 .radio-container {

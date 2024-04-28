@@ -18,7 +18,7 @@ defineProps<{
 div {
   display: flex;
   justify-content: center;
-  align-items: center; /* Centraliza verticalmente */
+  align-items: center;
   height: 100vh;
 }
 .text-container {
@@ -48,5 +48,12 @@ div {
 .grey-bold-text p {
   color: var(--dark-gray);
   font-weight: 700;
+}
+
+.main-text {
+  font-size: 1.5rem;
+  color: var(--white);
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 </style>

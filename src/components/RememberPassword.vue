@@ -10,11 +10,7 @@ import TextStyled from './TextStyled.vue'
 const router = useRouter()
 
 const email = defineModel<string>('email', { default: '' })
-const password = defineModel<string>('password', { default: '' })
-const password_confirmation = defineModel<string>('password_confirmation', { default: '' })
 const errorEmail = ref<string>('')
-const errorPassword = ref<string>('')
-const errorPasswordConfirmation = ref<string>('')
 const registerError = ref<string>('')
 
 const awaiting = ref<boolean>(false)
@@ -30,32 +26,15 @@ function handleEmail() {
   }
 }
 
-function handlePassword() {
-  if (password.value !== password_confirmation.value || password.value == '') {
-    errorPasswordConfirmation.value = 'As senhas não coincidem'
-  } else {
-    errorPasswordConfirmation.value = ''
-  }
-}
-
 function onSubmit() {
   if (email.value == '') {
     return (errorEmail.value = 'É necessário informar um email')
   }
-  if (password.value.length < 6) {
-    return (errorPassword.value = 'A senha deve conter no mínimo 6 caracteres')
-  }
-  if (password.value == '') {
-    return (errorPassword.value = 'É necessário informar uma senha')
-  }
-  if (password_confirmation.value == '') {
-    return (errorPassword.value = 'É necessário confirmar a senha')
-  }
+
   awaiting.value = true
-  auth.signUp(
+  auth.rememberPassword(
     email.value || '',
-    password.value || '',
-    password_confirmation.value || '',
+
     () => {
       awaiting.value = false
       router.push('/')
@@ -72,7 +51,7 @@ function onSubmit() {
   <AccessControlContainer>
     <form @submit.prevent="onSubmit">
       <TextStyled
-        text="Cadastre-se para criar sua loja e vender seus produtos."
+        text="Insira o seu email e enviaremos um link para você voltar a acessar a sua conta, caso esteja cadastrado."
         className="gray-text"
         width="22.5rem"
         height="2.8rem"
@@ -88,32 +67,6 @@ function onSubmit() {
         :handleChange="handleEmail"
         :error="errorEmail"
       />
-
-      <InputStyled
-        v-model="password"
-        type="password"
-        id="password"
-        width="22.5rem"
-        height="2.8rem"
-        placeholder="Digite sua senha"
-        borderColor="transparent"
-        :handleChange="handlePassword"
-        :error="errorPassword"
-      />
-
-      <InputStyled
-        v-model="password_confirmation"
-        type="password"
-        id="password_confirmation"
-        width="22.5rem"
-        height="2.8rem"
-        placeholder="Confirme sua senha"
-        borderColor="transparent"
-        :handleChange="handlePassword"
-        :error="errorPasswordConfirmation"
-      />
-
-      <span>{{ registerError }}</span>
 
       <ButtonStyled
         type="submit"
@@ -141,24 +94,16 @@ function onSubmit() {
 form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  height: 22rem;
-  gap: 5px;
+  height: 17rem;
+  justify-content: space-between;
   :first-child {
     text-align: center;
   }
-}
-span {
-  color: var(--red);
-  font-size: 0.875rem;
-  align-self: center;
-  margin: 5px 0;
 }
 
 nav {
   display: flex;
   justify-content: center;
-  gap: 5px;
-  margin: 15px 0 0 0;
+  margin: 30px 0;
 }
 </style>

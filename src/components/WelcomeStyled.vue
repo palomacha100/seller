@@ -43,6 +43,7 @@ export default defineComponent({
   flex-direction: column;
   justify-content: flex-start;
   background-image: url('../../images/fast-food.jpg');
+  opacity: 0.9;
   width: 100vw;
   height: 100vh;
   background-repeat: no-repeat;

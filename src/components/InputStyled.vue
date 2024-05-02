@@ -54,6 +54,7 @@ div {
 input {
   padding: 5px 10px;
   font-size: 1rem;
+  font-family: 'Poppins';
   background-color: var(--white);
   border-radius: 5px;
   margin: 5px 0;

@@ -116,7 +116,7 @@ function handlePassword() {
           v-model="checked"
           id="checked"
           type="checkbox"
-          width="7rem"
+          width="9rem"
           height="2rem"
           class="radio-container"
           label="Lembrar-me"
@@ -145,7 +145,7 @@ function handlePassword() {
       <div class="sign-up-container">
         <TextStyled
           text="Não tem uma conta?"
-          width="10rem"
+          width="11rem"
           height="2.8rem"
           className="grey-bold-text"
         />

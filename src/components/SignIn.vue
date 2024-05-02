@@ -5,7 +5,7 @@ import { Auth } from '../auth'
 import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import TextStyled from './TextStyled.vue'
-import AuthenticationContainer from './AuthenticationContainer.vue'
+import AccessControlContainer from './AccessControlContainer.vue'
 
 const router = useRouter()
 
@@ -86,7 +86,7 @@ function handlePassword() {
   </template>
 
   <template v-else>
-    <AuthenticationContainer>
+    <AccessControlContainer>
       <form @submit.prevent="onSubmit">
         <InputStyled
           v-model="email"
@@ -160,7 +160,7 @@ function handlePassword() {
           </RouterLink>
         </nav>
       </div>
-    </AuthenticationContainer>
+    </AccessControlContainer>
   </template>
 </template>
 

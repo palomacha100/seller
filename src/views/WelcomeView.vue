@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import UserProfile from '@/components/UserProfile.vue'
+import WelcomeStyled from '@/components/WelcomeStyled.vue'
 </script>
 
 <template>
   <main>
-    <UserProfile />
+    <WelcomeStyled />
   </main>
 </template>

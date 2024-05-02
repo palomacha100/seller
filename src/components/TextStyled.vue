@@ -51,7 +51,7 @@ div {
 }
 
 .main-text {
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: var(--white);
   font-weight: 700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);

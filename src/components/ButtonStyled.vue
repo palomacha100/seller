@@ -29,6 +29,7 @@ button {
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
+  font-family: 'Poppins';
   font-weight: 700;
 }
 

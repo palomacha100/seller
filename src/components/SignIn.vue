@@ -138,7 +138,7 @@ function handlePassword() {
           ><ButtonStyled
             className="transparent-button-blue-text"
             label="Esqueceu a senha?"
-            width="10rem"
+            width="11rem"
             height="3rem"
         /></RouterLink>
       </nav>
@@ -154,7 +154,7 @@ function handlePassword() {
             <ButtonStyled
               className="transparent-button-blue-text"
               label="Cadastre-se"
-              width="7rem"
+              width="8rem"
               height="2.8rem"
             />
           </RouterLink>
@@ -174,6 +174,7 @@ form {
   display: flex;
   flex-direction: column;
   height: 17rem;
+  gap: 5px;
 }
 nav {
   display: flex;

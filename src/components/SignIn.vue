@@ -6,33 +6,21 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import TextStyled from './TextStyled.vue'
 import AccessControlContainer from './AccessControlContainer.vue'
+const auth = new Auth()
 
 const router = useRouter()
-
+const isLoggedIn = ref(auth.isLoggedIn())
+const currentUser = ref(auth.currentUser())
 const email = defineModel<string>('email', { default: '' })
 const password = defineModel<string>('password', { default: '' })
 const awaiting = ref(false)
 const checked = defineModel<boolean>('remember', { default: true })
-
-const auth = new Auth()
-
-const isLoggedIn = ref(auth.isLoggedIn())
-const currentUser = ref(auth.currentUser())
-
-const signOut = () => {
-  auth.signOut(() => {
-    isLoggedIn.value = auth.isLoggedIn()
-    currentUser.value = auth.currentUser()
-  })
-}
 
 const errorEmail = ref('')
 const errorPassword = ref('')
 const errorCredential = ref('')
 
 const onSubmit = () => {
-  console.log('Email:', email.value)
-  console.log('Password:', password.value)
   if (email.value == '') {
     return (errorEmail.value = 'É necessário informar um email')
   }
@@ -48,7 +36,7 @@ const onSubmit = () => {
       awaiting.value = false
       isLoggedIn.value = auth.isLoggedIn()
       currentUser.value = auth.currentUser()
-      router.push('/')
+      router.push('/home')
     },
     () => {
       awaiting.value = false
@@ -77,91 +65,81 @@ function handlePassword() {
 </script>
 
 <template>
-  <template v-if="isLoggedIn">
-    <h3>Olá, {{ currentUser && currentUser.email }}</h3>
-    <br />
+  <AccessControlContainer>
+    <form @submit.prevent="onSubmit">
+      <InputStyled
+        v-model="email"
+        id="email"
+        type="email"
+        width="22.5rem"
+        height="2.8rem"
+        placeholder="Digite seu email"
+        borderColor="transparent"
+        :handleChange="handleEmail"
+        :error="errorEmail"
+      />
+
+      <InputStyled
+        v-model="password"
+        id="password"
+        type="password"
+        width="22.5rem"
+        height="2.8rem"
+        placeholder="Digite sua senha"
+        borderColor="transparent"
+        :handleChange="handlePassword"
+        :error="errorPassword"
+      />
+
+      <InputStyled
+        v-model="checked"
+        id="checked"
+        type="checkbox"
+        width="9rem"
+        height="2rem"
+        class="radio-container"
+        label="Lembrar-me"
+        placeholder=""
+      />
+
+      <ButtonStyled
+        type="submit"
+        v-show="!awaiting"
+        className="login-button"
+        label="Entrar"
+        width="22.5rem"
+        height="2.8rem"
+      />
+      <span>{{ errorCredential }}</span>
+    </form>
     <nav>
-      <a @click="signOut">Sair</a>
-    </nav>
-  </template>
-
-  <template v-else>
-    <AccessControlContainer>
-      <form @submit.prevent="onSubmit">
-        <InputStyled
-          v-model="email"
-          id="email"
-          type="email"
-          width="22.5rem"
-          height="2.8rem"
-          placeholder="Digite seu email"
-          borderColor="transparent"
-          :handleChange="handleEmail"
-          :error="errorEmail"
-        />
-
-        <InputStyled
-          v-model="password"
-          id="password"
-          type="password"
-          width="22.5rem"
-          height="2.8rem"
-          placeholder="Digite sua senha"
-          borderColor="transparent"
-          :handleChange="handlePassword"
-          :error="errorPassword"
-        />
-
-        <InputStyled
-          v-model="checked"
-          id="checked"
-          type="checkbox"
-          width="9rem"
-          height="2rem"
-          class="radio-container"
-          label="Lembrar-me"
-          placeholder=""
-        />
-
-        <ButtonStyled
-          type="submit"
-          v-show="!awaiting"
-          className="login-button"
-          label="Entrar"
-          width="22.5rem"
-          height="2.8rem"
-        />
-        <span>{{ errorCredential }}</span>
-      </form>
-      <nav>
-        <RouterLink :to="{ name: 'rememberPassword' }"
-          ><ButtonStyled
-            className="transparent-button-blue-text"
-            label="Esqueceu a senha?"
-            width="11rem"
-            height="3rem"
-        /></RouterLink>
-      </nav>
-      <div class="sign-up-container">
-        <TextStyled
-          text="Não tem uma conta?"
+      <RouterLink :to="{ name: 'rememberPassword' }"
+        ><ButtonStyled
+          className="transparent-button-blue-text"
+          label="Esqueceu a senha?"
           width="11rem"
-          height="2.8rem"
-          className="grey-bold-text"
-        />
-        <nav>
-          <RouterLink :to="{ name: 'signUp' }">
-            <ButtonStyled
-              className="transparent-button-blue-text"
-              label="Cadastre-se"
-              width="8rem"
-              height="2.8rem"
-            />
-          </RouterLink>
-        </nav>
-      </div>
-    </AccessControlContainer>
-  </template>
+          height="3rem"
+      /></RouterLink>
+    </nav>
+    <div class="sign-up-container">
+      <TextStyled
+        text="Não tem uma conta?"
+        width="11rem"
+        height="2.8rem"
+        className="grey-bold-text"
+      />
+      <nav>
+        <RouterLink :to="{ name: 'signUp' }">
+          <ButtonStyled
+            className="transparent-button-blue-text"
+            label="Cadastre-se"
+            width="8rem"
+            height="2.8rem"
+          />
+        </RouterLink>
+      </nav>
+    </div>
+  </AccessControlContainer>
 </template>
 
 <style scoped>
@@ -174,6 +152,7 @@ form {
   display: flex;
   flex-direction: column;
   height: 17rem;
+  justify-content: space-around;
   gap: 5px;
 }
 nav {
@@ -183,7 +162,7 @@ nav {
 
 span {
   color: var(--red);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
 }
 
 .sign-up-container {

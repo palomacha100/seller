@@ -52,8 +52,8 @@ div {
   flex-direction: column;
 }
 input {
-  padding: 5px 10px;
-  font-size: 1rem;
+  padding: 4px 10px;
+  font-size: 0.875rem;
   font-family: 'Poppins';
   background-color: var(--white);
   border-radius: 5px;
@@ -65,13 +65,13 @@ input::placeholder {
   color: var(--dark-gray);
 }
 label {
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: var(--dark-gray);
 }
 
 span {
   color: var(--red);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
 }
 
 .input-container {

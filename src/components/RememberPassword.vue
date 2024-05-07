@@ -51,10 +51,10 @@ function onSubmit() {
   <AccessControlContainer>
     <form @submit.prevent="onSubmit">
       <TextStyled
-        text="Insira o seu email e enviaremos um link para você voltar a acessar a sua conta, caso esteja cadastrado."
+        text="Insira o seu email. Caso esteja cadastrado, enviaremos um link para você voltar a acessar a sua conta."
         className="gray-text"
         width="22.5rem"
-        height="2.8rem"
+        height="3rem"
       />
       <InputStyled
         v-model="email"
@@ -92,10 +92,12 @@ function onSubmit() {
 
 <style scoped>
 form {
+  margin: 20px 0 0 0;
   display: flex;
   flex-direction: column;
   height: 17rem;
-  justify-content: space-between;
+  justify-content: space-around;
+  gap: 5px;
   :first-child {
     text-align: center;
   }
@@ -104,6 +106,6 @@ form {
 nav {
   display: flex;
   justify-content: center;
-  margin: 30px 0;
+  margin: 15px 0;
 }
 </style>

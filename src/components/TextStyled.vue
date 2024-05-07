@@ -24,10 +24,11 @@ div {
 .text-container {
   display: flex;
   align-items: center;
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 .gray-text p {
   color: var(--dark-gray);
+  font-size: 0.875rem;
 }
 .red-text p {
   color: var(--red);
@@ -48,6 +49,7 @@ div {
 .grey-bold-text p {
   color: var(--dark-gray);
   font-weight: 700;
+  font-size: 0.875rem;
 }
 
 .main-text {

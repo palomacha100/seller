@@ -58,4 +58,9 @@ div {
   font-weight: 700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
+
+.subtitle {
+  color: var(--dark-gray);
+  font-size: 1rem;
+}
 </style>

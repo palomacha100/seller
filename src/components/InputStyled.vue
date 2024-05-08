@@ -63,6 +63,7 @@ input {
 
 input::placeholder {
   color: var(--dark-gray);
+  font-family: 'Poppins';
 }
 label {
   font-size: 0.875rem;

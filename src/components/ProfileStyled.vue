@@ -4,20 +4,56 @@ import ButtonStyled from './ButtonStyled.vue'
 import TextStyled from './TextStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
+import TabsComponent from './TabsComponent.vue'
 
 export default defineComponent({
   components: {
     ButtonStyled,
     TextStyled,
     InputStyled,
-    SelectStyled
+    SelectStyled,
+    TabsComponent
   },
   data() {
     return {
-      dropdownOptions: [
+      estabDropdownOptions: [
         { value: 'option1', label: 'Cafeteria' },
         { value: 'option2', label: 'Hamburgueria' },
         { value: 'option3', label: 'Pizzaria' }
+      ],
+      stateDropdownOptions: [
+        { value: 'AC', label: 'Acre' },
+        { value: 'AL', label: 'Alagoas' },
+        { value: 'AP', label: 'Amapá' },
+        { value: 'AM', label: 'Amazonas' },
+        { value: 'BA', label: 'Bahia' },
+        { value: 'CE', label: 'Ceará' },
+        { value: 'DF', label: 'Distrito Federal' },
+        { value: 'ES', label: 'Espírito Santo' },
+        { value: 'GO', label: 'Goiás' },
+        { value: 'MA', label: 'Maranhão' },
+        { value: 'MT', label: 'Mato Grosso' },
+        { value: 'MS', label: 'Mato Grosso do Sul' },
+        { value: 'MG', label: 'Minas Gerais' },
+        { value: 'PA', label: 'Pará' },
+        { value: 'PB', label: 'Paraíba' },
+        { value: 'PR', label: 'Paraná' },
+        { value: 'PE', label: 'Pernambuco' },
+        { value: 'PI', label: 'Piauí' },
+        { value: 'RJ', label: 'Rio de Janeiro' },
+        { value: 'RN', label: 'Rio Grande do Norte' },
+        { value: 'RS', label: 'Rio Grande do Sul' },
+        { value: 'RO', label: 'Rondônia' },
+        { value: 'RR', label: 'Roraima' },
+        { value: 'SC', label: 'Santa Catarina' },
+        { value: 'SP', label: 'São Paulo' },
+        { value: 'SE', label: 'Sergipe' },
+        { value: 'TO', label: 'Tocantins' }
+      ],
+      tabs: [
+        { name: 'tab1', label: 'Endereço do restaurante' },
+        { name: 'tab2', label: 'Tab 2' }
+        // Adicione mais tabs conforme necessário
       ]
     }
   }
@@ -25,9 +61,18 @@ export default defineComponent({
 </script>
 <template>
   <form>
+    <TabsComponent :tabs="tabs">
+      <template #tab1>
+        <div>Conteúdo da Tab 1</div>
+      </template>
+      <template #tab2>
+        <div>Conteúdo da Tab 2</div>
+      </template>
+      <!-- Adicione mais conteúdo para outras tabs conforme necessário -->
+    </TabsComponent>
     <TextStyled text="Dados do restaurante" className="subtitle" width="50rem" height="2.8rem" />
     <InputStyled
-      id="teste"
+      id="fullname"
       type="text"
       width="22.5rem"
       height="2.8rem"
@@ -35,7 +80,7 @@ export default defineComponent({
       borderColor="transparent"
     />
     <InputStyled
-      id="teste"
+      id="phone-number"
       type="number"
       width="22.5rem"
       height="2.8rem"
@@ -51,12 +96,12 @@ export default defineComponent({
       borderColor="transparent"
     />
     <SelectStyled
-      id="myDropdown"
+      id="establishment"
       label=""
       typeOfSelect="Tipo de cozinha"
       width="22.5rem"
       height="2.8rem"
-      :options="dropdownOptions"
+      :options="estabDropdownOptions"
     />
     <TextStyled text="Endereço do restaurante" className="subtitle" width="50rem" height="2.8rem" />
     <InputStyled
@@ -68,12 +113,12 @@ export default defineComponent({
       borderColor="transparent"
     />
     <SelectStyled
-      id="myDropdown"
+      id="state"
       label=""
       typeOfSelect="Estado"
       width="22.5rem"
       height="2.8rem"
-      :options="dropdownOptions"
+      :options="stateDropdownOptions"
     />
   </form>
 </template>

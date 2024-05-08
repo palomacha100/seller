@@ -39,7 +39,7 @@ export default defineComponent({
       type="number"
       width="22.5rem"
       height="2.8rem"
-      placeholder="Telefone do seu restaurante (apenas números)"
+      placeholder="Telefone do restaurante (apenas números)"
       borderColor="transparent"
     />
     <InputStyled
@@ -47,13 +47,30 @@ export default defineComponent({
       type="number"
       width="22.5rem"
       height="2.8rem"
-      placeholder="CNPJ do seu restaurante (apenas números)"
+      placeholder="CNPJ do restaurante (apenas números)"
       borderColor="transparent"
     />
     <SelectStyled
       id="myDropdown"
       label=""
       typeOfSelect="Tipo de cozinha"
+      width="22.5rem"
+      height="2.8rem"
+      :options="dropdownOptions"
+    />
+    <TextStyled text="Endereço do restaurante" className="subtitle" width="50rem" height="2.8rem" />
+    <InputStyled
+      id="teste"
+      type="number"
+      width="22.5rem"
+      height="2.8rem"
+      placeholder="CEP (apenas números)"
+      borderColor="transparent"
+    />
+    <SelectStyled
+      id="myDropdown"
+      label=""
+      typeOfSelect="Estado"
       width="22.5rem"
       height="2.8rem"
       :options="dropdownOptions"

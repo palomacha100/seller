@@ -17,7 +17,7 @@ const { id, placeholder, borderColor, width, height, label, error, handleChange 
   }
 })
 
-const model = defineModel<string | boolean>()
+const model = defineModel<string | boolean | number>()
 </script>
 
 <template>

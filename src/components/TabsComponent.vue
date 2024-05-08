@@ -50,6 +50,7 @@ export default defineComponent({
 .tab-header {
   display: flex;
   border-bottom: 2px solid var(--dark-blue);
+  border-radius: 5px;
   background-color: var(--light_blue);
 }
 

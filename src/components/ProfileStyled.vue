@@ -44,9 +44,23 @@ const canMoveToTab2 = computed(() => {
 
 const addressSearch = (event: Event) => {
   event.preventDefault()
-  fetch(`https://viacep.com.br/ws/${cep.value}/json/`).then((data) =>
-    data.json().then((response) => console.log(response))
-  )
+  fetch(`https://viacep.com.br/ws/${cep.value}/json/`)
+    .then((response) => response.json())
+    .then((data) => {
+      // Preencher os campos com os dados retornados da API
+      if (data.cep) {
+        neighborhood.value = data.bairro || ''
+        city.value = data.localidade || ''
+        state.value = data.uf || ''
+        address.value = data.logradouro || ''
+        // Preencher outros campos conforme necessário
+      } else {
+        console.error('CEP não encontrado.')
+      }
+    })
+    .catch((error) => {
+      console.error('Erro ao buscar CEP:', error)
+    })
 }
 
 const estabDropdownOptions = [
@@ -65,6 +79,9 @@ const tabs = [
     <TabsComponent :tabs="tabs" :isTrue="canMoveToTab2">
       <template #tab1>
         <form>
+          <div v-if="!canMoveToTab2" class="error-message">
+            Por favor, preencha todos os campos obrigatórios antes de prosseguir.
+          </div>
           <InputStyled
             v-model="fullName"
             id="fullName"

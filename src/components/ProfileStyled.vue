@@ -1,13 +1,46 @@
 <script setup lang="ts">
-import { defineModel } from 'vue'
+import { defineModel, computed } from 'vue'
 import ButtonStyled from './ButtonStyled.vue'
-import TextStyled from './TextStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
 import TabsComponent from './TabsComponent.vue'
 
 const fullName = defineModel<string>('fullName', { default: '' })
+const cnpj = defineModel<number>('cnpj')
+const phoneNumber = defineModel<number>('phoneNumber')
+const city = defineModel<string>('city', { default: '' })
 const cep = defineModel<number>('cep')
+const state = defineModel<string>('state')
+const neighborhood = defineModel<string>('neighborhood')
+const address = defineModel<string>('address')
+const numberAddress = defineModel<number>('numberAddress')
+const complementAddress = defineModel<string>('complementAddress', { default: '' })
+const establishment = defineModel<string>('establishment', { default: '' })
+
+const canMoveToTab2 = computed(() => {
+  console.log(fullName.value)
+  console.log(cnpj.value)
+  console.log(phoneNumber.value)
+  console.log(city.value)
+  console.log(cep.value)
+  console.log(state.value)
+  console.log(neighborhood.value)
+  console.log(address.value)
+  console.log(numberAddress.value)
+  console.log(establishment.value)
+
+  return (
+    fullName.value !== '' &&
+    cnpj.value !== undefined &&
+    phoneNumber.value !== undefined &&
+    city.value !== '' &&
+    cep.value !== undefined &&
+    state.value !== '' &&
+    neighborhood.value !== '' &&
+    address.value !== '' &&
+    numberAddress.value !== undefined
+  )
+})
 
 const addressSearch = (event: Event) => {
   event.preventDefault()
@@ -22,35 +55,6 @@ const estabDropdownOptions = [
   { value: 'option3', label: 'Pizzaria' }
 ]
 
-const stateDropdownOptions = [
-  { value: 'AC', label: 'Acre' },
-  { value: 'AL', label: 'Alagoas' },
-  { value: 'AP', label: 'Amapá' },
-  { value: 'AM', label: 'Amazonas' },
-  { value: 'BA', label: 'Bahia' },
-  { value: 'CE', label: 'Ceará' },
-  { value: 'DF', label: 'Distrito Federal' },
-  { value: 'ES', label: 'Espírito Santo' },
-  { value: 'GO', label: 'Goiás' },
-  { value: 'MA', label: 'Maranhão' },
-  { value: 'MT', label: 'Mato Grosso' },
-  { value: 'MS', label: 'Mato Grosso do Sul' },
-  { value: 'MG', label: 'Minas Gerais' },
-  { value: 'PA', label: 'Pará' },
-  { value: 'PB', label: 'Paraíba' },
-  { value: 'PR', label: 'Paraná' },
-  { value: 'PE', label: 'Pernambuco' },
-  { value: 'PI', label: 'Piauí' },
-  { value: 'RJ', label: 'Rio de Janeiro' },
-  { value: 'RN', label: 'Rio Grande do Norte' },
-  { value: 'RS', label: 'Rio Grande do Sul' },
-  { value: 'RO', label: 'Rondônia' },
-  { value: 'RR', label: 'Roraima' },
-  { value: 'SC', label: 'Santa Catarina' },
-  { value: 'SP', label: 'São Paulo' },
-  { value: 'SE', label: 'Sergipe' },
-  { value: 'TO', label: 'Tocantins' }
-]
 const tabs = [
   { name: 'tab1', label: 'Dados do restaurante' },
   { name: 'tab2', label: 'Horário de funcionamento' }
@@ -58,15 +62,9 @@ const tabs = [
 </script>
 <template>
   <div class="main-container">
-    <TabsComponent :tabs="tabs">
+    <TabsComponent :tabs="tabs" :isTrue="canMoveToTab2">
       <template #tab1>
         <form>
-          <TextStyled
-            text="Dados do restaurante"
-            className="subtitle"
-            width="50rem"
-            height="2.8rem"
-          />
           <InputStyled
             v-model="fullName"
             id="fullName"
@@ -78,6 +76,7 @@ const tabs = [
           />
           <div class="phone-cnpj">
             <InputStyled
+              v-model="cnpj"
               id="cnpj"
               type="number"
               width="24rem"
@@ -86,7 +85,8 @@ const tabs = [
               borderColor="transparent"
             />
             <InputStyled
-              id="phone-number"
+              v-model="phoneNumber"
+              id="phoneNumber"
               type="number"
               width="24rem"
               height="2.8rem"
@@ -94,17 +94,16 @@ const tabs = [
               borderColor="transparent"
             />
           </div>
-          <div class="div"></div>
-          <InputStyled
-            v-model="cep"
-            id="cep"
-            type="number"
-            width="100%"
-            height="2.8rem"
-            placeholder="CEP (apenas números)"
-            borderColor="transparent"
-          />
-          <div class="address-content">
+          <div class="cepSearch">
+            <InputStyled
+              v-model="cep"
+              id="cep"
+              type="number"
+              width="100%"
+              height="2.8rem"
+              placeholder="CEP (apenas números)"
+              borderColor="transparent"
+            />
             <ButtonStyled
               className="transparent-button-blue-text"
               label="Pesquisar CEP"
@@ -112,25 +111,69 @@ const tabs = [
               height="2.8rem"
               @click="addressSearch"
             />
-            <SelectStyled
+          </div>
+
+          <div class="address-content">
+            <InputStyled
+              v-model="state"
               id="state"
-              label=""
-              typeOfSelect="Estado"
-              width="22.5rem"
+              type="text"
+              placeholder="Estado"
+              width="24rem"
               height="2.8rem"
-              :options="stateDropdownOptions"
+              borderColor="transparent"
             />
             <InputStyled
+              v-model="city"
               id="city"
               type="text"
-              width="100%"
+              width="24rem"
               height="2.8rem"
               placeholder="Cidade"
               borderColor="transparent"
             />
           </div>
+          <InputStyled
+            v-model="neighborhood"
+            id="neighborhood"
+            type="text"
+            width="100%"
+            height="2.8rem"
+            placeholder="Bairro"
+            borderColor="transparent"
+          />
+          <InputStyled
+            v-model="address"
+            id="address"
+            type="text"
+            width="100%"
+            height="2.8rem"
+            placeholder="Endereço"
+            borderColor="transparent"
+          />
+          <div class="phone-cnpj">
+            <InputStyled
+              v-model="numberAddress"
+              id="numberAddress"
+              type="number"
+              width="24rem"
+              height="2.8rem"
+              placeholder="Número"
+              borderColor="transparent"
+            />
+            <InputStyled
+              v-model="complementAddress"
+              id="complementAddress"
+              type="text"
+              width="24rem"
+              height="2.8rem"
+              placeholder="Complemento (opcional)"
+              borderColor="transparent"
+            />
+          </div>
 
           <SelectStyled
+            v-model="establishment"
             id="establishment"
             label=""
             typeOfSelect="Tipo de cozinha"
@@ -152,8 +195,8 @@ const tabs = [
   display: flex;
   justify-content: center;
   background-color: rgba(237, 228, 161, 0.5);
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
 form {
@@ -176,5 +219,13 @@ form {
   flex-direction: row;
   gap: 10px;
   justify-content: space-between;
+}
+
+.cepSearch {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100px;
 }
 </style>

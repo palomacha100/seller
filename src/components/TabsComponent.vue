@@ -17,33 +17,27 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { defineProps } from 'vue'
 
-interface Tab {
+type MyObjectType = {
   name: string
   label: string
 }
 
-export default defineComponent({
-  name: 'TabsComponent',
-  props: {
-    tabs: {
-      type: Array as () => Tab[],
-      required: true
-    }
-  },
-  data() {
-    return {
-      activeTab: 0
-    }
-  },
-  methods: {
-    changeTab(index: number) {
-      this.activeTab = index
-    }
+const props = defineProps<{
+  tabs: Array<MyObjectType>
+  isTrue: boolean
+}>()
+
+const activeTab = ref(0)
+
+const changeTab = (index: number) => {
+  if (props.isTrue && index == 1) {
+    activeTab.value = index
   }
-})
+}
 </script>
 
 <style scoped>

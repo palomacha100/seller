@@ -1,42 +1,40 @@
 <template>
   <div :style="{ width, height }">
-    <label :for="id">{{ label }}</label>
-    <select :id="id" v-model="selectedOption">
+    <label for="id">{{ label }}</label>
+    <select id="id" v-model="selectedOption" @change="handleSelect">
       <option value="" disabled hidden>{{ typeOfSelect }}</option>
       <option v-for="(option, index) in options" :key="index" :value="option.value">
         {{ option.label }}
       </option>
     </select>
-    <template v-if="selectedOption"> {{ label }} selecionado: {{ selectedOption }} </template>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, defineProps } from 'vue'
+
+const { label, options, width, height } = defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
+  options: Array as () => Option[],
+  width: String,
+  height: String,
+  label: String,
+  typeOfSelect: String
+})
 
 interface Option {
   value: string
   label: string
 }
 
-export default defineComponent({
-  props: {
-    id: String,
-    label: String,
-    options: {
-      type: Array as () => Option[],
-      required: true
-    },
-    typeOfSelect: String,
-    width: String,
-    height: String
-  },
-  data() {
-    return {
-      selectedOption: '' as string
-    }
-  }
-})
+const selectedOption = ref<string>('')
+
+const handleSelect = (event: Event) => {
+  selectedOption.value = (event.target as HTMLSelectElement).value
+}
 </script>
 
 <style scoped>

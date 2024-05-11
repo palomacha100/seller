@@ -36,6 +36,8 @@ const activeTab = ref(0)
 const changeTab = (index: number) => {
   if (props.isTrue && index == 1) {
     activeTab.value = index
+  } else if (index == 0) {
+    activeTab.value = index
   }
 }
 </script>

@@ -14,7 +14,8 @@ const { id, placeholder, borderColor, width, height, label, error, handleChange 
   handleChange: {
     type: Function as PropType<(event: Event) => void>,
     default: undefined
-  }
+  },
+  disabled: Boolean
 })
 
 const model = defineModel<string | boolean | number>()
@@ -40,7 +41,8 @@ const model = defineModel<string | boolean | number>()
       :placeholder="placeholder"
       :style="{ width, height, borderColor }"
       v-model="model"
-      @blur="handleChange"
+      @input="handleChange"
+      :disabled="disabled"
     />
     <span>{{ error }}</span>
   </div>
@@ -65,6 +67,13 @@ input::placeholder {
   color: var(--dark-gray);
   font-family: 'Poppins';
 }
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 label {
   font-size: 0.875rem;
   color: var(--dark-gray);

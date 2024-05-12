@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { defineModel, computed, reactive } from 'vue'
+import { defineModel, computed, reactive, ref, onMounted } from 'vue'
 import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
 import TabsComponent from './TabsComponent.vue'
 import ContainerStyled from './ContainerStyled.vue'
-import TextStyled from './TextStyled.vue'
+import TabelStyled from './TableStyled.vue'
+import { StoreService } from '../storeService'
 
 const fullName = defineModel<string>('fullName', { default: '' })
 const cnpj = defineModel<string>('cnpj', { default: '' })
@@ -18,6 +19,11 @@ const address = defineModel<string>('address', { default: '' })
 const numberAddress = defineModel<string>('numberAddress')
 const complementAddress = defineModel<string>('complementAddress', { default: '' })
 const establishment = defineModel<string>('establishment', { default: '' })
+const selectDay = defineModel<string>('selectday', { default: '' })
+const selectOpen = defineModel<string>('selectOpen', { default: '' })
+const selectClose = defineModel<string>('selectClose', { default: '' })
+const store = new StoreService()
+const tableData = ref<any>('')
 
 const errors = reactive({
   fullName: '',
@@ -135,21 +141,52 @@ const estabDropdownOptions = [
   { value: 'Pizzaria', label: 'Pizzaria' }
 ]
 
+const dayDropdownOptions = [
+  { value: 'Segunda-feira', label: 'Segunda-feira' },
+  { value: 'Terça-feira', label: 'Terça-feira' },
+  { value: 'Quarta-feira', label: 'Quarta-feira' },
+  { value: 'Quinta-feira', label: 'Quinta-feira' },
+  { value: 'Sexta-feira', label: 'Sexta-feira' },
+  { value: 'Sábado', label: 'Sábado' },
+  { value: 'Domingo', label: 'Domingo' }
+]
+
 const tabs = [
   { name: 'tab1', label: 'Dados do restaurante' },
   { name: 'tab2', label: 'Horário de funcionamento' }
 ]
 
-const pessoas = [
-  { nome: 'João', idade: 30, email: 'joao@example.com' },
-  { nome: 'Maria', idade: 25, email: 'maria@example.com' },
-  { nome: 'Pedro', idade: 35, email: 'pedro@example.com' }
-]
+const tableColumns = ['Dia', 'Horário de Abertura', 'Horário de Fechamento']
 
-const handleSelect = (event: Event) => {
-  const selectedValue = (event.target as HTMLSelectElement).value
-  localStorage.setItem('selectedOption', selectedValue)
+const addOpeningHour = () => {
+  console.log(selectDay.value)
+  console.log(selectOpen.value)
+
+  const data = store.storage.get('openingHours') || ''
+  const dataObject = {
+    dayOfweek: selectDay.value,
+    open: selectOpen.value,
+    closed: selectClose.value
+  }
+  console.log(data)
+  if (data !== '') {
+    console.log('aqui')
+    const storeData = [...JSON.parse(data), dataObject]
+    tableData.value = storeData
+    store.storage.store('openingHours', JSON.stringify(storeData))
+  } else {
+    console.log('aqui2')
+
+    const storeData = [dataObject]
+    tableData.value = storeData
+    store.storage.store('openingHours', JSON.stringify(storeData))
+  }
 }
+
+onMounted(() => {
+  const info = store.storage.get('openingHours') || ''
+  tableData.value = info ? JSON.stringify(info) : ''
+})
 </script>
 <template>
   <div class="main-container">
@@ -291,35 +328,47 @@ const handleSelect = (event: Event) => {
             width="100%"
             height="2.8rem"
             :options="estabDropdownOptions"
-            @Change="handleSelect"
           />
         </form>
       </template>
       <template #tab2>
-        <form>
-          <ContainerStyled width="100%" height="3.75rem" backgroundColor="var(--light_blue)">
-            <TextStyled text="Dia" width="10rem" height="2.8rem" className="gray-text" />
-
-            <div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>Idade</th>
-                    <th>Email</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(pessoa, index) in pessoas" :key="index">
-                    <td>{{ pessoa.nome }}</td>
-                    <td>{{ pessoa.idade }}</td>
-                    <td>{{ pessoa.email }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </ContainerStyled>
-        </form>
+        <ContainerStyled width="100%" height="3.75rem" backgroundColor="var(--light_blue)">
+          <SelectStyled
+            v-model="selectDay"
+            id="day"
+            label=""
+            typeOfSelect="Dia da semana"
+            width="15rem"
+            height="2.8rem"
+            :options="dayDropdownOptions"
+          />
+          <SelectStyled
+            v-model="selectOpen"
+            id="day"
+            label=""
+            typeOfSelect="Dia da semana"
+            width="15rem"
+            height="2.8rem"
+            :options="dayDropdownOptions"
+          />
+          <SelectStyled
+            v-model="selectClose"
+            id="day"
+            label=""
+            typeOfSelect="Dia da semana"
+            width="15rem"
+            height="2.8rem"
+            :options="dayDropdownOptions"
+          />
+          <ButtonStyled
+            className="login-button"
+            label="Adicionar"
+            width="10rem"
+            height="2.8rem"
+            @click="addOpeningHour"
+          />
+        </ContainerStyled>
+        <TabelStyled :columns="tableColumns" :data="tableData" />
       </template>
     </TabsComponent>
   </div>

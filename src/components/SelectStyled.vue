@@ -1,9 +1,8 @@
 <template>
   <div :style="{ width, height }">
     <label for="id">{{ label }}</label>
-    <select id="id" v-model="selectedOption" @change="handleSelect">
-      <option value="" disabled hidden>{{ typeOfSelect }}</option>
-      <option v-for="(option, index) in options" :key="index" :value="option.value">
+    <select id="id" v-model="selectedOption">
+      <option v-for="(option, index) in options" :key="index" :value="option.label">
         {{ option.label }}
       </option>
     </select>
@@ -11,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue'
+import { defineProps, defineModel } from 'vue'
 
 const { label, options, width, height } = defineProps({
   id: {
@@ -30,11 +29,7 @@ interface Option {
   label: string
 }
 
-const selectedOption = ref<string>('')
-
-const handleSelect = (event: Event) => {
-  selectedOption.value = (event.target as HTMLSelectElement).value
-}
+const selectedOption = defineModel<string>('')
 </script>
 
 <style scoped>
@@ -54,7 +49,6 @@ select {
   padding: 4px 10px;
   font-size: 0.875rem;
   background-color: var(--white);
-  margin: 5px 0;
   color: var(--dark-gray);
   border-color: transparent;
 }

@@ -4,6 +4,8 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
 import TabsComponent from './TabsComponent.vue'
+import ContainerStyled from './ContainerStyled.vue'
+import TextStyled from './TextStyled.vue'
 
 const fullName = defineModel<string>('fullName', { default: '' })
 const cnpj = defineModel<string>('cnpj', { default: '' })
@@ -136,6 +138,12 @@ const estabDropdownOptions = [
 const tabs = [
   { name: 'tab1', label: 'Dados do restaurante' },
   { name: 'tab2', label: 'Horário de funcionamento' }
+]
+
+const pessoas = [
+  { nome: 'João', idade: 30, email: 'joao@example.com' },
+  { nome: 'Maria', idade: 25, email: 'maria@example.com' },
+  { nome: 'Pedro', idade: 35, email: 'pedro@example.com' }
 ]
 
 const handleSelect = (event: Event) => {
@@ -288,7 +296,30 @@ const handleSelect = (event: Event) => {
         </form>
       </template>
       <template #tab2>
-        <div>Conteúdo da Tab 2</div>
+        <form>
+          <ContainerStyled width="100%" height="3.75rem" backgroundColor="var(--light_blue)">
+            <TextStyled text="Dia" width="10rem" height="2.8rem" className="gray-text" />
+
+            <div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Idade</th>
+                    <th>Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(pessoa, index) in pessoas" :key="index">
+                    <td>{{ pessoa.nome }}</td>
+                    <td>{{ pessoa.idade }}</td>
+                    <td>{{ pessoa.email }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ContainerStyled>
+        </form>
       </template>
     </TabsComponent>
   </div>

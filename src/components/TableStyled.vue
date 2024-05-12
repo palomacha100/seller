@@ -8,7 +8,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row, rowIndex) in localData" :key="rowIndex">
+        <tr v-for="(row, rowIndex) in data" :key="rowIndex">
           <td v-for="(value, columnIndex) in row" :key="columnIndex">
             {{ value }}
           </td>

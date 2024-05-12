@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { defineModel, computed, reactive, ref, onMounted } from 'vue'
+import { defineModel, computed, reactive } from 'vue'
 import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
-import TabsComponent from './TabsComponent.vue'
-import ContainerStyled from './ContainerStyled.vue'
-import TabelStyled from './TableStyled.vue'
-import { StoreService } from '../storeService'
 
 const fullName = defineModel<string>('fullName', { default: '' })
 const cnpj = defineModel<string>('cnpj', { default: '' })
@@ -19,11 +15,6 @@ const address = defineModel<string>('address', { default: '' })
 const numberAddress = defineModel<string>('numberAddress')
 const complementAddress = defineModel<string>('complementAddress', { default: '' })
 const establishment = defineModel<string>('establishment', { default: '' })
-const selectDay = defineModel<string>('selectday', { default: '' })
-const selectOpen = defineModel<string>('selectOpen', { default: '' })
-const selectClose = defineModel<string>('selectClose', { default: '' })
-const store = new StoreService()
-const tableData = ref<any>('')
 
 const errors = reactive({
   fullName: '',
@@ -140,237 +131,147 @@ const estabDropdownOptions = [
   { value: 'Hamburgueria', label: 'Hamburgueria' },
   { value: 'Pizzaria', label: 'Pizzaria' }
 ]
-
-const dayDropdownOptions = [
-  { value: 'Segunda-feira', label: 'Segunda-feira' },
-  { value: 'Terça-feira', label: 'Terça-feira' },
-  { value: 'Quarta-feira', label: 'Quarta-feira' },
-  { value: 'Quinta-feira', label: 'Quinta-feira' },
-  { value: 'Sexta-feira', label: 'Sexta-feira' },
-  { value: 'Sábado', label: 'Sábado' },
-  { value: 'Domingo', label: 'Domingo' }
-]
-
-const tabs = [
-  { name: 'tab1', label: 'Dados do restaurante' },
-  { name: 'tab2', label: 'Horário de funcionamento' }
-]
-
-const tableColumns = ['Dia', 'Horário de Abertura', 'Horário de Fechamento']
-
-const addOpeningHour = () => {
-  console.log(selectDay.value)
-  console.log(selectOpen.value)
-
-  const data = store.storage.get('openingHours') || ''
-  const dataObject = {
-    dayOfweek: selectDay.value,
-    open: selectOpen.value,
-    closed: selectClose.value
-  }
-  console.log(data)
-  if (data !== '') {
-    console.log('aqui')
-    const storeData = [...JSON.parse(data), dataObject]
-    tableData.value = storeData
-    store.storage.store('openingHours', JSON.stringify(storeData))
-  } else {
-    console.log('aqui2')
-
-    const storeData = [dataObject]
-    tableData.value = storeData
-    store.storage.store('openingHours', JSON.stringify(storeData))
-  }
-}
-
-onMounted(() => {
-  const info = store.storage.get('openingHours') || ''
-  tableData.value = info ? JSON.stringify(info) : ''
-})
 </script>
 <template>
   <div class="main-container">
-    <TabsComponent :tabs="tabs" :isTrue="canMoveToTab2">
-      <template #tab1>
-        <form>
-          <div v-if="!canMoveToTab2" class="error-message">
-            Por favor, preencha todos os campos obrigatórios antes de prosseguir.
-          </div>
-          <InputStyled
-            v-model="fullName"
-            id="fullName"
-            type="text"
-            width="100%"
-            height="2.8rem"
-            placeholder="Digite o nome do seu restaurante"
-            borderColor="transparent"
-            :error="errors.fullName"
-            :handleChange="handleFullName"
-          />
-          <div class="phone-cnpj">
-            <InputStyled
-              v-model="cnpj"
-              id="cnpj"
-              type="string"
-              width="24rem"
-              height="2.8rem"
-              placeholder="CNPJ do restaurante (apenas números)"
-              borderColor="transparent"
-              :error="errors.cnpj"
-              :handleChange="handleCnpj"
-              @input="handleCnpjInput"
-            />
-            <InputStyled
-              v-model="phoneNumber"
-              id="phoneNumber"
-              type="string"
-              width="24rem"
-              height="2.8rem"
-              placeholder="Telefone do restaurante (apenas números)"
-              borderColor="transparent"
-              :error="errors.phoneNumber"
-              :handleChange="handlePhoneNumber"
-              @input="handlePhoneInput"
-            />
-          </div>
-          <div class="cepSearch">
-            <InputStyled
-              v-model="cep"
-              id="cep"
-              type="number"
-              width="100%"
-              height="2.8rem"
-              placeholder="CEP (apenas números)"
-              borderColor="transparent"
-              :error="errors.cep"
-              :handleChange="handleCep"
-            />
-            <ButtonStyled
-              className="transparent-button-blue-text"
-              label="Pesquisar CEP"
-              width="8rem"
-              height="2.8rem"
-              @click="addressSearch"
-            />
-          </div>
+    <form>
+      <div v-if="!canMoveToTab2" class="error-message">
+        Por favor, preencha todos os campos obrigatórios antes de prosseguir.
+      </div>
+      <InputStyled
+        v-model="fullName"
+        id="fullName"
+        type="text"
+        width="100%"
+        height="2.8rem"
+        placeholder="Digite o nome do seu restaurante"
+        borderColor="transparent"
+        :error="errors.fullName"
+        :handleChange="handleFullName"
+      />
+      <div class="phone-cnpj">
+        <InputStyled
+          v-model="cnpj"
+          id="cnpj"
+          type="string"
+          width="24rem"
+          height="2.8rem"
+          placeholder="CNPJ do restaurante (apenas números)"
+          borderColor="transparent"
+          :error="errors.cnpj"
+          :handleChange="handleCnpj"
+          @input="handleCnpjInput"
+        />
+        <InputStyled
+          v-model="phoneNumber"
+          id="phoneNumber"
+          type="string"
+          width="24rem"
+          height="2.8rem"
+          placeholder="Telefone do restaurante (apenas números)"
+          borderColor="transparent"
+          :error="errors.phoneNumber"
+          :handleChange="handlePhoneNumber"
+          @input="handlePhoneInput"
+        />
+      </div>
+      <div class="cepSearch">
+        <InputStyled
+          v-model="cep"
+          id="cep"
+          type="number"
+          width="100%"
+          height="2.8rem"
+          placeholder="CEP (apenas números)"
+          borderColor="transparent"
+          :error="errors.cep"
+          :handleChange="handleCep"
+        />
+        <ButtonStyled
+          className="transparent-button-blue-text"
+          label="Pesquisar CEP"
+          width="8rem"
+          height="2.8rem"
+          @click="addressSearch"
+        />
+      </div>
 
-          <div class="address-content">
-            <InputStyled
-              v-model="state"
-              id="state"
-              type="text"
-              placeholder="Estado"
-              width="24rem"
-              height="2.8rem"
-              borderColor="transparent"
-              disabled
-            />
-            <InputStyled
-              v-model="city"
-              id="city"
-              type="text"
-              width="24rem"
-              height="2.8rem"
-              placeholder="Cidade"
-              borderColor="transparent"
-              disabled
-            />
-          </div>
-          <InputStyled
-            v-model="neighborhood"
-            id="neighborhood"
-            type="text"
-            width="100%"
-            height="2.8rem"
-            placeholder="Bairro"
-            borderColor="transparent"
-            disabled
-          />
-          <InputStyled
-            v-model="address"
-            id="address"
-            type="text"
-            width="100%"
-            height="2.8rem"
-            placeholder="Endereço"
-            borderColor="transparent"
-            disabled
-          />
-          <div class="phone-cnpj">
-            <InputStyled
-              v-model="numberAddress"
-              id="numberAddress"
-              type="number"
-              width="24rem"
-              height="2.8rem"
-              placeholder="Número"
-              borderColor="transparent"
-              :error="errors.numberAddress"
-              :handleChange="handleNumberAddress"
-            />
-            <InputStyled
-              v-model="complementAddress"
-              id="complementAddress"
-              type="text"
-              width="24rem"
-              height="2.8rem"
-              placeholder="Complemento (opcional)"
-              borderColor="transparent"
-              :handleChange="handleComplementAddress"
-            />
-          </div>
+      <div class="address-content">
+        <InputStyled
+          v-model="state"
+          id="state"
+          type="text"
+          placeholder="Estado"
+          width="24rem"
+          height="2.8rem"
+          borderColor="transparent"
+          disabled
+        />
+        <InputStyled
+          v-model="city"
+          id="city"
+          type="text"
+          width="24rem"
+          height="2.8rem"
+          placeholder="Cidade"
+          borderColor="transparent"
+          disabled
+        />
+      </div>
+      <InputStyled
+        v-model="neighborhood"
+        id="neighborhood"
+        type="text"
+        width="100%"
+        height="2.8rem"
+        placeholder="Bairro"
+        borderColor="transparent"
+        disabled
+      />
+      <InputStyled
+        v-model="address"
+        id="address"
+        type="text"
+        width="100%"
+        height="2.8rem"
+        placeholder="Endereço"
+        borderColor="transparent"
+        disabled
+      />
+      <div class="phone-cnpj">
+        <InputStyled
+          v-model="numberAddress"
+          id="numberAddress"
+          type="number"
+          width="24rem"
+          height="2.8rem"
+          placeholder="Número"
+          borderColor="transparent"
+          :error="errors.numberAddress"
+          :handleChange="handleNumberAddress"
+        />
+        <InputStyled
+          v-model="complementAddress"
+          id="complementAddress"
+          type="text"
+          width="24rem"
+          height="2.8rem"
+          placeholder="Complemento (opcional)"
+          borderColor="transparent"
+          :handleChange="handleComplementAddress"
+        />
+      </div>
 
-          <SelectStyled
-            v-model="establishment"
-            id="establishment"
-            label=""
-            typeOfSelect="Tipo de cozinha"
-            width="100%"
-            height="2.8rem"
-            :options="estabDropdownOptions"
-          />
-        </form>
-      </template>
-      <template #tab2>
-        <ContainerStyled width="100%" height="3.75rem" backgroundColor="var(--light_blue)">
-          <SelectStyled
-            v-model="selectDay"
-            id="day"
-            label=""
-            typeOfSelect="Dia da semana"
-            width="15rem"
-            height="2.8rem"
-            :options="dayDropdownOptions"
-          />
-          <SelectStyled
-            v-model="selectOpen"
-            id="day"
-            label=""
-            typeOfSelect="Dia da semana"
-            width="15rem"
-            height="2.8rem"
-            :options="dayDropdownOptions"
-          />
-          <SelectStyled
-            v-model="selectClose"
-            id="day"
-            label=""
-            typeOfSelect="Dia da semana"
-            width="15rem"
-            height="2.8rem"
-            :options="dayDropdownOptions"
-          />
-          <ButtonStyled
-            className="login-button"
-            label="Adicionar"
-            width="10rem"
-            height="2.8rem"
-            @click="addOpeningHour"
-          />
-        </ContainerStyled>
-        <TabelStyled :columns="tableColumns" :data="tableData" />
-      </template>
-    </TabsComponent>
+      <SelectStyled
+        v-model="establishment"
+        id="establishment"
+        label=""
+        typeOfSelect="Tipo de cozinha"
+        width="100%"
+        height="2.8rem"
+        :options="estabDropdownOptions"
+      />
+    </form>
   </div>
 </template>
 

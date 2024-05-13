@@ -5,6 +5,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import RememberPasswordView from '@/views/RememberPasswordView.vue'
 import WelcomeView from '@/views/WelcomeView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import { Auth } from '@/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,7 +18,8 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      meta: { requiresAuth: true },
     },
     {
       path: '/signIn',
@@ -37,9 +39,24 @@ const router = createRouter({
     {
       path: '/profile',
       name: 'profile',
-      component: ProfileView
+      component: ProfileView,
+      meta: { requiresAuth: true },
     }
   ]
 })
+router.beforeEach((to, from, next) => {
+  const auth = new Auth();
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!auth.isLoggedIn()) {
+      next('/signIn');
+    } else {
+      next();
+    }
+  } else if (auth.isLoggedIn()) {
+    next('/home');
+  } else {
+    next();
+  }
+});
 
 export default router

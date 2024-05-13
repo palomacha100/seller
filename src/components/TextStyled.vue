@@ -46,7 +46,7 @@ div {
   color: var(--dark-blue);
   font-weight: 700;
 }
-.grey-bold-text p {
+.gray-bold-text p {
   color: var(--dark-gray);
   font-weight: 700;
   font-size: 0.875rem;
@@ -57,5 +57,10 @@ div {
   color: var(--white);
   font-weight: 700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.subtitle {
+  color: var(--dark-gray);
+  font-size: 1rem;
 }
 </style>

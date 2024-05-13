@@ -1,7 +1,5 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useRouter } from 'vue-router'
-import { Auth } from '../auth'
 import ImageStyled from './ImageStyled.vue'
 import ButtonStyled from './ButtonStyled.vue'
 import TextStyled from './TextStyled.vue'
@@ -19,7 +17,7 @@ export default defineComponent({
     <div class="header-container">
       <ImageStyled
         imageUrl="../../images/logo.png"
-        altText="Logo com nome do app Link to Foodem azul"
+        altText="Logo com nome do app Link to Food em azul"
         width="7.5rem"
       />
       <nav>

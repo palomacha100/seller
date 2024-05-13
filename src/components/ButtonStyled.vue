@@ -37,9 +37,10 @@ button {
   background-color: var(--dark-blue);
   color: white;
   border: none;
-  :hover {
-    background-color: var(--hover-blue);
-  }
+}
+
+.login-button:hover {
+  background-color: var(--hover-blue);
 }
 
 .transparent-button-blue-text {

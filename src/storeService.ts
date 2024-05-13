@@ -23,23 +23,21 @@ class StoreService {
     return this.storage.get(key)
   }
 
-  async createStore(name: string, onSuccess: () => void, onFailure: () => void) {
-    const body = {
-      store: {
-        name: name
-      }
-    }
+  async createStore(name: string, image: File, onSuccess: () => void, onFailure: () => void) {
+    const formData = new FormData()
+    formData.append('store[image]', image)
+    formData.append('store[name]', name)
 
     const token = this.getFallback('token')
-
+    console.log(token)
+    console.log(formData)
     fetch(`${URL}/stores`, {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        "Accept": 'application/json',
+        "Authorization": `Bearer ${token}`
       },
-      body: JSON.stringify(body)
+      body: formData
     }).then((response) => {
       if (response.ok) {
         this.success(response, onSuccess)

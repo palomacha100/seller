@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { defineModel, computed, reactive } from 'vue'
+import { defineModel, reactive, onMounted, ref } from 'vue'
 import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
-
+import TextStyled from './TextStyled.vue'
+import { StoreService } from '@/storeService'
+import Swal from 'sweetalert2'
 const fullName = defineModel<string>('fullName', { default: '' })
 const cnpj = defineModel<string>('cnpj', { default: '' })
 const phoneNumber = defineModel<string>('phoneNumber')
@@ -15,6 +17,8 @@ const address = defineModel<string>('address', { default: '' })
 const numberAddress = defineModel<string>('numberAddress')
 const complementAddress = defineModel<string>('complementAddress', { default: '' })
 const establishment = defineModel<string>('establishment', { default: '' })
+
+const store = new StoreService()
 
 const errors = reactive({
   fullName: '',
@@ -67,12 +71,12 @@ const handleCep = (event: Event) => {
 const handleNumberAddress = (event: Event) => {
   errors.numberAddress = validateField(numberAddress.value, 1, undefined, 'numero')
   numberAddress.value = (event.target as HTMLInputElement).value
-  localStorage.setItem('numero', (event.target as HTMLInputElement).value)
+  localStorage.setItem('numberAddress', (event.target as HTMLInputElement).value)
 }
 
 const handleComplementAddress = (event: Event) => {
   complementAddress.value = (event.target as HTMLInputElement).value
-  localStorage.setItem('complemento', (event.target as HTMLInputElement).value)
+  localStorage.setItem('complementAddress', (event.target as HTMLInputElement).value)
 }
 
 const handleCnpjInput = (event: InputEvent) => {
@@ -89,7 +93,7 @@ const handlePhoneInput = (event: InputEvent) => {
   phoneNumber.value = newValue
 }
 
-const canMoveToTab2 = computed(() => {
+const canMoveToTab2 = () => {
   return (
     fullName.value !== '' &&
     cnpj.value !== undefined &&
@@ -101,7 +105,7 @@ const canMoveToTab2 = computed(() => {
     address.value !== '' &&
     numberAddress.value !== undefined
   )
-})
+}
 
 const addressSearch = (event: Event) => {
   event.preventDefault()
@@ -131,12 +135,82 @@ const estabDropdownOptions = [
   { value: 'Hamburgueria', label: 'Hamburgueria' },
   { value: 'Pizzaria', label: 'Pizzaria' }
 ]
+
+const getModelByName = {
+  fullName,
+  cnpj,
+  phoneNumber,
+  cep,
+  state,
+  city,
+  neighborhood,
+  address,
+  numberAddress,
+  complementAddress,
+  establishment
+}
+
+onMounted(() => {
+  const formData = [
+    'fullName',
+    'cnpj',
+    'phoneNumber',
+    'cep',
+    'state',
+    'city',
+    'neighborhood',
+    'address',
+    'numberAddress',
+    'complementAddress',
+    'establishment'
+  ]
+  formData.forEach((field) => {
+    const cnpjData = localStorage.getItem(field) || ''
+    const cnpjSeller = cnpjData ? cnpjData : null
+    if (cnpjSeller !== null) {
+      getModelByName[field].value = cnpjSeller
+    }
+  })
+})
+
+let image: File
+
+const imageUrl = ref('')
+
+const handleCreateStore = () => {
+  const boolean = canMoveToTab2()
+  if (boolean)
+    store.createStore(
+      fullName.value,
+      image,
+      () => Swal.fire('Loja criada com sucesso'),
+      () => Swal.fire('Erro ao cadastrar loja')
+    )
+}
+
+const handleImageChange = (event: Event) => {
+  const inputElement = event.target as HTMLInputElement
+  const file = inputElement.files ? inputElement.files[0] : null
+  if (file) {
+    image = file
+    imageUrl.value = URL.createObjectURL(file)
+  }
+}
 </script>
 <template>
   <div class="main-container">
     <form>
-      <div v-if="!canMoveToTab2" class="error-message">
-        Por favor, preencha todos os campos obrigatórios antes de prosseguir.
+      <div>
+        <div>
+          <img :src="imageUrl" />
+          <input type="file" @change="handleImageChange" />
+        </div>
+        <TextStyled
+          className="gray-bold-text"
+          width=" 800px"
+          height="2.8rem"
+          text="Por favor, preencha todos os campos obrigatórios antes de prosseguir"
+        />
       </div>
       <InputStyled
         v-model="fullName"
@@ -270,6 +344,14 @@ const estabDropdownOptions = [
         width="100%"
         height="2.8rem"
         :options="estabDropdownOptions"
+      />
+      <ButtonStyled
+        @click.prevent="handleCreateStore"
+        type="submit"
+        className="login-button"
+        label="Enviar"
+        width="22.5rem"
+        height="2.8rem"
       />
     </form>
   </div>

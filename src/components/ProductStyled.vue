@@ -230,13 +230,14 @@ form {
 }
 
 .product-image {
+  display: flex;
   background-image: url('../../images/background-image.png');
   width: 24rem;
-  height: 24rem;
+  height: 20rem;
   border-radius: 5px;
   margin: 5px 0;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
 }
 
 .img-content {
@@ -244,7 +245,6 @@ form {
   height: 100%;
   object-fit: cover;
   border-radius: 5px;
-  object-fit: cover;
 }
 
 textarea {

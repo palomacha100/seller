@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ width, height }">
+  <div class="select-container" :style="{ width, height }">
     <label for="id">{{ label }}</label>
     <select id="id" v-model="selectedOption" @change="handleSelect">
       <option value="" disabled hidden>{{ typeOfSelect }}</option>
@@ -38,6 +38,10 @@ const handleSelect = (event: Event) => {
 </script>
 
 <style scoped>
+div {
+  height: 5rem;
+}
+
 label {
   font-family: 'Poppins';
 }

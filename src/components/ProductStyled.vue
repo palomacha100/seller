@@ -56,16 +56,9 @@ const handlePhoneNumber = (event: Event) => {
   localStorage.setItem('phoneNumber', (event.target as HTMLInputElement).value)
 }
 
-const handleCnpjInput = (event: InputEvent) => {
-  const input = event.target as HTMLInputElement
-  const newValue = input.value.replace(/\D/g, '')
-  input.value = newValue
-  cnpj.value = newValue
-}
-
 const handlePhoneInput = (event: InputEvent) => {
   const input = event.target as HTMLInputElement
-  const newValue = input.value.replace(/\D/g, '')
+  const newValue = input.value.replace(/[^\d.,]/g, '')
   input.value = newValue
   phoneNumber.value = newValue
 }
@@ -131,13 +124,14 @@ const handleImageChange = (event: Event) => {
         text="Por favor, preencha todos os campos obrigatórios antes de prosseguir"
       />
       <div class="image-name-container">
-        <div>
+        <div class="image-styled">
           <div class="product-image">
-            <img :src="imageUrl" />
+            <img class="img-content" :src="imageUrl" v-if="imageUrl" />
           </div>
-          <input type="file" @change="handleImageChange" />
+          <input type="file" id="input-file" class="input-file" @change="handleImageChange" />
+          <label for="input-file" class="custom-button">Escolher imagem do produto</label>
         </div>
-        <div>
+        <div class="data-product">
           <InputStyled
             v-model="productName"
             id="productName"
@@ -155,44 +149,50 @@ const handleImageChange = (event: Event) => {
             label=""
             typeOfSelect="Categoria"
             width="100%"
+            :options="categoryDropdownOptions"
+          />
+          <InputStyled
+            v-model="price"
+            id="price"
+            type="string"
+            width="24rem"
             height="2.8rem"
+            placeholder="Preço do produto"
+            borderColor="transparent"
+            :error="errors.phoneNumber"
+            :handleChange="handlePhoneNumber"
+            @input="handlePhoneInput"
+          />
+          <textarea
+            v-model="cnpj"
+            id="cnpj"
+            type="text-area"
+            placeholder="Descrição do produto"
+            borderColor="transparent"
+            :error="errors.cnpj"
+            :handleChange="handleCnpj"
+            @input="handleCnpjInput"
+          ></textarea>
+          <SelectStyled
+            v-model="category"
+            id="category"
+            label=""
+            typeOfSelect="Esse prato serve quantas pessoas?"
+            width="100%"
             :options="categoryDropdownOptions"
           />
         </div>
       </div>
-      <div class="phone-cnpj">
-        <textarea
-          v-model="cnpj"
-          id="cnpj"
-          type="text-area"
-          placeholder="Descrição do produto"
-          borderColor="transparent"
-          :error="errors.cnpj"
-          :handleChange="handleCnpj"
-          @input="handleCnpjInput"
-        ></textarea>
-        <InputStyled
-          v-model="phoneNumber"
-          id="phoneNumber"
-          type="string"
-          width="24rem"
+      <div class="button-container">
+        <ButtonStyled
+          @click.prevent="handleCreateStore"
+          type="submit"
+          className="login-button"
+          label="Adicionar produto"
+          width="18rem"
           height="2.8rem"
-          placeholder="Telefone do restaurante (apenas números)"
-          borderColor="transparent"
-          :error="errors.phoneNumber"
-          :handleChange="handlePhoneNumber"
-          @input="handlePhoneInput"
         />
       </div>
-
-      <ButtonStyled
-        @click.prevent="handleCreateStore"
-        type="submit"
-        className="login-button"
-        label="Enviar"
-        width="22.5rem"
-        height="2.8rem"
-      />
     </form>
   </div>
 </template>
@@ -203,7 +203,7 @@ const handleImageChange = (event: Event) => {
   justify-content: center;
   background-color: rgba(237, 228, 161, 0.5);
   width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 
 form {
@@ -217,16 +217,34 @@ form {
 .image-name-container {
   display: flex;
   flex-direction: row;
-  gap: 10px;
   justify-content: space-between;
   align-items: center;
+  height: 450px;
+}
+
+.data-product {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 450px;
 }
 
 .product-image {
-  background-color: var(--white);
-  width: 120px;
-  height: 120px;
+  background-image: url('../../images/background-image.png');
+  width: 24rem;
+  height: 24rem;
   border-radius: 5px;
+  margin: 5px 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.img-content {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  object-fit: cover;
 }
 
 textarea {
@@ -235,20 +253,45 @@ textarea {
   border-color: transparent;
   border-radius: 5px;
   margin: 5px 0;
+  font-family: 'Poppins';
 }
 
-.phone-cnpj {
+.image-styled {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
-  height: auto;
-  justify-content: space-between;
-}
+  flex-direction: column;
 
-.address-content {
-  display: flex;
-  flex-direction: row;
+  align-items: center;
   gap: 10px;
-  justify-content: space-between;
+  width: 24rem;
+  height: 450px;
+}
+
+.input-file {
+  display: none;
+}
+
+.custom-button {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: transparent;
+  color: var(--dark-blue);
+  border: none;
+  border-radius: 5px;
+  font-size: 0.875rem;
+  font-family: 'Poppins';
+  font-weight: 700;
+}
+
+.custom-button:hover {
+  background-color: var(--hover-blue);
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 8rem;
 }
 </style>

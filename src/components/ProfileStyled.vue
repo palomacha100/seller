@@ -170,7 +170,7 @@ onMounted(() => {
     const storeData = localStorage.getItem(field) || ''
     const storeSeller = storeData ? storeData : null
     if (storeSeller !== null) {
-      getModelByName[field].value = storeSeller
+      getModelByName[field as keyof typeof getModelByName].value = storeSeller
     }
   })
   if (!address.value && !isStoreExists.value) {

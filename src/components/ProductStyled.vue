@@ -74,7 +74,7 @@ const handlePortion = (event: Event) => {
 
 
 const canMoveToTab2 = () => {
-  return productName.value !== '' && description.value !== undefined && price.value !== undefined
+  return productName.value !== ''  && price.value !== undefined && category.value !== undefined && portion.value !== undefined
 }
 
 const categoryDropdownOptions = [
@@ -93,16 +93,17 @@ const getModelByName = {
   productName,
   price,
   description,
-  category
+  category,
+  portion
 }
 
 onMounted(() => {
-  const formData = ['productName', 'price', 'description']
+  const formData = ['productName', 'price', 'description', 'category', 'portion']
   formData.forEach((field) => {
-    const cnpjData = localStorage.getItem(field) || ''
-    const cnpjSeller = cnpjData ? cnpjData : null
-    if (cnpjSeller !== null) {
-      getModelByName[field].value = cnpjSeller
+    const productData = localStorage.getItem(field) || ''
+    const infoProduct = productData ? productData : null
+    if (infoProduct !== null) {
+      getModelByName[field as keyof typeof getModelByName].value = productData
     }
   })
 })
@@ -111,14 +112,14 @@ let image: File
 
 const imageUrl = ref('')
 
-const handleCreateStore = () => {
+const handleCreateProduct = () => {
   const boolean = canMoveToTab2()
   if (boolean)
     store.createStore(
       productName.value,
       image,
-      () => Swal.fire('Loja criada com sucesso'),
-      () => Swal.fire('Erro ao cadastrar loja')
+      () => Swal.fire('Produto cadastrado com sucesso'),
+      () => Swal.fire('Erro ao cadastrar produto')
     )
 }
 
@@ -204,7 +205,7 @@ const handleImageChange = (event: Event) => {
       </div>
       <div class="button-container">
         <ButtonStyled
-          @click.prevent="handleCreateStore"
+          @click.prevent="handleCreateProduct"
           type="submit"
           className="login-button"
           label="Adicionar produto"

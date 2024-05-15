@@ -7,17 +7,16 @@ import TextStyled from './TextStyled.vue'
 import { StoreService } from '@/storeService'
 import Swal from 'sweetalert2'
 const productName = defineModel<string>('productName', { default: '' })
-const cnpj = defineModel<string>('cnpj', { default: '' })
-const phoneNumber = defineModel<string>('phoneNumber')
-
+const description = defineModel<string>('description', { default: '' })
+const price = defineModel<string>('price')
 const category = defineModel<string>('category', { default: '' })
 
 const store = new StoreService()
 
 const errors = reactive({
   productName: '',
-  cnpj: '',
-  phoneNumber: '',
+  description: '',
+  price: '',
   cep: '',
   numberAddress: ''
 })
@@ -25,6 +24,7 @@ const errors = reactive({
 const validateField = (
   value: any,
   minLength: number | undefined,
+  maxLength: number | undefined,
   exactLengths: number[] | undefined,
   campo: string
 ): string => {
@@ -35,36 +35,33 @@ const validateField = (
   if (exactLengths !== undefined && !exactLengths.includes(value.toString().length)) {
     return `Digite um campo de ${campo} válido (com ${exactLengths.join(' ou ')} caracteres)`
   }
+
+  if (maxLength !== undefined && value.toString().length > maxLength) {
+    return `O campo ${campo} não pode exceder ${maxLength} caracteres`
+  }
   return ''
 }
 
 const handleProductName = (event: Event) => {
   productName.value = (event.target as HTMLInputElement).value
-  errors.productName = validateField(productName.value, 3, undefined, 'nome')
-  localStorage.setItem('fullName', (event.target as HTMLInputElement).value)
+  errors.productName = validateField(productName.value, 3, undefined, undefined, 'produto')
+  localStorage.setItem('productName', (event.target as HTMLInputElement).value)
 }
 
-const handleCnpj = (event: Event) => {
-  errors.cnpj = validateField(cnpj.value, undefined, [14], 'CNPJ')
-  cnpj.value = (event.target as HTMLInputElement).value
-  localStorage.setItem('cnpj', (event.target as HTMLInputElement).value)
+const handleDescription = (event: Event) => {
+  description.value = (event.target as HTMLTextAreaElement).value
+  errors.description = validateField(description.value, 3, 100, undefined, 'descrição')
+  localStorage.setItem('description', description.value)
 }
 
-const handlePhoneNumber = (event: Event) => {
-  errors.phoneNumber = validateField(phoneNumber.value, undefined, [10, 11], 'telefone')
-  phoneNumber.value = (event.target as HTMLInputElement).value
-  localStorage.setItem('phoneNumber', (event.target as HTMLInputElement).value)
-}
-
-const handlePhoneInput = (event: InputEvent) => {
-  const input = event.target as HTMLInputElement
-  const newValue = input.value.replace(/[^\d.,]/g, '')
-  input.value = newValue
-  phoneNumber.value = newValue
+const handlePrice = (event: Event) => {
+  errors.price = validateField(price.value, 4, undefined, undefined, 'preço')
+  price.value = (event.target as HTMLInputElement).value
+  localStorage.setItem('price', (event.target as HTMLInputElement).value)
 }
 
 const canMoveToTab2 = () => {
-  return productName.value !== '' && cnpj.value !== undefined && phoneNumber.value !== undefined
+  return productName.value !== '' && description.value !== undefined && price.value !== undefined
 }
 
 const categoryDropdownOptions = [
@@ -74,13 +71,13 @@ const categoryDropdownOptions = [
 
 const getModelByName = {
   productName,
-  cnpj,
-  phoneNumber,
+  price,
+  description,
   category
 }
 
 onMounted(() => {
-  const formData = ['productName', 'cnpj', 'phoneNumber', 'establishment']
+  const formData = ['productName', 'price', 'description']
   formData.forEach((field) => {
     const cnpjData = localStorage.getItem(field) || ''
     const cnpjSeller = cnpjData ? cnpjData : null
@@ -159,20 +156,20 @@ const handleImageChange = (event: Event) => {
             height="2.8rem"
             placeholder="Preço do produto"
             borderColor="transparent"
-            :error="errors.phoneNumber"
-            :handleChange="handlePhoneNumber"
-            @input="handlePhoneInput"
+            :error="errors.price"
+            :handleChange="handlePrice"
           />
-          <textarea
-            v-model="cnpj"
-            id="cnpj"
-            type="text-area"
-            placeholder="Descrição do produto"
-            borderColor="transparent"
-            :error="errors.cnpj"
-            :handleChange="handleCnpj"
-            @input="handleCnpjInput"
-          ></textarea>
+          <div class="text-area-container">
+            <textarea
+              v-model="description"
+              id="description"
+              type="text-area"
+              placeholder="Descrição do produto"
+              :style="{ borderColor: errors.description ? 'var(--red)' : 'transparent' }"
+              :onInput="handleDescription"
+            ></textarea>
+            <span v-if="errors.description" class="error-message">{{ errors.description }}</span>
+          </div>
           <SelectStyled
             v-model="category"
             id="category"
@@ -254,6 +251,8 @@ textarea {
   border-radius: 5px;
   margin: 5px 0;
   font-family: 'Poppins';
+  font-size: 0.875rem;
+  padding: 5px;
 }
 
 .image-styled {
@@ -283,7 +282,7 @@ textarea {
 }
 
 .custom-button:hover {
-  background-color: var(--hover-blue);
+  background-color: var(--white);
 }
 
 .button-container {
@@ -292,6 +291,21 @@ textarea {
   justify-content: center;
   align-items: center;
   width: 100%;
+  height: 6rem;
+}
+
+span {
+  width: 24rem;
+  font-size: 0.75rem;
+  font-family: 'Poppins';
+  color: var(--red);
+  display: inline;
+  overflow: hidden;
+}
+
+.text-area-container {
+  display: flex;
+  flex-direction: column;
   height: 8rem;
 }
 </style>

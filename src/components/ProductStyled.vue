@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineModel, reactive, onMounted, ref } from 'vue'
+
 import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
@@ -10,6 +11,7 @@ const productName = defineModel<string>('productName', { default: '' })
 const description = defineModel<string>('description', { default: '' })
 const price = defineModel<string>('price')
 const category = defineModel<string>('category', { default: '' })
+const portion = defineModel<string>('portion', { default: '' })
 
 const store = new StoreService()
 
@@ -17,8 +19,8 @@ const errors = reactive({
   productName: '',
   description: '',
   price: '',
-  cep: '',
-  numberAddress: ''
+  category: '',
+  portion,
 })
 
 const validateField = (
@@ -50,7 +52,7 @@ const handleProductName = (event: Event) => {
 
 const handleDescription = (event: Event) => {
   description.value = (event.target as HTMLTextAreaElement).value
-  errors.description = validateField(description.value, 3, 100, undefined, 'descrição')
+  errors.description = validateField(description.value, 10, 100, undefined, 'descrição')
   localStorage.setItem('description', description.value)
 }
 
@@ -60,6 +62,17 @@ const handlePrice = (event: Event) => {
   localStorage.setItem('price', (event.target as HTMLInputElement).value)
 }
 
+const handleCategory = (event: Event) => {
+  category.value = (event.target as HTMLSelectElement).value
+  localStorage.setItem('category', category.value)
+}
+
+const handlePortion = (event: Event) => {
+  portion.value = (event.target as HTMLSelectElement).value
+  localStorage.setItem('portion', portion.value)
+}
+
+
 const canMoveToTab2 = () => {
   return productName.value !== '' && description.value !== undefined && price.value !== undefined
 }
@@ -67,6 +80,13 @@ const canMoveToTab2 = () => {
 const categoryDropdownOptions = [
   { value: 'Alimentos', label: 'Alimentos' },
   { value: 'Bebidas', label: 'Bebidas' }
+]
+
+const portionDropdownOptions = [
+  { value: '1 pessoa', label: '1 pessoa' },
+  { value: '2 pessoas', label: '2 pessoas' },
+  { value: '3 pessoas', label: '3 pessoas' },
+  { value: '4 pessoas', label: '4 pessoas' }
 ]
 
 const getModelByName = {
@@ -123,7 +143,7 @@ const handleImageChange = (event: Event) => {
       <div class="image-name-container">
         <div class="image-styled">
           <div class="product-image">
-            <img class="img-content" :src="imageUrl" v-if="imageUrl" />
+            <img class="img-content" :src="imageUrl" v-if="imageUrl" accept="image/*" id="imagePreview"/>
           </div>
           <input type="file" id="input-file" class="input-file" @change="handleImageChange" />
           <label for="input-file" class="custom-button">Escolher imagem do produto</label>
@@ -147,6 +167,7 @@ const handleImageChange = (event: Event) => {
             typeOfSelect="Categoria"
             width="100%"
             :options="categoryDropdownOptions"
+            :handleChange="handleCategory"
           />
           <InputStyled
             v-model="price"
@@ -171,12 +192,13 @@ const handleImageChange = (event: Event) => {
             <span v-if="errors.description" class="error-message">{{ errors.description }}</span>
           </div>
           <SelectStyled
-            v-model="category"
-            id="category"
+            v-model="portion"
+            id="portion"
             label=""
             typeOfSelect="Esse prato serve quantas pessoas?"
             width="100%"
-            :options="categoryDropdownOptions"
+            :options="portionDropdownOptions"
+            :handleChange="handlePortion"
           />
         </div>
       </div>

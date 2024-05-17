@@ -95,6 +95,11 @@ const handlePhoneInput = (event: InputEvent) => {
   phoneNumber.value = newValue
 }
 
+const handleEstablishment = (event: Event) => {
+  establishment.value = (event.target as HTMLSelectElement).value
+  localStorage.setItem('establishment', establishment.value)
+}
+
 const canMoveToTab2 = () => {
   return (
     fullName.value !== '' &&
@@ -184,9 +189,10 @@ const imageUrl = ref('')
 
 const handleCreateStore = () => {
   const boolean = canMoveToTab2()
+  console.log(establishment.value)
   if (boolean)
     store.createStore(
-      fullName.value,
+      getModelByName,
       image,
       () => Swal.fire('Loja criada com sucesso'),
       () => Swal.fire('Erro ao cadastrar loja')
@@ -350,6 +356,7 @@ const handleImageChange = (event: Event) => {
           width="100%"
           height="2.8rem"
           :options="estabDropdownOptions"
+          :handleChange="handleEstablishment"
         />
         <ButtonStyled
           @click.prevent="handleCreateStore"

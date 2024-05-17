@@ -31,17 +31,13 @@ const { id, options, width, height, handleChange } = defineProps({
   }
 })
 
-
-
 interface Option {
   value: string
   label: string
 }
 
 const selectedValue = ref<string>('')
-
 </script>
-
 
 <style scoped>
 div {

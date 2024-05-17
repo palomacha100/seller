@@ -14,28 +14,25 @@ class StoreService extends BaseService {
     }
   }
 
-  createStore(name: string, image: File, onSuccess: () => void, onFailure: () => void) {
+  async createStore(data: any, image: File, onSuccess: () => void, onFailure: () => void) {
     const formData = new FormData()
     formData.append('store[image]', image)
-    formData.append('store[name]', name)
-
-    const token = this.getFallback('token')
-    console.log(token)
-    console.log(formData)
-    fetch(`${URL}/stores`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: formData
-    }).then((response) => {
-      if (response.ok) {
-        this.success(response, onSuccess)
-      } else {
-        this.failure(response, onFailure)
-      }
-    })
+    formData.append('store[name]', data.fullName.value)
+    formData.append('store[cnpj]', data.cnpj.value)
+    formData.append('store[phonenumber]', data.phoneNumber.value)
+    formData.append('store[cep]', data.cep.value)
+    formData.append('store[state]', data.state.value)
+    formData.append('store[city]', data.city.value)
+    formData.append('store[neighborhood]', data.neighborhood.value)
+    formData.append('store[address]', data.address.value)
+    formData.append('store[numberaddress]', data.numberAddress.value)
+    formData.append('store[establishment]', data.establishment.value)
+    const response = await this.create('stores', formData)
+    if (response.ok) {
+      this.success(response, onSuccess)
+    } else {
+      this.failure(response, onFailure)
+    }
   }
   updateStore(id: number, name: string, onSuccess: () => void, onFailure: () => void) {
     const body = {

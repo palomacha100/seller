@@ -5,7 +5,7 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
 import TextStyled from './TextStyled.vue'
-import { StoreService } from '@/storeService'
+import { StoreService } from '@/api/storeService'
 import Swal from 'sweetalert2'
 const productName = defineModel<string>('productName', { default: '' })
 const description = defineModel<string>('description', { default: '' })
@@ -20,7 +20,7 @@ const errors = reactive({
   description: '',
   price: '',
   category: '',
-  portion,
+  portion
 })
 
 const validateField = (
@@ -72,9 +72,13 @@ const handlePortion = (event: Event) => {
   localStorage.setItem('portion', portion.value)
 }
 
-
 const canMoveToTab2 = () => {
-  return productName.value !== ''  && price.value !== undefined && category.value !== undefined && portion.value !== undefined
+  return (
+    productName.value !== '' &&
+    price.value !== undefined &&
+    category.value !== undefined &&
+    portion.value !== undefined
+  )
 }
 
 const categoryDropdownOptions = [
@@ -114,6 +118,7 @@ const imageUrl = ref('')
 
 const handleCreateProduct = () => {
   const boolean = canMoveToTab2()
+  console.log(category.value)
   if (boolean)
     store.createStore(
       productName.value,
@@ -144,7 +149,13 @@ const handleImageChange = (event: Event) => {
       <div class="image-name-container">
         <div class="image-styled">
           <div class="product-image">
-            <img class="img-content" :src="imageUrl" v-if="imageUrl" accept="image/*" id="imagePreview"/>
+            <img
+              class="img-content"
+              :src="imageUrl"
+              v-if="imageUrl"
+              accept="image/*"
+              id="imagePreview"
+            />
           </div>
           <input type="file" id="input-file" class="input-file" @change="handleImageChange" />
           <label for="input-file" class="custom-button">Escolher imagem do produto</label>

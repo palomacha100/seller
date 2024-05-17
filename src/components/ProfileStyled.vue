@@ -189,7 +189,6 @@ const imageUrl = ref('')
 
 const handleCreateStore = () => {
   const boolean = canMoveToTab2()
-  console.log(establishment.value)
   if (boolean)
     store.createStore(
       getModelByName,

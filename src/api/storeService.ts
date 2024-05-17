@@ -1,4 +1,4 @@
-import { createStorage, type SimpleStorage } from './storage'
+import { createStorage, type SimpleStorage } from '@/utils/storage'
 
 const URL = import.meta.env.VITE_API_URL
 
@@ -23,6 +23,24 @@ class StoreService {
     return this.storage.get(key)
   }
 
+  getStores(onSuccess: () => void, onFailure: () => void) {
+    const token = this.getFallback('token')
+    fetch(`${URL}/stores`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    }).then((response) => {
+      if (response.ok) {
+        this.success(response, onSuccess)
+      } else {
+        this.failure(response, onFailure)
+      }
+    })
+  }
+
   async createStore(name: string, image: File, onSuccess: () => void, onFailure: () => void) {
     const formData = new FormData()
     formData.append('store[image]', image)
@@ -34,8 +52,8 @@ class StoreService {
     fetch(`${URL}/stores`, {
       method: 'POST',
       headers: {
-        "Accept": 'application/json',
-        "Authorization": `Bearer ${token}`
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`
       },
       body: formData
     }).then((response) => {

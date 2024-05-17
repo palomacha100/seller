@@ -4,7 +4,7 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
 import TextStyled from './TextStyled.vue'
-import { StoreService } from '@/storeService'
+import { StoreService } from '@/api/storeService'
 import Swal from 'sweetalert2'
 
 const fullName = defineModel<string>('fullName', { default: '' })

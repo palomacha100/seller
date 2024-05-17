@@ -9,6 +9,19 @@ abstract class BaseService {
     this.storage = createStorage(persistent)
   }
 
+  async getAll(path: string): Promise<Response> {
+    const token = this.getFallback('token')
+    const response = await fetch(`${this.apiUrl}/${path}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    })
+    return response
+  }
+
   getFallback(key: string): string | null {
     return this.storage.get(key)
   }

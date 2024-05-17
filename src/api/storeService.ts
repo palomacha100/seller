@@ -5,22 +5,13 @@ class StoreService extends BaseService {
     super()
   }
 
-  getStores(onSuccess: () => void, onFailure: () => void) {
-    const token = this.getFallback('token')
-    fetch(`${URL}/stores`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    }).then((response) => {
-      if (response.ok) {
-        this.success(response, onSuccess)
-      } else {
-        this.failure(response, onFailure)
-      }
-    })
+  async getStores(onSuccess: () => void, onFailure: () => void) {
+    const response = await this.getAll('stores')
+    if (response.ok) {
+      this.success(response, onSuccess)
+    } else {
+      this.failure(response, onFailure)
+    }
   }
 
   createStore(name: string, image: File, onSuccess: () => void, onFailure: () => void) {

@@ -65,23 +65,13 @@ class StoreService extends BaseService {
     }
   }
 
-  deleteStore(id: number, onSuccess: () => void, onFailure: () => void) {
-    const token = this.getFallback('token')
-
-    fetch(`${URL}/stores/${id}`, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    }).then((response) => {
-      if (response.ok) {
-        this.success(response, onSuccess)
-      } else {
-        this.failure(response, onFailure)
-      }
-    })
+  async deleteStore(id: number, onSuccess: () => void, onFailure: () => void) {
+    const response = await this.delete(id, 'stores')
+    if (response.ok) {
+      onSuccess()
+    } else {
+      this.failure(response, onFailure)
+    }
   }
 
   failure(response: Response, onFailure: () => void) {
@@ -94,5 +84,3 @@ class StoreService extends BaseService {
 }
 
 export { StoreService }
-
-// import { StoreService } from '../../utils/storeService'

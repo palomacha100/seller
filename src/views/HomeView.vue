@@ -1,25 +1,29 @@
 <script setup lang="ts">
-import TitleStyled from '@/components/TitleStyled.vue'
-import TextStyled from '@/components/TextStyled.vue'
+import { ref } from 'vue'
+import { Auth } from '../auth'
+import { useRouter } from 'vue-router';
+const auth = new Auth()
+const isLoggedIn = ref(auth.isLoggedIn())
+const currentUser = ref(auth.currentUser())
+
+const route = useRouter()
+
+const signOut = () => {
+  auth.signOut(() => {
+    isLoggedIn.value = auth.isLoggedIn()
+    currentUser.value = auth.currentUser()
+    route.push('/signIn')
+  })
+}
 </script>
 
 <template>
   <main>
-    <TitleStyled title="Testando" />
-    <TextStyled className="gray-text" text="admin@example.com" width="22.5rem" height="1rem" />
-    <TextStyled
-      className="red-text"
-      text="Email ou senha incorretos. Confira-os."
-      width="22.5rem"
-      height="1rem"
-    />
-    <TextStyled className="white-bold-text" text="Entrar" width="22.5rem" height="1rem" />
-    <TextStyled className="blue-bold-text" text="Esqueceu a senha?" width="22.5rem" height="1rem" />
-    <TextStyled
-      className="grey-bold-text"
-      text="Não tem uma conta?"
-      width="22.5rem"
-      height="1rem"
-    />
+    <h3>Olá, {{ currentUser && currentUser.email }}</h3>
+
+    <br />
+    <nav>
+      <a @click="signOut">Sair</a>
+    </nav>
   </main>
 </template>

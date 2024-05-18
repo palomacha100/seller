@@ -2,8 +2,8 @@
 import { defineProps } from 'vue'
 defineProps<{
   text: string
-  width: string
-  height: string
+  width?: string
+  height?: string
   className: string
 }>()
 </script>
@@ -15,13 +15,20 @@ defineProps<{
 </template>
 
 <style scoped>
+div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 .text-container {
   display: flex;
   align-items: center;
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 .gray-text p {
   color: var(--dark-gray);
+  font-size: 0.875rem;
 }
 .red-text p {
   color: var(--red);
@@ -39,8 +46,21 @@ defineProps<{
   color: var(--dark-blue);
   font-weight: 700;
 }
-.grey-bold-text p {
+.gray-bold-text p {
   color: var(--dark-gray);
   font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.main-text {
+  font-size: 2rem;
+  color: var(--white);
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.subtitle {
+  color: var(--dark-gray);
+  font-size: 1rem;
 }
 </style>

@@ -12,7 +12,6 @@ const description = defineModel<string>('description', { default: '' })
 const price = defineModel<string>('price')
 const category = defineModel<string>('category', { default: '' })
 const portion = defineModel<string>('portion', { default: '' })
-
 const product = new ProductService()
 
 const errors = reactive({

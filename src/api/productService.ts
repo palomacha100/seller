@@ -63,6 +63,20 @@ class ProductService extends BaseService {
     }
   }
 
+  async deleteProduct(
+    idStore: number,
+    idProduct: number,
+    onSuccess: () => void,
+    onFailure: () => void
+  ) {
+    const response = await this.delete(idProduct, `stores/${idStore}/products`)
+    if (response.ok) {
+      onSuccess()
+    } else {
+      this.failure(response, onFailure)
+    }
+  }
+
   failure(response: Response, onFailure: () => void) {
     onFailure()
   }

@@ -5,7 +5,7 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
 import TextStyled from './TextStyled.vue'
-import { StoreService } from '@/api/storeService'
+import { ProductService } from '@/api/productService'
 import Swal from 'sweetalert2'
 const productName = defineModel<string>('productName', { default: '' })
 const description = defineModel<string>('description', { default: '' })
@@ -13,7 +13,7 @@ const price = defineModel<string>('price')
 const category = defineModel<string>('category', { default: '' })
 const portion = defineModel<string>('portion', { default: '' })
 
-const store = new StoreService()
+const product = new ProductService()
 
 const errors = reactive({
   productName: '',
@@ -118,10 +118,19 @@ const imageUrl = ref('')
 
 const handleCreateProduct = () => {
   const boolean = canMoveToTab2()
-  console.log(category.value)
+  const data = {
+    title: productName,
+    description,
+    price,
+    category,
+    portion
+  }
+  const store = localStorage.getItem('store') || ''
+  const storeParse = store !== '' ? JSON.parse(store) : null
   if (boolean)
-    store.createStore(
-      productName.value,
+    product.createProduct(
+      storeParse.id,
+      data,
       image,
       () => Swal.fire('Produto cadastrado com sucesso'),
       () => Swal.fire('Erro ao cadastrar produto')

@@ -49,36 +49,30 @@ const validateField = (
 const handleFullName = (event: Event) => {
   fullName.value = (event.target as HTMLInputElement).value
   errors.fullName = validateField(fullName.value, 3, undefined, 'nome')
-  localStorage.setItem('fullName', (event.target as HTMLInputElement).value)
 }
 
 const handleCnpj = (event: Event) => {
   errors.cnpj = validateField(cnpj.value, undefined, [14], 'CNPJ')
   cnpj.value = (event.target as HTMLInputElement).value
-  localStorage.setItem('cnpj', (event.target as HTMLInputElement).value)
 }
 
 const handlePhoneNumber = (event: Event) => {
   errors.phoneNumber = validateField(phoneNumber.value, undefined, [10, 11], 'telefone')
   phoneNumber.value = (event.target as HTMLInputElement).value
-  localStorage.setItem('phoneNumber', (event.target as HTMLInputElement).value)
 }
 
 const handleCep = (event: Event) => {
   errors.cep = validateField(cep.value, undefined, [8], 'telefone')
   cep.value = (event.target as HTMLInputElement).value
-  localStorage.setItem('cep', (event.target as HTMLInputElement).value)
 }
 
 const handleNumberAddress = (event: Event) => {
   errors.numberAddress = validateField(numberAddress.value, 1, undefined, 'numero')
   numberAddress.value = (event.target as HTMLInputElement).value
-  localStorage.setItem('numberAddress', (event.target as HTMLInputElement).value)
 }
 
 const handleComplementAddress = (event: Event) => {
   complementAddress.value = (event.target as HTMLInputElement).value
-  localStorage.setItem('complementAddress', (event.target as HTMLInputElement).value)
 }
 
 const handleCnpjInput = (event: InputEvent) => {
@@ -97,7 +91,6 @@ const handlePhoneInput = (event: InputEvent) => {
 
 const handleEstablishment = (event: Event) => {
   establishment.value = (event.target as HTMLSelectElement).value
-  localStorage.setItem('establishment', establishment.value)
 }
 
 const canMoveToTab2 = () => {
@@ -171,6 +164,7 @@ onMounted(() => {
     'complementAddress',
     'establishment'
   ]
+
   formData.forEach((field) => {
     const storeData = localStorage.getItem(field) || ''
     const storeSeller = storeData ? storeData : null

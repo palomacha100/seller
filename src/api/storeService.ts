@@ -31,7 +31,7 @@ class StoreService extends BaseService {
     formData.append('store[establishment]', data.establishment.value)
     const response = await this.create('stores', formData)
     if (response.ok) {
-      this.success(response, onSuccess)
+      this.success(response, onSuccess, 'generate')
     } else {
       this.failure(response, onFailure)
     }
@@ -59,7 +59,7 @@ class StoreService extends BaseService {
     formData.append('store[establishment]', data.establishment.value)
     const response = await this.update(id, 'stores', formData)
     if (response.ok) {
-      this.success(response, onSuccess)
+      this.success(response, onSuccess, 'generate')
     } else {
       this.failure(response, onFailure)
     }
@@ -78,8 +78,27 @@ class StoreService extends BaseService {
     onFailure()
   }
 
-  success(response: Response, onSuccess: () => void) {
+  success(response: Response, onSuccess: () => void, action = '') {
     onSuccess()
+    response.json().then((json) => {
+      if (action === 'generate') {
+        const store = {
+          id: json.id,
+          src: `${this.apiUrl}${json.image_url}`,
+          name: json.name,
+          cnpj: json.cnpj,
+          phonenumber: json.phonenumber,
+          cep: json.cep,
+          state: json.state,
+          city: json.city,
+          address: json.address,
+          neighborhood: json.neighborhood,
+          establishment: json.establishment,
+          complementaddress: json.complementaddress
+        }
+        this.storage.store('store', JSON.stringify(store))
+      }
+    })
   }
 }
 

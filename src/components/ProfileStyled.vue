@@ -191,13 +191,23 @@ const imageUrl = ref('')
 
 const handleCreateStore = () => {
   const boolean = canMoveToTab2()
-  console.log(establishment.value)
   if (boolean)
     store.createStore(
       getModelByName,
       image,
       () => Swal.fire('Loja criada com sucesso'),
       () => Swal.fire('Erro ao cadastrar loja')
+    )
+}
+
+const handleUpdateStore = () => {
+  const boolean = canMoveToTab2()
+  if (boolean)
+    store.updateStore(
+      getModelByName,
+      image,
+      () => Swal.fire('Loja atualizada com sucesso'),
+      () => Swal.fire('Erro ao atualizar loja')
     )
 }
 
@@ -361,10 +371,10 @@ const handleImageChange = (event: Event) => {
           :handleChange="handleEstablishment"
         />
         <ButtonStyled
-          @click.prevent="handleCreateStore"
+          @click.prevent="isEditing ? handleUpdateStore() : handleCreateStore()"
           type="submit"
           className="login-button"
-          label="Enviar"
+          :label="isEditing ? 'Atualizar' : 'Enviar'"
           width="22.5rem"
           height="2.8rem"
         />
@@ -427,6 +437,7 @@ form {
   flex-direction: column;
   margin: auto;
   width: 800px;
+  height: 100vh;
 }
 
 .profile {

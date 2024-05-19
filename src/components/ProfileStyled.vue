@@ -161,6 +161,7 @@ const getModelByName = {
 
 onMounted(() => {
   const formData = [
+    'image',
     'fullName',
     'cnpj',
     'phoneNumber',
@@ -202,13 +203,23 @@ const handleCreateStore = () => {
 
 const handleUpdateStore = () => {
   const boolean = canMoveToTab2()
-  if (boolean)
+  const getId = store.storage.get('store') || ''
+  const parse = getId ? JSON.parse(getId) : ''
+  if (boolean) {
     store.updateStore(
+      parse.id,
       getModelByName,
       image,
-      () => Swal.fire('Loja atualizada com sucesso'),
+      () => {
+        const getId = store.storage.get('store') || ''
+        const parse = getId ? JSON.parse(getId) : ''
+        imageUrl.value = parse.src
+        isEditing.value = false
+        Swal.fire('Loja atualizada com sucesso')
+      },
       () => Swal.fire('Erro ao atualizar loja')
     )
+  }
 }
 
 const handleImageChange = (event: Event) => {
@@ -218,6 +229,13 @@ const handleImageChange = (event: Event) => {
     image = file
     imageUrl.value = URL.createObjectURL(file)
   }
+}
+
+const handleEdit = () => {
+  isEditing.value = true
+  const getId = store.storage.get('store') || ''
+  const parse = getId ? JSON.parse(getId) : ''
+  imageUrl.value = parse.src
 }
 </script>
 <template>
@@ -395,6 +413,17 @@ const handleImageChange = (event: Event) => {
   <template v-else>
     <div class="main-container">
       <div class="profile">
+        <div class="image-styled">
+          <div class="product-image">
+            <img
+              class="img-content"
+              :src="imageUrl"
+              v-if="imageUrl"
+              accept="image/*"
+              id="imagePreview"
+            />
+          </div>
+        </div>
         <TitleStyled :title="`${fullName}`" />
         <TextStyled className="gray-text" width=" 800px" height="2.5rem" :text="`CNPJ: ${cnpj}`" />
         <TextStyled
@@ -421,7 +450,7 @@ const handleImageChange = (event: Event) => {
           :text="`${establishment}`"
         />
         <ButtonStyled
-          @click="isEditing = true"
+          @click="handleEdit"
           type="submit"
           className="login-button"
           label="Editar"

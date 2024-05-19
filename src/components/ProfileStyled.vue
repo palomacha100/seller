@@ -4,6 +4,7 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
 import TextStyled from './TextStyled.vue'
+import TitleStyled from './TitleStyled.vue'
 import { StoreService } from '@/api/storeService'
 import Swal from 'sweetalert2'
 
@@ -19,6 +20,7 @@ const numberAddress = defineModel<string>('numberAddress')
 const complementAddress = defineModel<string>('complementAddress', { default: '' })
 const establishment = defineModel<string>('establishment', { default: '' })
 const isStoreExists = ref(false)
+const isEditing = ref(false)
 
 const store = new StoreService()
 
@@ -209,7 +211,7 @@ const handleImageChange = (event: Event) => {
 }
 </script>
 <template>
-  <template v-if="isStoreExists">
+  <template v-if="isStoreExists || isEditing">
     <div class="main-container">
       <form>
         <div>
@@ -370,8 +372,42 @@ const handleImageChange = (event: Event) => {
     </div>
   </template>
   <template v-else>
-    <div>
-      <p>{{ address }}</p>
+    <div class="main-container">
+      <div class="profile">
+        <TitleStyled :title="`${fullName}`" />
+        <TextStyled className="gray-text" width=" 800px" height="2.5rem" :text="`CNPJ: ${cnpj}`" />
+        <TextStyled
+          className="gray-text"
+          width=" 800px"
+          height="2.5rem"
+          :text="`Telefone: ${phoneNumber}`"
+        />
+        <TextStyled
+          className="gray-text"
+          width=" 800px"
+          height="2.5rem"
+          :text="`Endereço: ${address}, ${numberAddress}, ${complementAddress}, ${neighborhood}`"
+        />
+        <TextStyled
+          className="gray-text"
+          height="2.5rem"
+          :text="`CEP: ${cep} - ${city} - ${state}`"
+        />
+        <TextStyled
+          className="gray-text"
+          width=" 800px"
+          height="2.5rem"
+          :text="`${establishment}`"
+        />
+        <ButtonStyled
+          @click="isEditing = true"
+          type="submit"
+          className="login-button"
+          label="Editar"
+          width="20rem"
+          height="2.8rem"
+        />
+      </div>
     </div>
   </template>
 </template>
@@ -382,7 +418,7 @@ const handleImageChange = (event: Event) => {
   justify-content: center;
   background-color: rgba(237, 228, 161, 0.5);
   width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 
 form {
@@ -391,6 +427,18 @@ form {
   flex-direction: column;
   margin: auto;
   width: 800px;
+}
+
+.profile {
+  display: flex;
+  background-color: var(--white);
+  justify-content: center;
+  flex-direction: column;
+  margin: auto;
+  width: 800px;
+  height: 400px;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 .phone-cnpj {

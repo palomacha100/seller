@@ -16,7 +16,9 @@ class StoreService extends BaseService {
 
   async createStore(data: any, image: File, onSuccess: () => void, onFailure: () => void) {
     const formData = new FormData()
-    formData.append('store[image]', image)
+    if (image) {
+      formData.append('store[image]', image)
+    }
     formData.append('store[name]', data.fullName.value)
     formData.append('store[cnpj]', data.cnpj.value)
     formData.append('store[phonenumber]', data.phoneNumber.value)
@@ -29,63 +31,75 @@ class StoreService extends BaseService {
     formData.append('store[establishment]', data.establishment.value)
     const response = await this.create('stores', formData)
     if (response.ok) {
-      this.success(response, onSuccess)
+      this.success(response, onSuccess, 'generate')
     } else {
       this.failure(response, onFailure)
     }
   }
-  updateStore(id: number, name: string, onSuccess: () => void, onFailure: () => void) {
-    const body = {
-      store: {
-        name: name
-      }
+  async updateStore(
+    id: number,
+    data: any,
+    image: File | string | null,
+    onSuccess: () => void,
+    onFailure: () => void
+  ) {
+    const formData = new FormData()
+    if (image) {
+      formData.append('store[image]', image)
     }
-    const token = this.getFallback('token')
-
-    fetch(`${URL}/stores/${id}`, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(body)
-    }).then((response) => {
-      if (response.ok) {
-        this.success(response, onSuccess)
-      } else {
-        this.failure(response, onFailure)
-      }
-    })
+    formData.append('store[name]', data.fullName.value)
+    formData.append('store[cnpj]', data.cnpj.value)
+    formData.append('store[phonenumber]', data.phoneNumber.value)
+    formData.append('store[cep]', data.cep.value)
+    formData.append('store[state]', data.state.value)
+    formData.append('store[city]', data.city.value)
+    formData.append('store[neighborhood]', data.neighborhood.value)
+    formData.append('store[address]', data.address.value)
+    formData.append('store[numberaddress]', data.numberAddress.value)
+    formData.append('store[establishment]', data.establishment.value)
+    const response = await this.update(id, 'stores', formData)
+    if (response.ok) {
+      this.success(response, onSuccess, 'generate')
+    } else {
+      this.failure(response, onFailure)
+    }
   }
-  deleteStore(id: number, onSuccess: () => void, onFailure: () => void) {
-    const token = this.getFallback('token')
 
-    fetch(`${URL}/stores/${id}`, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    }).then((response) => {
-      if (response.ok) {
-        this.success(response, onSuccess)
-      } else {
-        this.failure(response, onFailure)
-      }
-    })
+  async deleteStore(id: number, onSuccess: () => void, onFailure: () => void) {
+    const response = await this.delete(id, 'stores')
+    if (response.ok) {
+      onSuccess()
+    } else {
+      this.failure(response, onFailure)
+    }
   }
 
   failure(response: Response, onFailure: () => void) {
     onFailure()
   }
 
-  success(response: Response, onSuccess: () => void) {
+  success(response: Response, onSuccess: () => void, action = '') {
     onSuccess()
+    response.json().then((json) => {
+      if (action === 'generate') {
+        const store = {
+          id: json.id,
+          src: `${this.apiUrl}${json.image_url}`,
+          name: json.name,
+          cnpj: json.cnpj,
+          phonenumber: json.phonenumber,
+          cep: json.cep,
+          state: json.state,
+          city: json.city,
+          address: json.address,
+          neighborhood: json.neighborhood,
+          establishment: json.establishment,
+          complementaddress: json.complementaddress
+        }
+        this.storage.store('store', JSON.stringify(store))
+      }
+    })
   }
 }
 
 export { StoreService }
-
-// import { StoreService } from '../../utils/storeService'

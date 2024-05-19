@@ -225,10 +225,6 @@ const handleImageChange = (event: Event) => {
     <div class="main-container">
       <form>
         <div>
-          <div>
-            <img :src="imageUrl" />
-            <input type="file" @change="handleImageChange" />
-          </div>
           <TextStyled
             className="gray-bold-text"
             width=" 800px"
@@ -236,6 +232,21 @@ const handleImageChange = (event: Event) => {
             text="Por favor, preencha todos os campos obrigatórios antes de prosseguir"
           />
         </div>
+
+        <div class="image-styled">
+          <div class="product-image">
+            <img
+              class="img-content"
+              :src="imageUrl"
+              v-if="imageUrl"
+              accept="image/*"
+              id="imagePreview"
+            />
+          </div>
+          <input type="file" id="input-file" class="input-file" @change="handleImageChange" />
+          <label for="input-file" class="custom-button">Escolher imagem do produto</label>
+        </div>
+
         <InputStyled
           v-model="fullName"
           id="fullName"

@@ -260,24 +260,6 @@ form {
   height: 450px;
 }
 
-.product-image {
-  display: flex;
-  background-image: url('../../images/background-image.png');
-  width: 24rem;
-  height: 20rem;
-  border-radius: 5px;
-  margin: 5px 0;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
-.img-content {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
 textarea {
   width: 24rem;
   height: 5rem;
@@ -287,36 +269,6 @@ textarea {
   font-family: 'Poppins';
   font-size: 0.875rem;
   padding: 5px;
-}
-
-.image-styled {
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-  gap: 10px;
-  width: 24rem;
-  height: 450px;
-}
-
-.input-file {
-  display: none;
-}
-
-.custom-button {
-  padding: 8px 16px;
-  cursor: pointer;
-  background-color: transparent;
-  color: var(--dark-blue);
-  border: none;
-  border-radius: 5px;
-  font-size: 0.875rem;
-  font-family: 'Poppins';
-  font-weight: 700;
-}
-
-.custom-button:hover {
-  background-color: var(--white);
 }
 
 .button-container {
@@ -341,5 +293,61 @@ span {
   display: flex;
   flex-direction: column;
   height: 8rem;
+}
+</style>
+
+<style>
+.img-content {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.product-image {
+  display: flex;
+  background-image: url('../../images/background-image.png');
+  width: 24rem;
+  height: 20rem;
+  border-radius: 5px;
+  margin: 5px 0;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.img-content {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.custom-button:hover {
+  background-color: var(--white);
+}
+
+.custom-button {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: transparent;
+  color: var(--dark-blue);
+  border: none;
+  border-radius: 5px;
+  font-size: 0.875rem;
+  font-family: 'Poppins';
+  font-weight: 700;
+}
+
+.input-file {
+  display: none;
+}
+
+.image-styled {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 24rem;
+  height: 450px;
 }
 </style>

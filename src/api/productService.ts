@@ -81,8 +81,23 @@ class ProductService extends BaseService {
     onFailure()
   }
 
-  success(response: Response, onSuccess: () => void) {
+  success(response: Response, onSuccess: () => void, action = 'generate') {
     onSuccess()
+    response.json().then((json) => {
+      console.log(json)
+      if (action === 'generate') {
+        const product = {
+          id: json.id,
+          src: `${this.apiUrl}${json.image_url}`,
+          productName: json.title,
+          price: json.price,
+          description: json.description,
+          category: json.category,
+          portion: json.portion
+        }
+        this.storage.store('product', JSON.stringify(product))
+      }
+    })
   }
 }
 

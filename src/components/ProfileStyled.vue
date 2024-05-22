@@ -131,7 +131,7 @@ const addressSearch = (event: Event) => {
         localStorage.setItem('city', city.value)
         localStorage.setItem('address', address.value)
       } else {
-        console.error('CEP não encontrado.')
+        console.error('CEP não encontrado.'), () => Swal.fire('CEP não encontrado')
       }
     })
     .catch((error) => {
@@ -161,7 +161,6 @@ const getModelByName = {
 
 onMounted(() => {
   const formData = [
-    'image',
     'fullName',
     'cnpj',
     'phoneNumber',
@@ -181,6 +180,11 @@ onMounted(() => {
       getModelByName[field as keyof typeof getModelByName].value = storeSeller
     }
   })
+  const storeData = localStorage.getItem('store') || ''
+  const storeSeller = storeData ? storeData : null
+  if (storeSeller !== null) {
+    imageUrl.value = JSON.parse(storeSeller).src
+  }
   if (!address.value && !isStoreExists.value) {
     isStoreExists.value = true
   }
@@ -424,39 +428,47 @@ const handleEdit = () => {
             />
           </div>
         </div>
-        <TitleStyled :title="`${fullName}`" />
-        <TextStyled className="gray-text" width=" 800px" height="2.5rem" :text="`CNPJ: ${cnpj}`" />
-        <TextStyled
-          className="gray-text"
-          width=" 800px"
-          height="2.5rem"
-          :text="`Telefone: ${phoneNumber}`"
-        />
-        <TextStyled
-          className="gray-text"
-          width=" 800px"
-          height="2.5rem"
-          :text="`Endereço: ${address}, ${numberAddress}, ${complementAddress}, ${neighborhood}`"
-        />
-        <TextStyled
-          className="gray-text"
-          height="2.5rem"
-          :text="`CEP: ${cep} - ${city} - ${state}`"
-        />
-        <TextStyled
-          className="gray-text"
-          width=" 800px"
-          height="2.5rem"
-          :text="`${establishment}`"
-        />
-        <ButtonStyled
-          @click="handleEdit"
-          type="submit"
-          className="login-button"
-          label="Editar"
-          width="20rem"
-          height="2.8rem"
-        />
+        <div class="data-text-container">
+          <TitleStyled :title="`${fullName}`" />
+          <TextStyled
+            className="gray-text"
+            width=" 350px"
+            height="2.5rem"
+            :text="`CNPJ: ${cnpj}`"
+          />
+          <TextStyled
+            className="gray-text"
+            width=" 350px"
+            height="2.5rem"
+            :text="`Telefone: ${phoneNumber}`"
+          />
+          <TextStyled
+            className="gray-text"
+            width=" 350px"
+            height="2.5rem"
+            :text="`Endereço: ${address}, ${numberAddress}, ${complementAddress}, ${neighborhood}`"
+          />
+          <TextStyled
+            className="gray-text"
+            width=" 350px"
+            height="2.5rem"
+            :text="`CEP: ${cep} - ${city} - ${state}`"
+          />
+          <TextStyled
+            className="gray-text"
+            width=" 350px"
+            height="2.5rem"
+            :text="`Categoria: ${establishment}`"
+          />
+          <ButtonStyled
+            @click="handleEdit"
+            type="submit"
+            className="login-button"
+            label="Editar"
+            width="100%"
+            height="2.5rem"
+          />
+        </div>
       </div>
     </div>
   </template>
@@ -466,7 +478,6 @@ const handleEdit = () => {
 .main-container {
   display: flex;
   justify-content: center;
-  background-color: rgba(237, 228, 161, 0.5);
   width: 100%;
   height: 100vh;
 }
@@ -483,13 +494,22 @@ form {
 .profile {
   display: flex;
   background-color: var(--white);
-  justify-content: center;
-  flex-direction: column;
+  justify-content: space-around;
+  flex-direction: row;
   margin: auto;
   width: 800px;
-  height: 400px;
+  height: 370px;
   border-radius: 5px;
   padding: 10px;
+
+  align-items: center;
+}
+
+.data-text-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .phone-cnpj {

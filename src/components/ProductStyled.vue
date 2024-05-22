@@ -5,15 +5,15 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
 import TextStyled from './TextStyled.vue'
-import { StoreService } from '@/api/storeService'
+import { ProductService } from '@/api/productService'
 import Swal from 'sweetalert2'
 const productName = defineModel<string>('productName', { default: '' })
 const description = defineModel<string>('description', { default: '' })
-const price = defineModel<string>('price')
+const price = ref<string>('')
 const category = defineModel<string>('category', { default: '' })
 const portion = defineModel<string>('portion', { default: '' })
 
-const store = new StoreService()
+const product = new ProductService()
 
 const errors = reactive({
   productName: '',
@@ -58,7 +58,7 @@ const handleDescription = (event: Event) => {
 
 const handlePrice = (event: Event) => {
   errors.price = validateField(price.value, 4, undefined, undefined, 'preço')
-  price.value = (event.target as HTMLInputElement).value
+  price.value = priceMask((event.target as HTMLInputElement).value)
   localStorage.setItem('price', (event.target as HTMLInputElement).value)
 }
 
@@ -118,10 +118,13 @@ const imageUrl = ref('')
 
 const handleCreateProduct = () => {
   const boolean = canMoveToTab2()
-  console.log(category.value)
+  const getId = product.storage.get('store') || ''
+  const parse = getId ? JSON.parse(getId) : ''
+  const data = { productName, description, price, category, portion }
   if (boolean)
-    store.createStore(
-      productName.value,
+    product.createProduct(
+      parse.id,
+      data,
       image,
       () => Swal.fire('Produto cadastrado com sucesso'),
       () => Swal.fire('Erro ao cadastrar produto')
@@ -134,6 +137,19 @@ const handleImageChange = (event: Event) => {
   if (file) {
     image = file
     imageUrl.value = URL.createObjectURL(file)
+  }
+}
+
+function priceMask(value: string): string {
+  if (!value) return ''
+  value = value.replace(/\D/gi, '')
+  const arrayValue = value.split('')
+  if (arrayValue.length <= 2) {
+    return value
+  } else {
+    const length = arrayValue.length - 2
+    arrayValue.splice(length, 0, '.')
+    return arrayValue.join('')
   }
 }
 </script>
@@ -315,13 +331,6 @@ span {
   background-size: contain;
 }
 
-.img-content {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
 .custom-button:hover {
   background-color: var(--white);
 }
@@ -348,6 +357,5 @@ span {
   align-items: center;
   gap: 10px;
   width: 24rem;
-  height: 450px;
 }
 </style>

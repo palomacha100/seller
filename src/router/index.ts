@@ -6,6 +6,7 @@ import RememberPasswordView from '@/views/RememberPasswordView.vue'
 import WelcomeView from '@/views/WelcomeView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import ProductView from '@/views/ProductView.vue'
+import ListingStores from '@/views/ListingStores.vue'
 import { Auth } from '@/auth'
 
 const router = createRouter({
@@ -47,6 +48,12 @@ const router = createRouter({
       path: '/products',
       name: 'products',
       component: ProductView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/listingStores',
+      name: 'listingStores',
+      component: ListingStores,
       meta: { requiresAuth: true },
     }
   ]

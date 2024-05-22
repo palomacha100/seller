@@ -254,58 +254,63 @@ const handleEdit = () => {
             text="Por favor, preencha todos os campos obrigatórios antes de prosseguir"
           />
         </div>
+        <div class="image-data-container">
 
-        <div class="image-styled">
-          <div class="product-image">
-            <img
-              class="img-content"
-              :src="imageUrl"
-              v-if="imageUrl"
-              accept="image/*"
-              id="imagePreview"
-            />
+          <div class="image-styled">
+            <div class="product-image">
+              <img
+                class="img-content"
+                :src="imageUrl"
+                v-if="imageUrl"
+                accept="image/*"
+                id="imagePreview"
+              />
+            </div>
+            <input type="file" id="input-file" class="input-file" @change="handleImageChange" />
+            <label for="input-file" class="custom-button">Escolher imagem do produto</label>
           </div>
-          <input type="file" id="input-file" class="input-file" @change="handleImageChange" />
-          <label for="input-file" class="custom-button">Escolher imagem do produto</label>
+          <div>
+  
+  
+            <InputStyled
+              v-model="fullName"
+              id="fullName"
+              type="text"
+              width="100%"
+              height="2.8rem"
+              placeholder="Digite o nome do seu restaurante"
+              borderColor="transparent"
+              :error="errors.fullName"
+              :handleChange="handleFullName"
+            />
+           
+              <InputStyled
+                v-model="cnpj"
+                id="cnpj"
+                type="string"
+                width="24rem"
+                height="2.8rem"
+                placeholder="CNPJ do restaurante (apenas números)"
+                borderColor="transparent"
+                :error="errors.cnpj"
+                :handleChange="handleCnpj"
+                @input="handleCnpjInput"
+              />
+              <InputStyled
+                v-model="phoneNumber"
+                id="phoneNumber"
+                type="string"
+                width="24rem"
+                height="2.8rem"
+                placeholder="Telefone do restaurante (apenas números)"
+                borderColor="transparent"
+                :error="errors.phoneNumber"
+                :handleChange="handlePhoneNumber"
+                @input="handlePhoneInput"
+              />
+          </div>
         </div>
-
-        <InputStyled
-          v-model="fullName"
-          id="fullName"
-          type="text"
-          width="100%"
-          height="2.8rem"
-          placeholder="Digite o nome do seu restaurante"
-          borderColor="transparent"
-          :error="errors.fullName"
-          :handleChange="handleFullName"
-        />
-        <div class="phone-cnpj">
-          <InputStyled
-            v-model="cnpj"
-            id="cnpj"
-            type="string"
-            width="24rem"
-            height="2.8rem"
-            placeholder="CNPJ do restaurante (apenas números)"
-            borderColor="transparent"
-            :error="errors.cnpj"
-            :handleChange="handleCnpj"
-            @input="handleCnpjInput"
-          />
-          <InputStyled
-            v-model="phoneNumber"
-            id="phoneNumber"
-            type="string"
-            width="24rem"
-            height="2.8rem"
-            placeholder="Telefone do restaurante (apenas números)"
-            borderColor="transparent"
-            :error="errors.phoneNumber"
-            :handleChange="handlePhoneNumber"
-            @input="handlePhoneInput"
-          />
-        </div>
+      
         <div class="cepSearch">
           <InputStyled
             v-model="cep"
@@ -479,7 +484,7 @@ const handleEdit = () => {
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 100vh;
+  height: auto;
 }
 
 form {
@@ -488,7 +493,7 @@ form {
   flex-direction: column;
   margin: auto;
   width: 800px;
-  height: 100vh;
+  height: 100%;
 }
 
 .profile {
@@ -512,7 +517,7 @@ form {
   justify-content: center;
 }
 
-.phone-cnpj {
+.image-data-container {
   display: flex;
   flex-direction: row;
   gap: 5px;

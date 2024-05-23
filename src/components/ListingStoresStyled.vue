@@ -1,26 +1,26 @@
 <template>
-  <div>
+  <div class="table-container">
     <TitleStyled title="Gerenciamento de lojas" />
     <InputStyled
       v-model="searchQuery"
       id="storeSearch"
       type="text"
-      width="100%"
+      width="68.75rem"
       height="2.8rem"
       placeholder="Pesquisar pelo nome da loja"
-      borderColor="transparent"
+      :borderColor="'var(--dark-gray)'"
     />
 
     <table>
       <thead>
         <tr>
+          <th>Imagem</th>
           <th @click="sortByName">
-            Name
+            Nome
             <span v-if="sortOrder === 'asc'">▲</span>
             <span v-if="sortOrder === 'desc'">▼</span>
           </th>
-          <th>Image</th>
-          <th>Actions</th>
+          <th>Ações</th>
           <th>Status</th>
         </tr>
       </thead>
@@ -131,6 +131,14 @@ onMounted(() => {
   height: 50px;
   object-fit: cover;
   border-radius: 4px;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
 }
 
 table {

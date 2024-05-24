@@ -5,7 +5,7 @@ class ProductService extends BaseService {
     super()
   }
   async getProducts(id: number, onSuccess: () => void, onFailure: () => void) {
-    const response = await this.getAll(`stores/${id}/products`)
+    const response = await this.getEntity(`stores/${id}/products`)
     if (response.ok) {
       this.success(response, onSuccess)
     } else {

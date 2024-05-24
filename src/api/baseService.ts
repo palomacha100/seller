@@ -9,7 +9,7 @@ abstract class BaseService {
     this.storage = createStorage(persistent)
   }
 
-  async getAll(path: string): Promise<Response> {
+  async getEntity(path: string): Promise<Response> {
     const token = this.getFallback('token')
     const response = await fetch(`${this.apiUrl}/${path}`, {
       method: 'GET',
@@ -37,7 +37,7 @@ abstract class BaseService {
 
   async update(id: number, path: string, data: any): Promise<Response> {
     const token = this.getFallback('token')
-
+    console.log(id, path, data)
     const response = await fetch(`${this.apiUrl}/${path}/${id}`, {
       method: 'PUT',
       headers: {

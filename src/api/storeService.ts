@@ -6,10 +6,21 @@ class StoreService extends BaseService {
   }
 
   async getStores(onSuccess: () => void, onFailure: () => void) {
-    const response = await this.getAll('stores')
+    const response = await this.getEntity('stores')
     if (response.ok) {
-      this.success(response, onSuccess)
+      this.success(response, onSuccess, 'getAll')
     } else {
+      this.failure(response, onFailure)
+    }
+  }
+
+  async getStoresById(id: number, onSuccess: (data: any) => void, onFailure: () => void) {
+    const response = await this.getEntity(`stores/${id}`)
+    if (response.ok) {
+      console.log('deu bom')
+      this.success(response, onSuccess, 'byId')
+    } else {
+      console.log('deu ruim')
       this.failure(response, onFailure)
     }
   }
@@ -47,6 +58,19 @@ class StoreService extends BaseService {
     if (image) {
       formData.append('store[image]', image)
     }
+    console.log(image)
+    console.log(data.fullName.value)
+    console.log(data.cnpj.value)
+    console.log(data.phoneNumber.value)
+    console.log(data.cep.value)
+    console.log(data.state.value)
+    console.log(data.city.value)
+    console.log(data.neighborhood.value)
+    console.log(data.address.value)
+    console.log(data.numberAddress.value)
+    console.log(data.establishment.value)
+    console.log(data.complementAddress.value)
+
     formData.append('store[name]', data.fullName.value)
     formData.append('store[cnpj]', data.cnpj.value)
     formData.append('store[phonenumber]', data.phoneNumber.value)
@@ -78,10 +102,11 @@ class StoreService extends BaseService {
     onFailure()
   }
 
-  success(response: Response, onSuccess: () => void, action = '') {
-    onSuccess()
+  success(response: Response, onSuccess: (data?: any) => void, action = '') {
     response.json().then((json) => {
       if (action === 'generate') {
+        console.log('chegou no generate')
+
         const store = {
           id: json.id,
           src: `${this.apiUrl}${json.image_url}`,
@@ -94,9 +119,41 @@ class StoreService extends BaseService {
           address: json.address,
           neighborhood: json.neighborhood,
           establishment: json.establishment,
-          complementaddress: json.complementaddress
+          numberaddress: json.numberaddress,
+          complementaddress: json.complementadress
         }
         this.storage.store('store', JSON.stringify(store))
+        onSuccess()
+      } else if (action === 'getAll' && Array.isArray(json)) {
+        console.log('chegou no getAll')
+
+        const storeData = json.map((fields: any) => ({
+          id: fields.id,
+          name: fields.name,
+          image_url: fields.image_url && `${this.apiUrl}${fields?.image_url}`,
+          active: true
+        }))
+        onSuccess(storeData)
+      } else if (action == 'byId') {
+        console.log('chegou no byID')
+        const store = {
+          id: json.id,
+          src: `${this.apiUrl}${json.image_url}`,
+          name: json.name,
+          cnpj: json.cnpj,
+          phonenumber: json.phonenumber,
+          cep: json.cep,
+          state: json.state,
+          city: json.city,
+          address: json.address,
+          neighborhood: json.neighborhood,
+          establishment: json.establishment,
+          numberaddress: json.numberaddress,
+          complementaddress: json.complementadress
+        }
+        console.log(json)
+        console.log(store)
+        onSuccess(store)
       }
     })
   }

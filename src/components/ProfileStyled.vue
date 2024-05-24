@@ -7,6 +7,7 @@ import TextStyled from './TextStyled.vue'
 import TitleStyled from './TitleStyled.vue'
 import { StoreService } from '@/api/storeService'
 import Swal from 'sweetalert2'
+import { useRoute } from 'vue-router'
 
 const fullName = defineModel<string>('fullName', { default: '' })
 const cnpj = defineModel<string>('cnpj', { default: '' })
@@ -21,6 +22,7 @@ const complementAddress = defineModel<string>('complementAddress', { default: ''
 const establishment = defineModel<string>('establishment', { default: '' })
 const isStoreExists = ref(false)
 const isEditing = ref(false)
+const route = useRoute()
 
 const store = new StoreService()
 
@@ -188,6 +190,46 @@ onMounted(() => {
   if (!address.value && !isStoreExists.value) {
     isStoreExists.value = true
   }
+  if (route.query.isEditing === 'true') {
+    isEditing.value = true
+
+    store.getStoresById(
+      Number(route.query.id),
+      (storeData: any) => {
+        fullName.value = storeData.name
+        cnpj.value = storeData.cnpj
+        phoneNumber.value = storeData.phonenumber
+        city.value = storeData.city
+        cep.value = storeData.cep
+        state.value = storeData.state
+        neighborhood.value = storeData.neighborhood
+        address.value = storeData.address
+        numberAddress.value = storeData.numberaddress
+        complementAddress.value = storeData.complementadress
+        establishment.value = storeData.establishment
+        imageUrl.value = storeData.src
+        isStoreExists.value = true
+      },
+      () => {
+        console.error('Failed to fetch stores')
+      }
+    )
+  }
+  if (route.query.isNewStore === 'true') {
+    isEditing.value = true
+    fullName.value = ''
+    cnpj.value = ''
+    phoneNumber.value = ''
+    city.value = ''
+    cep.value = ''
+    state.value = ''
+    neighborhood.value = ''
+    address.value = ''
+    numberAddress.value = ''
+    complementAddress.value = ''
+    establishment.value = ''
+    imageUrl.value = ''
+  }
 })
 
 let image: File
@@ -220,6 +262,7 @@ const handleUpdateStore = () => {
         imageUrl.value = parse.src
         isEditing.value = false
         Swal.fire('Loja atualizada com sucesso')
+        isStoreExists.value = false
       },
       () => Swal.fire('Erro ao atualizar loja')
     )
@@ -255,7 +298,6 @@ const handleEdit = () => {
           />
         </div>
         <div class="image-data-container">
-
           <div class="image-styled">
             <div class="product-image">
               <img
@@ -270,8 +312,6 @@ const handleEdit = () => {
             <label for="input-file" class="custom-button">Escolher imagem do produto</label>
           </div>
           <div>
-  
-  
             <InputStyled
               v-model="fullName"
               id="fullName"
@@ -283,34 +323,34 @@ const handleEdit = () => {
               :error="errors.fullName"
               :handleChange="handleFullName"
             />
-           
-              <InputStyled
-                v-model="cnpj"
-                id="cnpj"
-                type="string"
-                width="24rem"
-                height="2.8rem"
-                placeholder="CNPJ do restaurante (apenas números)"
-                borderColor="transparent"
-                :error="errors.cnpj"
-                :handleChange="handleCnpj"
-                @input="handleCnpjInput"
-              />
-              <InputStyled
-                v-model="phoneNumber"
-                id="phoneNumber"
-                type="string"
-                width="24rem"
-                height="2.8rem"
-                placeholder="Telefone do restaurante (apenas números)"
-                borderColor="transparent"
-                :error="errors.phoneNumber"
-                :handleChange="handlePhoneNumber"
-                @input="handlePhoneInput"
-              />
+
+            <InputStyled
+              v-model="cnpj"
+              id="cnpj"
+              type="string"
+              width="24rem"
+              height="2.8rem"
+              placeholder="CNPJ do restaurante (apenas números)"
+              borderColor="transparent"
+              :error="errors.cnpj"
+              :handleChange="handleCnpj"
+              @input="handleCnpjInput"
+            />
+            <InputStyled
+              v-model="phoneNumber"
+              id="phoneNumber"
+              type="string"
+              width="24rem"
+              height="2.8rem"
+              placeholder="Telefone do restaurante (apenas números)"
+              borderColor="transparent"
+              :error="errors.phoneNumber"
+              :handleChange="handlePhoneNumber"
+              @input="handlePhoneInput"
+            />
           </div>
         </div>
-      
+
         <div class="cepSearch">
           <InputStyled
             v-model="cep"

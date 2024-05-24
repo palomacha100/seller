@@ -1,53 +1,13 @@
-<template>
-  <div class="table-container">
-    <TitleStyled title="Gerenciamento de lojas" />
-    <InputStyled
-      v-model="searchQuery"
-      id="storeSearch"
-      type="text"
-      width="68.75rem"
-      height="2.8rem"
-      placeholder="Pesquisar pelo nome da loja"
-      :borderColor="'var(--dark-gray)'"
-    />
-
-    <table>
-      <thead>
-        <tr>
-          <th>Imagem</th>
-          <th @click="sortByName">
-            Nome
-            <span v-if="sortOrder === 'asc'">▲</span>
-            <span v-if="sortOrder === 'desc'">▼</span>
-          </th>
-          <th>Ações</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="store in filteredStores" :key="store.id">
-          <td>{{ store.name }}</td>
-          <td><img :src="store.image_url" alt="Store Image" class="thumbnail" /></td>
-          <td>
-            <button @click="editStore(store.id)">Edit</button>
-            <button @click="deleteStore(store.id)">Delete</button>
-          </td>
-          <td>
-            <button @click="toggleStatus(store)">
-              {{ store.active ? 'Deactivate' : 'Activate' }}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
 import { StoreService } from '../api/storeService'
 import TitleStyled from './TitleStyled.vue'
 import InputStyled from './InputStyled.vue'
+import ContainerStyled from './ContainerStyled.vue'
+import { useRouter } from 'vue-router'
+import ButtonStyled from './ButtonStyled.vue'
+
+const router = useRouter()
 
 interface Store {
   id: number
@@ -64,7 +24,8 @@ const sortOrder = ref<'asc' | 'desc'>('asc')
 const fetchStores = async () => {
   await storeService.getStores(
     (data: Store[]) => {
-      stores.value = data
+      console.log(`fetchStores ${data}`)
+      stores.value = data || []
     },
     () => {
       console.error('Failed to fetch stores')
@@ -85,8 +46,7 @@ const deleteStore = async (id: number) => {
 }
 
 const editStore = (id: number) => {
-  // Implement edit functionality or navigation to the edit page
-  console.log('Edit store', id)
+  router.push({ path: './profile', query: { isEditing: 'true', id } })
 }
 
 const toggleStatus = async (store: Store) => {
@@ -115,15 +75,80 @@ const sortByName = () => {
 }
 
 const filteredStores = computed(() => {
+  console.log(`filteresStores ${stores.value}`)
   return stores.value.filter((store) =>
     store.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 })
 
+const addStore = () => {
+  router.push({ path: './profile', query: { isNewStore: 'true' } })
+}
+
 onMounted(() => {
   fetchStores()
 })
 </script>
+
+<template>
+  <div class="table-container">
+    <ContainerStyled width="68.75rem" height="3.5rem" backgroundColor="transparent">
+      <TitleStyled title="Gerenciamento de lojas" />
+    </ContainerStyled>
+    <ContainerStyled width="68.75rem" height="3.5rem" :backgroundColor="'var(--light-blue)'">
+      <InputStyled
+        v-model="searchQuery"
+        id="storeSearch"
+        type="text"
+        width="57rem"
+        height="2.8rem"
+        placeholder="Pesquisar pelo nome da loja"
+        borderColor="transparent"
+        class="custom-height"
+      />
+      <ButtonStyled
+        className="login-button"
+        label="+ Adicionar loja"
+        width="10rem"
+        height="2.5rem"
+        @click="addStore"
+      />
+    </ContainerStyled>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Imagem</th>
+          <th @click="sortByName">
+            Nome
+            <span v-if="sortOrder === 'asc'">▲</span>
+            <span v-if="sortOrder === 'desc'">▼</span>
+          </th>
+          <th>Ações</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="store in filteredStores" :key="store.id">
+          <td><img :src="store.image_url" alt="Store Image" class="thumbnail" /></td>
+          <td>{{ store.name }}</td>
+          <td>
+            <button class="edit-button" @click="editStore(store.id)">Editar</button>
+            <button class="delete-button" @click="deleteStore(store.id)">Excluir</button>
+          </td>
+          <td>
+            <button
+              @click="toggleStatus(store)"
+              :class="['status-button', store.active ? 'active' : 'inactive']"
+            >
+              {{ store.active ? 'Deactivate' : 'Activate' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
 
 <style>
 .thumbnail {
@@ -144,7 +169,7 @@ onMounted(() => {
 table {
   width: 1100px;
   border-collapse: collapse;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 th,
@@ -152,10 +177,13 @@ td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  font-family: 'Poppins';
+  color: var(--dark-gray);
 }
 
 th {
   cursor: pointer;
+  background-color: var(--light-blue);
 }
 
 th span {
@@ -180,18 +208,23 @@ button:active {
   transform: scale(0.98);
 }
 
-button:first-child {
-  background-color: #4caf50; /* Green for edit */
+.edit-button {
+  background-color: var(--dark-blue); /* Green for edit */
   color: white;
 }
 
-button:nth-child(2) {
-  background-color: #f44336; /* Red for delete */
+.delete-button {
+  background-color: var(--red); /* Red for delete */
   color: white;
 }
 
-button:last-child {
-  background-color: #2196f3; /* Blue for status toggle */
+.status-button.active {
+  background-color: var(--dark-gray); /* Blue for status toggle */
+  color: white;
+}
+
+.status-button.inactive {
+  background-color: var(--green); /* Blue for status toggle */
   color: white;
 }
 </style>

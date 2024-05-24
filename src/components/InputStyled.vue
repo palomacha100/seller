@@ -88,6 +88,10 @@ span {
   height: 5rem;
 }
 
+.custom-height {
+  height: 3rem;
+}
+
 .radio-container {
   display: flex;
   flex-direction: row;

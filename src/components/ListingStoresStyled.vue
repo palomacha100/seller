@@ -26,6 +26,9 @@ const fetchStores = async () => {
     (data: Store[]) => {
       console.log(`fetchStores ${data}`)
       stores.value = data || []
+      stores.value.forEach((store) => {
+        store.active = false
+      })
     },
     () => {
       console.error('Failed to fetch stores')
@@ -50,6 +53,23 @@ const editStore = (id: number) => {
 }
 
 const toggleStatus = async (store: Store) => {
+  stores.value.forEach((s) => {
+    if (s.id !== store.id && s.active) {
+      s.active = false
+      storeService.updateStore(
+        s.id,
+        s,
+        null,
+        () => {
+          console.log(`Store ${s.id} deactivated`)
+        },
+        () => {
+          console.error(`Failed to update store ${s.id}`)
+        }
+      )
+    }
+  })
+
   store.active = !store.active
   await storeService.updateStore(
     store.id,
@@ -141,7 +161,7 @@ onMounted(() => {
               @click="toggleStatus(store)"
               :class="['status-button', store.active ? 'active' : 'inactive']"
             >
-              {{ store.active ? 'Deactivate' : 'Activate' }}
+              {{ store.active ? 'Aberta' : 'Fechada' }}
             </button>
           </td>
         </tr>
@@ -214,17 +234,17 @@ button:active {
 }
 
 .delete-button {
-  background-color: var(--red); /* Red for delete */
+  background-color: var(--red);
   color: white;
 }
 
 .status-button.active {
-  background-color: var(--dark-gray); /* Blue for status toggle */
+  background-color: var(--green);
   color: white;
 }
 
 .status-button.inactive {
-  background-color: var(--green); /* Blue for status toggle */
+  background-color: var(--dark-gray);
   color: white;
 }
 </style>

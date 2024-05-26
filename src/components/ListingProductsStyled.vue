@@ -67,24 +67,6 @@ const editProduct = (id: number) => {
 }
 
 const toggleStatus = async (storeId: number, product: Product) => {
-  products.value.forEach((p) => {
-    if (p.id !== product.id && p.active) {
-      p.active = false
-      productService.updateProduct(
-        storeId,
-        p.id,
-        p,
-        null,
-        () => {
-          console.log(`Product ${p.id} deactivated`)
-        },
-        () => {
-          console.error(`Failed to update product ${p.id}`)
-        }
-      )
-    }
-  })
-
   product.active = !product.active
   await productService.updateProduct(
     storeId,

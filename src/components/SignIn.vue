@@ -6,11 +6,9 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import TextStyled from './TextStyled.vue'
 import AccessControlContainer from './AccessControlContainer.vue'
-const auth = new Auth()
 
 const router = useRouter()
-const isLoggedIn = ref(auth.isLoggedIn())
-const currentUser = ref(auth.currentUser())
+
 const email = defineModel<string>('email', { default: '' })
 const password = defineModel<string>('password', { default: '' })
 const awaiting = ref(false)
@@ -21,6 +19,8 @@ const errorPassword = ref('')
 const errorCredential = ref('')
 
 const onSubmit = () => {
+  const auth = new Auth(checked.value)
+  console.log(checked.value)
   if (email.value == '') {
     return (errorEmail.value = 'É necessário informar um email')
   }
@@ -34,8 +34,7 @@ const onSubmit = () => {
     password.value || '',
     () => {
       awaiting.value = false
-      isLoggedIn.value = auth.isLoggedIn()
-      currentUser.value = auth.currentUser()
+
       router.push('/home')
     },
     () => {

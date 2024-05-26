@@ -17,7 +17,7 @@ defineProps<{
 <style scoped>
 div {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   height: 100vh;
 }

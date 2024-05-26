@@ -9,7 +9,7 @@ abstract class BaseService {
     this.storage = createStorage(persistent)
   }
 
-  async getAll(path: string): Promise<Response> {
+  async getEntity(path: string): Promise<Response> {
     const token = this.getFallback('token')
     const response = await fetch(`${this.apiUrl}/${path}`, {
       method: 'GET',
@@ -31,6 +31,32 @@ abstract class BaseService {
         Authorization: `Bearer ${token}`
       },
       body: data
+    })
+    return response
+  }
+
+  async update(id: number, path: string, data: any): Promise<Response> {
+    const token = this.getFallback('token')
+    console.log(id, path, data)
+    const response = await fetch(`${this.apiUrl}/${path}/${id}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: data
+    })
+    return response
+  }
+  async delete(id: number, path: string): Promise<Response> {
+    const token = this.getFallback('token')
+    const response = await fetch(`${this.apiUrl}/${path}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
     })
     return response
   }

@@ -13,7 +13,7 @@ defineProps<{
 
 <style scoped>
 .title-styled {
-  width: 17rem;
+  width: 100%;
   height: 4rem;
   display: flex;
   align-items: center;

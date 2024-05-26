@@ -15,8 +15,9 @@ const { width, height, backgroundColor } = defineProps({
 <style scoped>
 div {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   flex-direction: row;
   align-items: center;
+  gap: 10px;
 }
 </style>

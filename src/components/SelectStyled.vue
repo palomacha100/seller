@@ -63,5 +63,6 @@ select {
   margin: 5px 0;
   color: var(--dark-gray);
   border-color: transparent;
+  box-shadow: 0 0 1px 0 var(--dark-gray);
 }
 </style>

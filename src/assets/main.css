@@ -4,7 +4,7 @@
   --dark-gray: #48484d;
   --red: #cc4b4e;
   --yellow: #ede4a1;
-  --light_blue: #b8c9e6;
+  --light-blue: #b8c9e6;
   --green: #33a33c;
   --purple: #504c9c;
   --medium-blue: #1bded8;
@@ -27,4 +27,5 @@ li {
 body {
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
+  background-color: rgba(237, 228, 161, 0.2);
 }

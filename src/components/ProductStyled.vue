@@ -118,7 +118,7 @@ const imageUrl = ref('')
 
 const handleCreateProduct = () => {
   const boolean = canMoveToTab2()
-  const getId = product.storage.get('store') || ''
+  const getId = product.storage.get('activedStore') || ''
   const parse = getId ? JSON.parse(getId) : ''
   const data = { productName, description, price, category, portion }
   if (boolean)

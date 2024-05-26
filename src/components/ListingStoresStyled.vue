@@ -71,6 +71,11 @@ const toggleStatus = async (store: Store) => {
   })
 
   store.active = !store.active
+  if (store.active) {
+    localStorage.setItem('activedStore', JSON.stringify(store))
+  } else {
+    localStorage.removeItem('activedStore')
+  }
   await storeService.updateStore(
     store.id,
     store,

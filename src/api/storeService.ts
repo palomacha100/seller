@@ -17,10 +17,8 @@ class StoreService extends BaseService {
   async getStoresById(id: number, onSuccess: (data: any) => void, onFailure: () => void) {
     const response = await this.getEntity(`stores/${id}`)
     if (response.ok) {
-      console.log('deu bom')
       this.success(response, onSuccess, 'byId')
     } else {
-      console.log('deu ruim')
       this.failure(response, onFailure)
     }
   }

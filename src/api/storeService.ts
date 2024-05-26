@@ -58,18 +58,6 @@ class StoreService extends BaseService {
     if (image) {
       formData.append('store[image]', image)
     }
-    console.log(image)
-    console.log(data.fullName.value)
-    console.log(data.cnpj.value)
-    console.log(data.phoneNumber.value)
-    console.log(data.cep.value)
-    console.log(data.state.value)
-    console.log(data.city.value)
-    console.log(data.neighborhood.value)
-    console.log(data.address.value)
-    console.log(data.numberAddress.value)
-    console.log(data.establishment.value)
-    console.log(data.complementAddress.value)
 
     formData.append('store[name]', data.fullName.value)
     formData.append('store[cnpj]', data.cnpj.value)
@@ -105,8 +93,6 @@ class StoreService extends BaseService {
   success(response: Response, onSuccess: (data?: any) => void, action = '') {
     response.json().then((json) => {
       if (action === 'generate') {
-        console.log('chegou no generate')
-
         const store = {
           id: json.id,
           src: `${this.apiUrl}${json.image_url}`,
@@ -125,8 +111,6 @@ class StoreService extends BaseService {
         this.storage.store('store', JSON.stringify(store))
         onSuccess()
       } else if (action === 'getAll' && Array.isArray(json)) {
-        console.log('chegou no getAll')
-
         const storeData = json.map((fields: any) => ({
           id: fields.id,
           name: fields.name,
@@ -135,7 +119,6 @@ class StoreService extends BaseService {
         }))
         onSuccess(storeData)
       } else if (action == 'byId') {
-        console.log('chegou no byID')
         const store = {
           id: json.id,
           src: `${this.apiUrl}${json.image_url}`,
@@ -151,8 +134,6 @@ class StoreService extends BaseService {
           numberaddress: json.numberaddress,
           complementaddress: json.complementadress
         }
-        console.log(json)
-        console.log(store)
         onSuccess(store)
       }
     })

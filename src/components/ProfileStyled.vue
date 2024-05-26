@@ -470,7 +470,7 @@ const handleEdit = () => {
           </div>
         </div>
         <div class="data-text-container">
-          <TitleStyled :title="`${fullName}`" />
+          <TitleStyled :title="`${fullName}`" class="title-styled" />
           <TextStyled
             className="gray-text"
             width=" 350px"
@@ -501,14 +501,28 @@ const handleEdit = () => {
             height="2.5rem"
             :text="`Categoria: ${establishment}`"
           />
-          <ButtonStyled
-            @click="handleEdit"
-            type="submit"
-            className="login-button"
-            label="Editar"
-            width="100%"
-            height="2.5rem"
-          />
+          <div class="button-container">
+            <ButtonStyled
+              @click="handleEdit"
+              type="submit"
+              className="login-button"
+              label="Editar"
+              width="10rem"
+              height="2.5rem"
+            />
+            <nav>
+              <RouterLink :to="{ name: 'listingStores' }">
+                <ButtonStyled
+                  @click="handleEdit"
+                  type="submit"
+                  className="login-button"
+                  label="Gerenciar lojas"
+                  width="10rem"
+                  height="2.5rem"
+                />
+              </RouterLink>
+            </nav>
+          </div>
         </div>
       </div>
     </div>
@@ -536,6 +550,7 @@ form {
   margin: 30px 0;
   display: flex;
   justify-content: center;
+  gap: 10px;
 }
 
 .profile {
@@ -543,12 +558,12 @@ form {
   background-color: var(--white);
   justify-content: space-around;
   flex-direction: row;
-  margin: auto;
+  margin: 30px auto;
   width: 800px;
-  height: 370px;
+  height: auto;
   border-radius: 5px;
   padding: 10px;
-
+  gap: 5px;
   align-items: center;
 }
 
@@ -582,5 +597,9 @@ form {
 .first-data-content {
   display: flex;
   flex-direction: column;
+}
+
+.title-styled {
+  width: 350px;
 }
 </style>

@@ -138,7 +138,7 @@ onMounted(() => {
     <table>
       <thead>
         <tr>
-          <th>Imagem</th>
+          <th></th>
           <th @click="sortByName">
             Nome
             <span v-if="sortOrder === 'asc'">▲</span>

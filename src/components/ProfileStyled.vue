@@ -8,6 +8,7 @@ import TitleStyled from './TitleStyled.vue'
 import { StoreService } from '@/api/storeService'
 import Swal from 'sweetalert2'
 import { useRoute } from 'vue-router'
+import ContainerStyled from './ContainerStyled.vue'
 
 const fullName = defineModel<string>('fullName', { default: '' })
 const cnpj = defineModel<string>('cnpj', { default: '' })
@@ -289,14 +290,9 @@ const handleEdit = () => {
   <template v-if="isStoreExists || isEditing">
     <div class="main-container">
       <form>
-        <div>
-          <TextStyled
-            className="gray-bold-text"
-            width=" 800px"
-            height="2.8rem"
-            text="Por favor, preencha todos os campos obrigatórios antes de prosseguir"
-          />
-        </div>
+        <ContainerStyled width="68.75rem" height="4rem" backgroundColor="transparent">
+          <TitleStyled title="Edição de perfil" />
+        </ContainerStyled>
         <div class="image-data-container">
           <div class="image-styled">
             <div class="product-image">
@@ -311,7 +307,7 @@ const handleEdit = () => {
             <input type="file" id="input-file" class="input-file" @change="handleImageChange" />
             <label for="input-file" class="custom-button">Escolher imagem do produto</label>
           </div>
-          <div>
+          <div class="first-data-content">
             <InputStyled
               v-model="fullName"
               id="fullName"
@@ -323,7 +319,6 @@ const handleEdit = () => {
               :error="errors.fullName"
               :handleChange="handleFullName"
             />
-
             <InputStyled
               v-model="cnpj"
               id="cnpj"
@@ -348,28 +343,27 @@ const handleEdit = () => {
               :handleChange="handlePhoneNumber"
               @input="handlePhoneInput"
             />
+            <div class="cepSearch">
+              <InputStyled
+                v-model="cep"
+                id="cep"
+                type="number"
+                width="24rem"
+                height="2.8rem"
+                placeholder="CEP (apenas números)"
+                borderColor="transparent"
+                :error="errors.cep"
+                :handleChange="handleCep"
+              />
+              <ButtonStyled
+                className="transparent-button-blue-text"
+                label="Pesquisar CEP"
+                width="8rem"
+                height="2.8rem"
+                @click="addressSearch"
+              />
+            </div>
           </div>
-        </div>
-
-        <div class="cepSearch">
-          <InputStyled
-            v-model="cep"
-            id="cep"
-            type="number"
-            width="100%"
-            height="2.8rem"
-            placeholder="CEP (apenas números)"
-            borderColor="transparent"
-            :error="errors.cep"
-            :handleChange="handleCep"
-          />
-          <ButtonStyled
-            className="transparent-button-blue-text"
-            label="Pesquisar CEP"
-            width="8rem"
-            height="2.8rem"
-            @click="addressSearch"
-          />
         </div>
 
         <div class="address-content">
@@ -414,7 +408,7 @@ const handleEdit = () => {
           borderColor="transparent"
           disabled
         />
-        <div class="phone-cnpj">
+        <div class="address-content">
           <InputStyled
             v-model="numberAddress"
             id="numberAddress"
@@ -448,14 +442,16 @@ const handleEdit = () => {
           :options="estabDropdownOptions"
           :handleChange="handleEstablishment"
         />
-        <ButtonStyled
-          @click.prevent="isEditing ? handleUpdateStore() : handleCreateStore()"
-          type="submit"
-          className="login-button"
-          :label="isEditing ? 'Atualizar' : 'Enviar'"
-          width="22.5rem"
-          height="2.8rem"
-        />
+        <div class="button-container">
+          <ButtonStyled
+            @click.prevent="isEditing ? handleUpdateStore() : handleCreateStore()"
+            type="submit"
+            className="login-button"
+            :label="isEditing ? 'Atualizar' : 'Enviar'"
+            width="22.5rem"
+            height="2.8rem"
+          />
+        </div>
       </form>
     </div>
   </template>
@@ -536,6 +532,12 @@ form {
   height: 100%;
 }
 
+.button-container {
+  margin: 30px 0;
+  display: flex;
+  justify-content: center;
+}
+
 .profile {
   display: flex;
   background-color: var(--white);
@@ -574,8 +576,11 @@ form {
 .cepSearch {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  height: 100px;
+  height: 80px;
+}
+
+.first-data-content {
+  display: flex;
+  flex-direction: column;
 }
 </style>

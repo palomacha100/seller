@@ -336,7 +336,7 @@ span {
 }
 
 .custom-button {
-  padding: 8px 16px;
+  padding: 2px 16px 8px 16px;
   cursor: pointer;
   background-color: transparent;
   color: var(--dark-blue);
@@ -355,7 +355,6 @@ span {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   width: 24rem;
 }
 </style>

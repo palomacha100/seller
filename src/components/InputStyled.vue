@@ -61,6 +61,7 @@ input {
   border-radius: 5px;
   margin: 5px 0;
   color: var(--dark-gray);
+  box-shadow: 0 0 1px 0 var(--dark-gray);
 }
 
 input::placeholder {

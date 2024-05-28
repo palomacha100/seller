@@ -5,6 +5,7 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
 import TextStyled from './TextStyled.vue'
+import TitleStyled from './TitleStyled.vue'
 import { ProductService } from '@/api/productService'
 import Swal from 'sweetalert2'
 import { useRoute } from 'vue-router'
@@ -61,7 +62,7 @@ const handleDescription = (event: Event) => {
 }
 
 const handlePrice = (event: Event) => {
-  errors.price = validateField(price.value, 4, undefined, undefined, 'preço')
+  errors.price = validateField(price.value, 3, undefined, undefined, 'preço')
   price.value = priceMask((event.target as HTMLInputElement).value)
   localStorage.setItem('price', (event.target as HTMLInputElement).value)
 }
@@ -140,7 +141,7 @@ onMounted(() => {
     }
   })
   if (route.query.isNewProduct === 'true') {
-    isEditing.value = true
+    isEditing.value = false
     productName.value = ''
     price.value = ''
     description.value = ''
@@ -218,6 +219,9 @@ function priceMask(value: string): string {
 <template>
   <div class="main-container">
     <form>
+      <ContainerStyled width="68.75rem" height="3.5rem" backgroundColor="transparent">
+      <TitleStyled title="Edição de produto" />
+    </ContainerStyled>
       <TextStyled
         className="gray-bold-text"
         width=" 800px"
@@ -327,7 +331,6 @@ form {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
   height: 450px;
 }
 

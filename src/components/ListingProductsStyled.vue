@@ -32,7 +32,6 @@ const fetchProducts = async (storeId: number) => {
     storeId,
     (data: Product[]) => {
       products.value = data.data || []
-      console.log(data)
       if (products.value.length > 0) {
         products.value.forEach((product) => {
           product.active = true
@@ -50,18 +49,29 @@ const fetchProducts = async (storeId: number) => {
   )
 }
 
-const deleteProduct = async (storeId: number, productId: number) => {
+const deleteProduct = async (productId: number) => {
+  const storage = localStorage.getItem('activedStore')
+  const storeData = storage ? JSON.parse(storage) : null
+  const storeId = storeData ? storeData.id : null
+
+  if (!storeId) {
+    console.error('Failed to get storeId from localStorage')
+    return
+  }
+
   await productService.deleteProduct(
     storeId,
     productId,
     () => {
       products.value = products.value.filter((product) => product.id !== productId)
+      filteredProducts.value = filteredProducts.value.filter((product) => product.id !== productId)
     },
     () => {
       console.error('Failed to delete product')
     }
   )
 }
+
 
 const editProduct = (id: number) => {
   router.push({ path: './products', query: { isEditing: 'true', id } })
@@ -110,7 +120,7 @@ const sortByPrice = () => {
 }
 
 const addProduct = () => {
-  router.push({ path: './products', query: { isNewProduct: 'true' } })
+  router.push({ path: './products', query: { isNewStore: 'true' } })
 }
 
 onMounted(() => {
@@ -187,7 +197,7 @@ const handleFilter = () => {
             <button class="edit-button" @click="editProduct(product.id)">Editar</button>
             <button
               class="delete-button"
-              @click="deleteProduct(Number($route.query.storeId), product.id)"
+              @click="deleteProduct(product.id)"
             >
               Excluir
             </button>
@@ -265,7 +275,7 @@ button:active {
 }
 
 .edit-button {
-  background-color: var(--dark-blue); /* Green for edit */
+  background-color: var(--dark-blue);
   color: white;
 }
 

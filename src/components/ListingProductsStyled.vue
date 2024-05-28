@@ -120,7 +120,7 @@ const sortByPrice = () => {
 }
 
 const addProduct = () => {
-  router.push({ path: './products', query: { isNewStore: 'true' } })
+  router.push({ path: './products', query: { isNewProduct: 'true' } })
 }
 
 onMounted(() => {

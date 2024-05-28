@@ -250,11 +250,11 @@ const handleCreateStore = () => {
 
 const handleUpdateStore = () => {
   const boolean = canMoveToTab2()
-  const getId = store.storage.get('store') || ''
+  const getId = sessionStorage.getItem('active') || ''
   const parse = getId ? JSON.parse(getId) : ''
   if (boolean) {
     store.updateStore(
-      parse.id,
+      parse,
       getModelByName,
       image,
       () => {
@@ -546,27 +546,6 @@ form {
   height: 100%;
 }
 
-.button-container {
-  margin: 30px 0;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.profile {
-  display: flex;
-  background-color: var(--white);
-  justify-content: space-around;
-  flex-direction: row;
-  margin: 30px auto;
-  width: 800px;
-  height: auto;
-  border-radius: 5px;
-  padding: 10px;
-  gap: 5px;
-  align-items: center;
-}
-
 .data-text-container {
   display: flex;
   align-items: center;
@@ -601,5 +580,29 @@ form {
 
 .title-styled {
   width: 350px;
+}
+
+.button-container {
+  margin: 30px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+}
+</style>
+
+<style>
+  .profile {
+  display: flex;
+  background-color: var(--white);
+  justify-content: space-around;
+  flex-direction: row;
+  margin: 30px auto;
+  width: 800px;
+  height: auto;
+  border-radius: 5px;
+  padding: 10px;
+  gap: 10px;
+
 }
 </style>

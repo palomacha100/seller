@@ -513,7 +513,7 @@ const handleEdit = () => {
             <nav>
               <RouterLink :to="{ name: 'listingStores' }">
                 <ButtonStyled
-                  @click="handleEdit"
+                
                   type="submit"
                   className="login-button"
                   label="Gerenciar lojas"

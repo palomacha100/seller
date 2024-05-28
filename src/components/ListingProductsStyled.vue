@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ProductService } from '@/api/productService'
 import TitleStyled from './TitleStyled.vue'
 import InputStyled from './InputStyled.vue'
 import ContainerStyled from './ContainerStyled.vue'
 import { useRouter } from 'vue-router'
 import ButtonStyled from './ButtonStyled.vue'
+import Swal from 'sweetalert2'
 
 const router = useRouter()
 const filteredProducts = ref<any[]>([])
@@ -73,12 +74,8 @@ const toggleStatus = async (storeId: number, product: Product) => {
     product.id,
     product,
     null,
-    () => {
-      console.log('Product status updated')
-    },
-    () => {
-      console.error('Failed to update product status')
-    }
+    () => Swal.fire(`Status alterado`),
+    () => Swal.fire('Erro ao alterar status')
   )
 }
 

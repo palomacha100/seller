@@ -24,10 +24,15 @@ const sortOrder = ref<'asc' | 'desc'>('asc')
 const fetchStores = async () => {
   await storeService.getStores(
     (data: Store[]) => {
-      console.log(`fetchStores ${data}`)
       stores.value = data || []
       stores.value.forEach((store) => {
-        store.active = false
+        const data = sessionStorage.getItem('active') || ''
+        const parse = data ? JSON.parse(data) : '' 
+        if (parse && store.id == parse) {
+          store.active = true
+        } else {
+          store.active = false
+        }
       })
     },
     () => {
@@ -73,6 +78,7 @@ const toggleStatus = async (store: Store) => {
   store.active = !store.active
   if (store.active) {
     localStorage.setItem('activedStore', JSON.stringify(store))
+    sessionStorage.setItem('active', JSON.stringify(store.id)) 
   } else {
     localStorage.removeItem('activedStore')
   }
@@ -100,7 +106,6 @@ const sortByName = () => {
 }
 
 const filteredStores = computed(() => {
-  console.log(`filteresStores ${stores.value}`)
   return stores.value.filter((store) =>
     store.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   )

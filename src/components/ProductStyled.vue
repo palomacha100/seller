@@ -7,11 +7,15 @@ import SelectStyled from './SelectStyled.vue'
 import TextStyled from './TextStyled.vue'
 import { ProductService } from '@/api/productService'
 import Swal from 'sweetalert2'
+import { useRoute } from 'vue-router'
 const productName = defineModel<string>('productName', { default: '' })
 const description = defineModel<string>('description', { default: '' })
 const price = ref<string>('')
 const category = defineModel<string>('category', { default: '' })
 const portion = defineModel<string>('portion', { default: '' })
+const isEditing = ref(false)
+const isProductExists =ref(false)
+const route = useRoute()
 
 const product = new ProductService()
 
@@ -77,7 +81,9 @@ const canMoveToTab2 = () => {
     productName.value !== '' &&
     price.value !== undefined &&
     category.value !== undefined &&
-    portion.value !== undefined
+    description.value !== undefined &&
+    portion.value !== undefined &&
+    imageUrl.value !== undefined
   )
 }
 
@@ -101,6 +107,29 @@ const getModelByName = {
   portion
 }
 
+const handleUpdateProduct = () => {
+  const boolean = canMoveToTab2()
+  const getId = product.storage.get('activedStore') || ''
+  const parse = getId ? JSON.parse(getId) : ''
+  if (boolean) {
+    product.updateProduct(
+      parse.id,
+      Number(route.query.id),
+      getModelByName,
+      image,
+      () => {
+        const getId = product.storage.get('store') || ''
+        const parse = getId ? JSON.parse(getId) : ''
+        imageUrl.value = parse.src
+        isEditing.value = false
+        Swal.fire('Produto atualizado com sucesso')
+        isProductExists.value = false
+      },
+      () => Swal.fire('Erro ao atualizar produto')
+    )
+  }
+}
+
 onMounted(() => {
   const formData = ['productName', 'price', 'description', 'category', 'portion']
   formData.forEach((field) => {
@@ -110,6 +139,39 @@ onMounted(() => {
       getModelByName[field as keyof typeof getModelByName].value = productData
     }
   })
+  if (route.query.isNewProduct === 'true') {
+    isEditing.value = true
+    productName.value = ''
+    price.value = ''
+    description.value = ''
+    category.value = ''
+    portion.value = ''
+    imageUrl.value = ''
+  }
+  if (route.query.isEditing === 'true') {
+    isEditing.value = true
+    const store = localStorage.getItem('activedStore') || '';
+    const parse = store ? JSON.parse(store)  : ''
+    if (parse) {
+      product.getProductsById(
+        parse.id,
+        Number(route.query.id),
+        (productData: any) => {
+          console.log(productData)
+          productName.value = productData.title
+          price.value = productData.price
+          description.value = productData.description
+          category.value = productData.category
+          portion.value = productData.portion
+          imageUrl.value = `${import.meta.env.VITE_API_URL}${productData.image_url}`
+          isProductExists.value = true
+        },
+        () => {
+          console.error('Failed to fetch stores')
+        }
+      )
+    }
+  }
 })
 
 let image: File
@@ -232,10 +294,10 @@ function priceMask(value: string): string {
       </div>
       <div class="button-container">
         <ButtonStyled
-          @click.prevent="handleCreateProduct"
+        @click.prevent="isEditing ? handleUpdateProduct() : handleCreateProduct()"
           type="submit"
           className="login-button"
-          label="Adicionar produto"
+          :label="isEditing ? 'Atualizar' : 'Enviar'"
           width="18rem"
           height="2.8rem"
         />

@@ -99,7 +99,7 @@ const cancelledOrder = (orderId: number) => {
             <p>Número do Pedido: {{ order.id }}</p>
             <p>Status: {{ order.status }}</p>
           </div>
-          <ButtonStyled className="small-button" @click="toggleOrderDetails(order.id)" label="Exibir detalhes"/>
+          <ButtonStyled className="small-blue-button" @click="toggleOrderDetails(order.id)" label="Exibir detalhes"/>
         </div>
         
         <div v-if="order.expanded" class="order-details">
@@ -110,8 +110,8 @@ const cancelledOrder = (orderId: number) => {
           <p>Nome: {{ order.customerName }}</p>
           <p>Endereço: {{ order.address }}</p>
           <div class="order-actions">
-            <ButtonStyled className="small-button" v-if="order.status === 'new'" @click="acceptOrder(order.id)" label="Aceitar"/>
-            <ButtonStyled className="small-button" v-if="order.status === 'new'" @click="rejectOrder(order.id)" label="Recusar"/>
+            <ButtonStyled className="small-green-button" v-if="order.status === 'new'" @click="acceptOrder(order.id)" label="Aceitar"/>
+            <ButtonStyled className="small-red-button" v-if="order.status === 'new'" @click="rejectOrder(order.id)" label="Recusar"/>
             <ButtonStyled className="small-button" v-if="order.status === 'preparing'" @click="completeOrder(order.id)" label="Finalizar"/>
             <ButtonStyled className="small-button" v-if="order.status === 'preparing'" @click="cancelledOrder(order.id)" label="Cancelar"/>
           </div>
@@ -134,6 +134,7 @@ const cancelledOrder = (orderId: number) => {
   }
   
   .order-card {
+    width: 68.75rem;
     border: 1px solid #ddd;
     padding: 10px;
     margin-bottom: 10px;
@@ -160,7 +161,7 @@ const cancelledOrder = (orderId: number) => {
   
   .order-actions {
     display: flex;
-    justify-content: space-around;
+    justify-content:center;
     margin-top: 10px;
   }
   </style>

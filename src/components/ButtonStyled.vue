@@ -32,13 +32,26 @@ button {
   font-family: 'Poppins';
   font-weight: 700;
 }
-
-.small-button {
+ 
+.small-green-button,
+.small-red-button,
+.small-blue-button {
   width: auto;
   height: 2rem;
-  background-color: var(--dark-blue);
   color: white;
   border: none;
+}
+
+.small-blue-button {
+  background-color: var(--dark-blue);
+}
+
+.small-green-button {
+  background-color: var(--green);
+}
+
+.small-red-button {
+  background-color: var(--red);
 }
 
 .medium-button {

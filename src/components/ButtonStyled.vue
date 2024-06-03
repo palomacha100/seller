@@ -5,8 +5,8 @@ const props = defineProps<{
   label: string
   className: string
   isDisabled?: boolean
-  width: string
-  height: string
+  width?: string
+  height?: string
 }>()
 
 const emit = defineEmits(['click'])
@@ -33,6 +33,13 @@ button {
   font-weight: 700;
 }
 
+.medium-button {
+  width: 10rem;
+  height: 2.8rem;
+  background-color: var(--dark-blue);
+  color: white;
+  border: none;
+}
 .login-button {
   background-color: var(--dark-blue);
   color: white;

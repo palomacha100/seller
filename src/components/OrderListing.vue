@@ -2,6 +2,7 @@
   import { ref, computed } from 'vue';
   import TitleStyled from './TitleStyled.vue';
   import ButtonStyled from './ButtonStyled.vue';
+  import ContainerStyled from './ContainerStyled.vue';
   
   interface Order {
     id: number;
@@ -79,7 +80,9 @@ const cancelledOrder = (orderId: number) => {
   </script>
 <template>
     <div class="order-management-container">
-      <TitleStyled class="title-styled" title="Gerenciamento de Pedidos"/>
+      <ContainerStyled className="title-container">
+        <TitleStyled class="title-styled" title="Gerenciamento de Pedidos"/>
+      </ContainerStyled>
   
       <div class="filter-buttons">
         <ButtonStyled @click="filterOrders('all')" label="Todos" className="medium-button"/>

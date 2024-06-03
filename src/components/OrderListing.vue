@@ -50,10 +50,26 @@
     order.status = 'preparing';
   }
 };
+
+const completeOrder = (orderId: number) => {
+  const order = orders.value.find(order => order.id === orderId);
+  if (order) {
+    order.status = 'completed';
+  }
+};
+
+const cancelledOrder = (orderId: number) => {
+  const order = orders.value.find(order => order.id === orderId);
+  if (order) {
+    order.status = 'cancelled';
+  }
+}
   
   const rejectOrder = (orderId: number) => {
-    console.log(`Pedido ${orderId} recusado.`);
-    // Implementar lógica de recusa de pedido
+    const order = orders.value.find(order => order.id === orderId);
+    if (order) {
+    order.status = 'cancelled';
+  }
   };
   
   const openChat = (orderId: number) => {
@@ -98,9 +114,10 @@
           <p>Nome: {{ order.customerName }}</p>
           <p>Endereço: {{ order.address }}</p>
           <div class="order-actions">
-            <ButtonStyled @click="acceptOrder(order.id)" label="Aceitar"/>
-            <ButtonStyled @click="rejectOrder(order.id)" label="Recusar"/>
-            <ButtonStyled @click="openChat(order.id)" label="Chat"/>
+            <ButtonStyled v-if="order.status === 'new'" @click="acceptOrder(order.id)" label="Aceitar"/>
+            <ButtonStyled v-if="order.status === 'new'" @click="rejectOrder(order.id)" label="Recusar"/>
+            <ButtonStyled v-if="order.status === 'preparing'" @click="completeOrder(order.id)" label="Finalizar"/>
+            <ButtonStyled v-if="order.status === 'preparing'" @click="cancelledOrder(order.id)" label="Cancelar"/>
           </div>
         </div>
       </div>

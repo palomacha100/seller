@@ -28,5 +28,13 @@ div {
   background-color: transparent
 }
 
+.buttons-container {
+  width: 68.75rem;
+  height: 3.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 
 </style>

@@ -25,12 +25,20 @@ function handleClick(event: MouseEvent) {
 
 <style scoped>
 button {
-  padding: 5px;
+  
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.875rem;
   font-family: 'Poppins';
   font-weight: 700;
+}
+
+.small-button {
+  width: auto;
+  height: 2rem;
+  background-color: var(--dark-blue);
+  color: white;
+  border: none;
 }
 
 .medium-button {

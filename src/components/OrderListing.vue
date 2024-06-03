@@ -84,13 +84,13 @@ const cancelledOrder = (orderId: number) => {
         <TitleStyled class="title-styled" title="Gerenciamento de Pedidos"/>
       </ContainerStyled>
   
-      <div class="filter-buttons">
+      <ContainerStyled className=buttons-container>
         <ButtonStyled @click="filterOrders('all')" label="Todos" className="medium-button"/>
         <ButtonStyled @click="filterOrders('new')" label="Novos" className="medium-button"/>
         <ButtonStyled @click="filterOrders('preparing')" label="Preparando" className="medium-button"/>
         <ButtonStyled @click="filterOrders('completed')" label="Finalizados" className="medium-button"/>
         <ButtonStyled @click="filterOrders('cancelled')" label="Cancelados" className="medium-button"/>
-      </div>
+      </ContainerStyled>
   
       <div v-for="order in filteredOrders" :key="order.id" class="order-card">
         <div class="order-header">
@@ -99,7 +99,7 @@ const cancelledOrder = (orderId: number) => {
             <p>Número do Pedido: {{ order.id }}</p>
             <p>Status: {{ order.status }}</p>
           </div>
-          <ButtonStyled @click="toggleOrderDetails(order.id)" label="Exibir detalhes"/>
+          <ButtonStyled className="small-button" @click="toggleOrderDetails(order.id)" label="Exibir detalhes"/>
         </div>
         
         <div v-if="order.expanded" class="order-details">
@@ -110,10 +110,10 @@ const cancelledOrder = (orderId: number) => {
           <p>Nome: {{ order.customerName }}</p>
           <p>Endereço: {{ order.address }}</p>
           <div class="order-actions">
-            <ButtonStyled v-if="order.status === 'new'" @click="acceptOrder(order.id)" label="Aceitar"/>
-            <ButtonStyled v-if="order.status === 'new'" @click="rejectOrder(order.id)" label="Recusar"/>
-            <ButtonStyled v-if="order.status === 'preparing'" @click="completeOrder(order.id)" label="Finalizar"/>
-            <ButtonStyled v-if="order.status === 'preparing'" @click="cancelledOrder(order.id)" label="Cancelar"/>
+            <ButtonStyled className="small-button" v-if="order.status === 'new'" @click="acceptOrder(order.id)" label="Aceitar"/>
+            <ButtonStyled className="small-button" v-if="order.status === 'new'" @click="rejectOrder(order.id)" label="Recusar"/>
+            <ButtonStyled className="small-button" v-if="order.status === 'preparing'" @click="completeOrder(order.id)" label="Finalizar"/>
+            <ButtonStyled className="small-button" v-if="order.status === 'preparing'" @click="cancelledOrder(order.id)" label="Cancelar"/>
           </div>
         </div>
       </div>
@@ -123,7 +123,7 @@ const cancelledOrder = (orderId: number) => {
   
   <style scoped>
   .order-management-container {
-    width: 80%;
+    width: 1100px;
     margin: 30px auto;
   }
   

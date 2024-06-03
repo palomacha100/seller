@@ -5,13 +5,18 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import SelectStyled from './SelectStyled.vue'
 import TextStyled from './TextStyled.vue'
+import TitleStyled from './TitleStyled.vue'
 import { ProductService } from '@/api/productService'
 import Swal from 'sweetalert2'
+import { useRoute } from 'vue-router'
 const productName = defineModel<string>('productName', { default: '' })
 const description = defineModel<string>('description', { default: '' })
 const price = ref<string>('')
 const category = defineModel<string>('category', { default: '' })
 const portion = defineModel<string>('portion', { default: '' })
+const isEditing = ref(false)
+const isProductExists =ref(false)
+const route = useRoute()
 
 const product = new ProductService()
 
@@ -57,7 +62,7 @@ const handleDescription = (event: Event) => {
 }
 
 const handlePrice = (event: Event) => {
-  errors.price = validateField(price.value, 4, undefined, undefined, 'preço')
+  errors.price = validateField(price.value, 3, undefined, undefined, 'preço')
   price.value = priceMask((event.target as HTMLInputElement).value)
   localStorage.setItem('price', (event.target as HTMLInputElement).value)
 }
@@ -77,7 +82,9 @@ const canMoveToTab2 = () => {
     productName.value !== '' &&
     price.value !== undefined &&
     category.value !== undefined &&
-    portion.value !== undefined
+    description.value !== undefined &&
+    portion.value !== undefined &&
+    imageUrl.value !== undefined
   )
 }
 
@@ -101,6 +108,29 @@ const getModelByName = {
   portion
 }
 
+const handleUpdateProduct = () => {
+  const boolean = canMoveToTab2()
+  const getId = product.storage.get('activedStore') || ''
+  const parse = getId ? JSON.parse(getId) : ''
+  if (boolean) {
+    product.updateProduct(
+      parse.id,
+      Number(route.query.id),
+      getModelByName,
+      image,
+      () => {
+        const getId = product.storage.get('store') || ''
+        const parse = getId ? JSON.parse(getId) : ''
+        imageUrl.value = parse.src
+        isEditing.value = false
+        Swal.fire('Produto atualizado com sucesso')
+        isProductExists.value = false
+      },
+      () => Swal.fire('Erro ao atualizar produto')
+    )
+  }
+}
+
 onMounted(() => {
   const formData = ['productName', 'price', 'description', 'category', 'portion']
   formData.forEach((field) => {
@@ -110,6 +140,41 @@ onMounted(() => {
       getModelByName[field as keyof typeof getModelByName].value = productData
     }
   })
+  if (route.query.isNewProduct === 'true') {
+    console.log('aqui')
+    isEditing.value = false
+    isProductExists.value = true
+    productName.value = ''
+    price.value = ''
+    description.value = ''
+    category.value = ''
+    portion.value = ''
+    imageUrl.value = ''
+  }
+  if (route.query.isEditing === 'true') {
+    isEditing.value = true
+    const store = localStorage.getItem('activedStore') || '';
+    const parse = store ? JSON.parse(store)  : ''
+    if (parse) {
+      product.getProductsById(
+        parse.id,
+        Number(route.query.id),
+        (productData: any) => {
+          console.log(productData)
+          productName.value = productData.title
+          price.value = productData.price
+          description.value = productData.description
+          category.value = productData.category
+          portion.value = productData.portion
+          imageUrl.value = `${import.meta.env.VITE_API_URL}${productData.image_url}`
+          isProductExists.value = true
+        },
+        () => {
+          console.error('Failed to fetch stores')
+        }
+      )
+    }
+  }
 })
 
 let image: File
@@ -118,7 +183,7 @@ const imageUrl = ref('')
 
 const handleCreateProduct = () => {
   const boolean = canMoveToTab2()
-  const getId = product.storage.get('store') || ''
+  const getId = product.storage.get('activedStore') || ''
   const parse = getId ? JSON.parse(getId) : ''
   const data = { productName, description, price, category, portion }
   if (boolean)
@@ -129,6 +194,13 @@ const handleCreateProduct = () => {
       () => Swal.fire('Produto cadastrado com sucesso'),
       () => Swal.fire('Erro ao cadastrar produto')
     )
+}
+
+const handleEdit = () => {
+  isEditing.value = true
+  const getId = product.storage.get('store') || ''
+  const parse = getId ? JSON.parse(getId) : ''
+  imageUrl.value = parse.src
 }
 
 const handleImageChange = (event: Event) => {
@@ -152,17 +224,107 @@ function priceMask(value: string): string {
     return arrayValue.join('')
   }
 }
+
+
 </script>
 <template>
-  <div class="main-container">
-    <form>
-      <TextStyled
-        className="gray-bold-text"
-        width=" 800px"
-        height="2.8rem"
-        text="Por favor, preencha todos os campos obrigatórios antes de prosseguir"
-      />
-      <div class="image-name-container">
+  <template v-if="isProductExists || isEditing">
+
+    <div class="main-container">
+      <form>
+        <ContainerStyled width="68.75rem" height="3.5rem" backgroundColor="transparent">
+        <TitleStyled title="Edição de produto" />
+      </ContainerStyled>
+        <TextStyled
+          className="gray-bold-text"
+          width=" 800px"
+          height="2.8rem"
+          text="Por favor, preencha todos os campos obrigatórios antes de prosseguir"
+        />
+        <div class="image-name-container">
+          <div class="image-styled">
+            <div class="product-image">
+              <img
+                class="img-content"
+                :src="imageUrl"
+                v-if="imageUrl"
+                accept="image/*"
+                id="imagePreview"
+              />
+            </div>
+            <input type="file" id="input-file" class="input-file" @change="handleImageChange" />
+            <label for="input-file" class="custom-button">Escolher imagem do produto</label>
+          </div>
+          <div class="data-product">
+            <InputStyled
+              v-model="productName"
+              id="productName"
+              type="text"
+              width="24rem"
+              height="2.8rem"
+              placeholder="Digite o nome do produto"
+              borderColor="transparent"
+              :error="errors.productName"
+              :handleChange="handleProductName"
+            />
+            <SelectStyled
+              v-model="category"
+              id="category"
+              label=""
+              typeOfSelect="Categoria"
+              width="100%"
+              :options="categoryDropdownOptions"
+              :handleChange="handleCategory"
+            />
+            <InputStyled
+              v-model="price"
+              id="price"
+              type="string"
+              width="24rem"
+              height="2.8rem"
+              placeholder="Preço do produto"
+              borderColor="transparent"
+              :error="errors.price"
+              :handleChange="handlePrice"
+            />
+            <div class="text-area-container">
+              <textarea
+                v-model="description"
+                id="description"
+                type="text-area"
+                placeholder="Descrição do produto"
+                :style="{ borderColor: errors.description ? 'var(--red)' : 'transparent' }"
+                :onInput="handleDescription"
+              ></textarea>
+              <span v-if="errors.description" class="error-message">{{ errors.description }}</span>
+            </div>
+            <SelectStyled
+              v-model="portion"
+              id="portion"
+              label=""
+              typeOfSelect="Esse prato serve quantas pessoas?"
+              width="100%"
+              :options="portionDropdownOptions"
+              :handleChange="handlePortion"
+            />
+          </div>
+        </div>
+        <div class="button-container">
+          <ButtonStyled
+          @click.prevent="isEditing ? handleUpdateProduct() : handleCreateProduct()"
+            type="submit"
+            className="login-button"
+            :label="isEditing ? 'Atualizar' : 'Enviar'"
+            width="18rem"
+            height="2.8rem"
+          />
+        </div>
+      </form>
+    </div>
+  </template>
+  <template v-else>
+    <div class="main-container">
+      <div class="profile">
         <div class="image-styled">
           <div class="product-image">
             <img
@@ -173,84 +335,66 @@ function priceMask(value: string): string {
               id="imagePreview"
             />
           </div>
-          <input type="file" id="input-file" class="input-file" @change="handleImageChange" />
-          <label for="input-file" class="custom-button">Escolher imagem do produto</label>
         </div>
-        <div class="data-product">
-          <InputStyled
-            v-model="productName"
-            id="productName"
-            type="text"
-            width="24rem"
-            height="2.8rem"
-            placeholder="Digite o nome do produto"
-            borderColor="transparent"
-            :error="errors.productName"
-            :handleChange="handleProductName"
+        <div class="data-text-container">
+          <TitleStyled :title="`${productName}`" class="title-styled" />
+          <TextStyled
+            className="gray-text"
+            width=" 391px"
+            height="2.5rem"
+            :text="`Categoria: ${category}`"
           />
-          <SelectStyled
-            v-model="category"
-            id="category"
-            label=""
-            typeOfSelect="Categoria"
-            width="100%"
-            :options="categoryDropdownOptions"
-            :handleChange="handleCategory"
+          <TextStyled
+            className="gray-text"
+            width=" 391px"
+            height="2.5rem"
+            :text="`Valor: ${price}`"
           />
-          <InputStyled
-            v-model="price"
-            id="price"
-            type="string"
-            width="24rem"
-            height="2.8rem"
-            placeholder="Preço do produto"
-            borderColor="transparent"
-            :error="errors.price"
-            :handleChange="handlePrice"
+          <TextStyled
+            className="gray-text"
+            width=" 391px"
+            height="2.5rem"
+            :text="`Descrição: ${description}`"
           />
-          <div class="text-area-container">
-            <textarea
-              v-model="description"
-              id="description"
-              type="text-area"
-              placeholder="Descrição do produto"
-              :style="{ borderColor: errors.description ? 'var(--red)' : 'transparent' }"
-              :onInput="handleDescription"
-            ></textarea>
-            <span v-if="errors.description" class="error-message">{{ errors.description }}</span>
+          <TextStyled
+            className="gray-text"
+            width=" 391px"
+            height="2.5rem"
+            :text="`Serve: ${portion}`"
+          />
+          <div class="button-container">
+            <ButtonStyled
+              @click="handleEdit"
+              type="submit"
+              className="login-button"
+              label="Editar"
+              width="10rem"
+              height="2.5rem"
+            />
+            <nav>
+              <RouterLink :to="{ name: 'listingProducts' }">
+                <ButtonStyled
+                  type="submit"
+                  className="login-button"
+                  label="Gerenciar produtos"
+                  width="10rem"
+                  height="2.5rem"
+                />
+              </RouterLink>
+            </nav>
           </div>
-          <SelectStyled
-            v-model="portion"
-            id="portion"
-            label=""
-            typeOfSelect="Esse prato serve quantas pessoas?"
-            width="100%"
-            :options="portionDropdownOptions"
-            :handleChange="handlePortion"
-          />
         </div>
       </div>
-      <div class="button-container">
-        <ButtonStyled
-          @click.prevent="handleCreateProduct"
-          type="submit"
-          className="login-button"
-          label="Adicionar produto"
-          width="18rem"
-          height="2.8rem"
-        />
-      </div>
-    </form>
-  </div>
+    </div>
+  </template>
 </template>
 
 <style scoped>
 .main-container {
   display: flex;
   justify-content: center;
-  background-color: rgba(237, 228, 161, 0.5);
   width: 100%;
-  height: 100vh;
+  height: auto;
 }
 
 form {
@@ -265,7 +409,6 @@ form {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
   height: 450px;
 }
 
@@ -288,12 +431,11 @@ textarea {
 }
 
 .button-container {
+  margin: 15px 0;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 6rem;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 span {
@@ -356,5 +498,12 @@ span {
   flex-direction: column;
   align-items: center;
   width: 24rem;
+}
+
+.data-text-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

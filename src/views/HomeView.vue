@@ -12,6 +12,7 @@ const signOut = () => {
   auth.signOut(() => {
     isLoggedIn.value = auth.isLoggedIn()
     currentUser.value = auth.currentUser()
+    sessionStorage.removeItem('active');
     route.push('/signIn')
   })
 }

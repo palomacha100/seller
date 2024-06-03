@@ -4,10 +4,20 @@ class ProductService extends BaseService {
   constructor() {
     super()
   }
-  async getProducts(id: number, onSuccess: () => void, onFailure: () => void) {
+
+  async getProducts(id: number, onSuccess: (data: any) => void, onFailure: () => void) {
     const response = await this.getEntity(`stores/${id}/products`)
     if (response.ok) {
       this.success(response, onSuccess)
+    } else {
+      this.failure(response, onFailure)
+    }
+  }
+
+  async getProductsById(id: number, productId: number, onSuccess: (data: any) => void, onFailure: () => void) {
+    const response = await this.getEntity(`stores/${id}/products/${productId}`)
+    if (response.ok) {
+      this.success(response, onSuccess, 'byId')
     } else {
       this.failure(response, onFailure)
     }
@@ -42,7 +52,7 @@ class ProductService extends BaseService {
     idStore: number,
     idProduct: number,
     data: any,
-    image: File,
+    image: File | string | null,
     onSuccess: () => void,
     onFailure: () => void
   ) {
@@ -81,10 +91,9 @@ class ProductService extends BaseService {
     onFailure()
   }
 
-  success(response: Response, onSuccess: () => void, action = 'generate') {
-    onSuccess()
+  success(response: Response, onSuccess: (data?: any) => void, action = 'generate') {
     response.json().then((json) => {
-      console.log(json)
+      onSuccess(json)
       if (action === 'generate') {
         const product = {
           id: json.id,

@@ -49,13 +49,6 @@ button {
   border: none;
 }
 
-.disable-button {
-  background-color: var(--light_blue);
-  color: var(--white);
-  cursor: not-allowed;
-  border: none;
-}
-
 .red-button {
   background-color: transparent;
   border-width: 2px;

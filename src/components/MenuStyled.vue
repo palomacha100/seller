@@ -47,7 +47,7 @@ const signOut = () => {
                 <a class="nav-link" href="home">Início</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Pedidos</a>
+                <a class="nav-link" href="orderListing">Pedidos</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="listingStores">Lojas</a>
@@ -141,7 +141,7 @@ img {
 }
 
 .nav-link:hover {
-  color: var(--red);
+  color: var(--dark-blue);
 }
 
 .dropdown-menu {
@@ -176,7 +176,7 @@ img {
 .notification {
     font-size: 20px;
     text-decoration: none;
-    color: var(--red);
+    color: var(--dark-blue);
     font-weight: 700;
 }
 

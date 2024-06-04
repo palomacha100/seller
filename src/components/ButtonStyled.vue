@@ -35,32 +35,44 @@ button {
  
 .small-green-button,
 .small-red-button,
-.small-blue-button {
+.small-blue-button,
+.small-yellow-button,
+.small-gray-button {
   width: auto;
   height: 2rem;
   color: white;
   border: none;
 }
 
-.small-blue-button {
+.small-blue-button, .medium-blue-button {
   background-color: var(--dark-blue);
 }
 
-.small-green-button {
+.small-yellow-button, .medium-yellow-button {
+  background-color: var(--yellow);
+}
+
+.small-green-button, .medium-green-button {
   background-color: var(--green);
 }
 
-.small-red-button {
+.small-red-button, .medium-red-button {
   background-color: var(--red);
 }
 
-.medium-button {
+.small-gray-button, .medium-gray-button {
+  background-color: var(--dark-gray);
+}
+
+.medium-blue-button, 
+.medium-red-button, .medium-green-button, .medium-yellow-button, .medium-gray-button  {
   width: 10rem;
   height: 2.8rem;
-  background-color: var(--dark-blue);
   color: white;
   border: none;
 }
+
+
 .login-button {
   background-color: var(--dark-blue);
   color: white;

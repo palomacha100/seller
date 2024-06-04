@@ -85,11 +85,11 @@ const cancelledOrder = (orderId: number) => {
       </ContainerStyled>
   
       <ContainerStyled className=buttons-container>
-        <ButtonStyled @click="filterOrders('all')" label="Todos" className="medium-button"/>
-        <ButtonStyled @click="filterOrders('new')" label="Novos" className="medium-button"/>
-        <ButtonStyled @click="filterOrders('preparing')" label="Preparando" className="medium-button"/>
-        <ButtonStyled @click="filterOrders('completed')" label="Finalizados" className="medium-button"/>
-        <ButtonStyled @click="filterOrders('cancelled')" label="Cancelados" className="medium-button"/>
+        <ButtonStyled @click="filterOrders('all')" label="Todos" className="medium-blue-button"/>
+        <ButtonStyled @click="filterOrders('new')" label="Novos" className="medium-green-button"/>
+        <ButtonStyled @click="filterOrders('preparing')" label="Preparando" className="medium-yellow-button"/>
+        <ButtonStyled @click="filterOrders('completed')" label="Finalizados" className="medium-gray-button"/>
+        <ButtonStyled @click="filterOrders('cancelled')" label="Cancelados" className="medium-red-button"/>
       </ContainerStyled>
   
       <div v-for="order in filteredOrders" :key="order.id" class="order-card">

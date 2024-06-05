@@ -20,7 +20,6 @@ const errorCredential = ref('')
 
 const onSubmit = () => {
   const auth = new Auth(checked.value)
-  console.log(checked.value)
   if (email.value == '') {
     return (errorEmail.value = 'É necessário informar um email')
   }

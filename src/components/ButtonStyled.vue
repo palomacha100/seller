@@ -38,7 +38,7 @@ button {
 .small-blue-button,
 .small-yellow-button,
 .small-gray-button {
-  width: auto;
+  width: 10rem;
   height: 2rem;
   color: white;
   border: none;
@@ -66,7 +66,7 @@ button {
 
 .medium-blue-button, 
 .medium-red-button, .medium-green-button, .medium-yellow-button, .medium-gray-button  {
-  width: 10rem;
+  width: 12rem;
   height: 2.8rem;
   color: white;
   border: none;

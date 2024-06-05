@@ -4,7 +4,7 @@ defineProps<{
   text: string
   width?: string
   height?: string
-  className: string
+  className?: string
 }>()
 </script>
 
@@ -19,7 +19,8 @@ div {
   display: flex;
   justify-content: start;
   align-items: center;
-  height: 100vh;
+  height: auto;
+  widows: auto;
 }
 .text-container {
   display: flex;

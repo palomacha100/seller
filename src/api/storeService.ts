@@ -109,6 +109,7 @@ class StoreService extends BaseService {
         this.storage.store('store', JSON.stringify(store))
         onSuccess()
       } else if (action === 'getAll' && Array.isArray(json)) {
+        
         const storeData = json.map((fields: any) => ({
           id: fields.id,
           name: fields.name,

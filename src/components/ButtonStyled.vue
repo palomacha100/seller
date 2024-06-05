@@ -25,7 +25,6 @@ function handleClick(event: MouseEvent) {
 
 <style scoped>
 button {
-  
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.875rem;
@@ -42,6 +41,15 @@ button {
   height: 2rem;
   color: white;
   border: none;
+}
+
+.pagination-button {
+  background-color: var(--light-blue);
+  color: var(--dark-gray);
+  width: 7rem;
+  height: 2rem;
+  font-weight: 300;
+  font-size: 0.75rem;
 }
 
 .small-blue-button, .medium-blue-button {

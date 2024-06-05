@@ -20,6 +20,8 @@ const storeService = new StoreService()
 const stores = ref<Store[]>([])
 const searchQuery = ref<string>('')
 const sortOrder = ref<'asc' | 'desc'>('asc')
+const currentPage = ref<number>(1)
+const itemsPerPage = ref<number>(10)
 
 const fetchStores = async () => {
   await storeService.getStores(
@@ -111,6 +113,28 @@ const filteredStores = computed(() => {
   )
 })
 
+const paginatedStores = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return filteredStores.value.slice(start, end)
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredStores.value.length / itemsPerPage.value)
+})
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1
+  }
+}
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1
+  }
+}
+
 const addStore = () => {
   router.push({ path: './profile', query: { isNewStore: 'true' } })
 }
@@ -159,7 +183,7 @@ onMounted(() => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="store in filteredStores" :key="store.id">
+        <tr v-for="store in paginatedStores" :key="store.id">
           <td><img :src="store.image_url" alt="Store Image" class="thumbnail" /></td>
           <td>{{ store.name }}</td>
           <td>
@@ -177,6 +201,11 @@ onMounted(() => {
         </tr>
       </tbody>
     </table>
+    <div class="pagination">
+      <ButtonStyled className="pagination-button" @click="prevPage" :disabled="currentPage === 1" label="Anterior"/>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+      <ButtonStyled className="pagination-button" @click="nextPage" :disabled="currentPage === totalPages" label="Próxima"/>
+    </div>
   </div>
 </template>
 
@@ -202,6 +231,11 @@ table {
   margin-top: 0.5rem;
 }
 
+span {
+  color: var(--dark-gray);
+  font-size: 14px;
+}
+
 th,
 td {
   padding: 12px;
@@ -216,30 +250,8 @@ th {
   background-color: var(--light-blue);
 }
 
-th span {
-  margin-left: 5px;
-  font-size: 12px;
-  color: #888;
-}
-
-button {
-  padding: 6px 12px;
-  margin-right: 5px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.8;
-}
-
-button:active {
-  transform: scale(0.98);
-}
-
 .edit-button {
-  background-color: var(--dark-blue); /* Green for edit */
+  background-color: var(--dark-blue);
   color: white;
 }
 
@@ -257,4 +269,15 @@ button:active {
   background-color: var(--dark-gray);
   color: white;
 }
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+
+
 </style>

@@ -75,7 +75,7 @@ button {
 .medium-blue-button, 
 .medium-red-button, .medium-green-button, .medium-yellow-button, .medium-gray-button  {
   width: 12rem;
-  height: 2.8rem;
+  height: 2.5rem;
   color: white;
   border: none;
 }

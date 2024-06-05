@@ -154,17 +154,12 @@ onMounted(() => {
         v-model="searchQuery"
         id="storeSearch"
         type="text"
-        width="57rem"
-        height="2.8rem"
         placeholder="Pesquisar pelo nome da loja"
-        borderColor="transparent"
-        class="custom-height"
+        class="input-header"
       />
       <ButtonStyled
-        className="login-button"
+        className="medium-blue-button"
         label="+ Adicionar loja"
-        width="10rem"
-        height="2.5rem"
         @click="addStore"
       />
     </ContainerStyled>

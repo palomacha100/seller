@@ -204,7 +204,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .thumbnail {
   width: 50px;
   height: 50px;

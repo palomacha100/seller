@@ -53,6 +53,9 @@ const signOut = () => {
                 <a class="nav-link" href="listingStores">Lojas</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="#">Histórico</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="#">Estatísticas</a>
             </li>
         </ul>

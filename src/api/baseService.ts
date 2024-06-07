@@ -1,12 +1,15 @@
 import { createStorage, type SimpleStorage } from '@/utils/storage'
+import { Auth } from '@/auth';
 
 abstract class BaseService {
   protected apiUrl: string
   storage: SimpleStorage
+  protected auth: Auth;
   constructor() {
     this.apiUrl = import.meta.env.VITE_API_URL
     const persistent: boolean = this.whatIsMyStorage()
     this.storage = createStorage(persistent)
+    this.auth = new Auth(persistent);
   }
 
   async getEntity(path: string): Promise<Response> {

@@ -22,6 +22,7 @@ interface Product {
   image_url: string
   price: string
   active: boolean
+  thumbnail_url: string
 }
 
 const fetchProducts = async (storeId: number) => {
@@ -32,6 +33,7 @@ const fetchProducts = async (storeId: number) => {
     storeId,
     (data: Product[]) => {
       products.value = data.data || []
+      console.log(data)
       if (products.value.length > 0) {
         products.value.forEach((product) => {
           product.active = true
@@ -39,7 +41,8 @@ const fetchProducts = async (storeId: number) => {
       }
       products.value.map((product) => ({
         ...product,
-        image_url: `${import.meta.env.VITE_API_URL}${product.image_url}`
+        image_url: `${import.meta.env.VITE_API_URL}${product.image_url}`,
+        thumbnail_url: `${import.meta.env.VITE_API_URL}${product.thumbnail_url}`
       }))
       filteredProducts.value = products.value
     },
@@ -189,7 +192,7 @@ const handleFilter = () => {
       </thead>
       <tbody v-if="filteredProducts">
         <tr v-for="product in filteredProducts" :key="product.id">
-          <td><img :src="product.image_url" alt="Product Image" class="thumbnail" /></td>
+          <td><img :src="product.thumbnail_url" alt="Product Image" class="thumbnail" /></td>
           <td>{{ product.title }}</td>
           <td>{{ product.category }}</td>
           <td>{{ product.price }}</td>

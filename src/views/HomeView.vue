@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Auth } from '../auth'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 const auth = new Auth()
 const isLoggedIn = ref(auth.isLoggedIn())
 const currentUser = ref(auth.currentUser())
@@ -12,7 +12,7 @@ const signOut = () => {
   auth.signOut(() => {
     isLoggedIn.value = auth.isLoggedIn()
     currentUser.value = auth.currentUser()
-    sessionStorage.removeItem('active');
+    sessionStorage.removeItem('active')
     route.push('/signIn')
   })
 }

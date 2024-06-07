@@ -75,7 +75,6 @@ const deleteProduct = async (productId: number) => {
   )
 }
 
-
 const editProduct = (id: number) => {
   router.push({ path: './products', query: { isEditing: 'true', id } })
 }
@@ -198,12 +197,7 @@ const handleFilter = () => {
           <td>{{ product.price }}</td>
           <td>
             <button class="edit-button" @click="editProduct(product.id)">Editar</button>
-            <button
-              class="delete-button"
-              @click="deleteProduct(product.id)"
-            >
-              Excluir
-            </button>
+            <button class="delete-button" @click="deleteProduct(product.id)">Excluir</button>
           </td>
           <td>
             <button

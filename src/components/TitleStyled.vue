@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
 defineProps<{
   title: string
 }>()
@@ -15,7 +14,7 @@ defineProps<{
 .title-styled {
   width: 100%;
   display: flex;
-  align-items: center;          
+  align-items: center;
 }
 .title-styled h1 {
   color: var(--dark-blue);

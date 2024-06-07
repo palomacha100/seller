@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, type PropType } from 'vue'
+import { type PropType } from 'vue'
 
 const { id, placeholder, borderColor, width, height, label, error, handleChange } = defineProps({
   type: String,
@@ -111,13 +111,10 @@ span {
 .full-input {
   width: 100%;
   height: 5rem;
-  
 }
 
 .full-input input {
   height: 2.8rem;
   border-color: transparent;
 }
-
-
 </style>

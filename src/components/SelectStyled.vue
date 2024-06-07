@@ -1,17 +1,4 @@
-<template>
-  <div class="select-container" :style="{ width, height }">
-    <label :for="id">{{ label }}</label>
-    <select :id="id" v-model="selectedValue" @change="handleChange">
-      <option value="" disabled hidden>{{ typeOfSelect }}</option>
-      <option v-for="(option, index) in options" :key="index" :value="option.value">
-        {{ option.label }}
-      </option>
-    </select>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, defineProps } from 'vue'
 import { type PropType } from 'vue'
 
 const { id, options, width, height, handleChange } = defineProps({
@@ -28,7 +15,8 @@ const { id, options, width, height, handleChange } = defineProps({
   handleChange: {
     type: Function as PropType<(event: Event) => void>,
     default: undefined
-  }
+  },
+  selectedValue: String
 })
 
 interface Option {
@@ -36,8 +24,18 @@ interface Option {
   label: string
 }
 
-const selectedValue = ref<string>('')
 </script>
+<template>
+  <div class="select-container" :style="{ width, height }">
+    <label :for="id">{{ label }}</label>
+    <select :id="id" @change="handleChange" :value="selectedValue">
+      <option value="" disabled hidden>{{ typeOfSelect }}</option>
+      <option v-for="(option, index) in options" :key="index" :value="option.value">
+        {{ option.label }}
+      </option>
+    </select>
+  </div>
+</template>
 
 <style scoped>
 div {
@@ -64,5 +62,10 @@ select {
   color: var(--dark-gray);
   border-color: transparent;
   box-shadow: 0 0 1px 0 var(--dark-gray);
+}
+
+.select-container {
+  width: 100%;
+  height: 5rem;
 }
 </style>

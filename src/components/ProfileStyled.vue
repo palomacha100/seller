@@ -10,14 +10,13 @@ import Swal from 'sweetalert2'
 import { useRoute } from 'vue-router'
 import ContainerStyled from './ContainerStyled.vue'
 
-const route = useRoute();
+const route = useRoute()
 const isStoreExists = ref(false)
 const isEditing = ref(false)
 const themeOptions = ref([])
 const store = new StoreService()
 const imageUrl = ref('')
 let image: File
-
 
 const fullName = defineModel<string>('fullName', { default: '' })
 const cnpj = defineModel<string>('cnpj', { default: '' })
@@ -31,7 +30,6 @@ const numberAddress = defineModel<string>('numberAddress')
 const complementAddress = defineModel<string>('complementAddress', { default: '' })
 const establishment = defineModel<string>('establishment', { default: '' })
 const theme = defineModel<string>('theme', { default: 'blue' })
-
 
 const errors = reactive({
   fullName: '',
@@ -111,6 +109,11 @@ const handleEstablishment = (event: Event) => {
   localStorage.setItem('establishment', establishment.value)
 }
 
+const handleTheme = (event: Event) => {
+  theme.value = (event.target as HTMLSelectElement).value
+  localStorage.setItem('theme', theme.value)
+}
+
 const canMoveToTab2 = () => {
   return (
     fullName.value !== '' &&
@@ -146,10 +149,6 @@ const addressSearch = (event: Event) => {
     .catch((error) => {
       console.error('Erro ao buscar CEP:', error)
     })
-}
-
-const applyTheme = (color: string) => {
-  document.documentElement.style.setProperty('--primary-color', color);
 }
 
 const estabDropdownOptions = [
@@ -205,25 +204,25 @@ onMounted(() => {
   }
   if (route.query.isEditing === 'true') {
     isEditing.value = true
-
+    console.log('aqui')
     store.getStoresById(
       Number(route.query.id),
-      (storeData: any) => {
-        fullName.value = storeData.name
-        cnpj.value = storeData.cnpj
-        phoneNumber.value = storeData.phonenumber
-        city.value = storeData.city
-        cep.value = storeData.cep
-        state.value = storeData.state
-        neighborhood.value = storeData.neighborhood
-        address.value = storeData.address
-        numberAddress.value = storeData.numberaddress
-        complementAddress.value = storeData.complementadress
-        establishment.value = storeData.establishment
-        imageUrl.value = storeData.src
+      (storeDataTwo: any) => {
+        console.log(storeDataTwo)
+        fullName.value = storeDataTwo.name
+        cnpj.value = storeDataTwo.cnpj
+        phoneNumber.value = storeDataTwo.phonenumber
+        city.value = storeDataTwo.city
+        cep.value = storeDataTwo.cep
+        state.value = storeDataTwo.state
+        neighborhood.value = storeDataTwo.neighborhood
+        address.value = storeDataTwo.address
+        numberAddress.value = storeDataTwo.numberaddress
+        complementAddress.value = storeDataTwo.complementadress
+        establishment.value = storeDataTwo.establishment
+        imageUrl.value = storeDataTwo.src
         isStoreExists.value = true
-        theme.value = storeData.theme
-        applyTheme(storeData.theme)
+        theme.value = storeDataTwo.theme
       },
       () => {
         console.error('Failed to fetch stores')
@@ -246,11 +245,15 @@ onMounted(() => {
     imageUrl.value = ''
     theme.value = 'blue'
   }
-  store.getTheme((data: any) => {themeOptions.value = data.themes}, 
-  () => {console.log('deu ruim')})
+  store.getTheme(
+    (data: any) => {
+      themeOptions.value = data.themes
+    },
+    () => {
+      console.log('deu ruim')
+    }
+  )
 })
-
-
 
 const handleCreateStore = () => {
   const boolean = canMoveToTab2()
@@ -264,8 +267,8 @@ const handleCreateStore = () => {
 }
 
 const handleUpdateStore = () => {
-  const boolean = canMoveToTab2();
-  const storeId = route.query.id || '';
+  const boolean = canMoveToTab2()
+  const storeId = route.query.id || ''
   if (boolean) {
     store.updateStore(
       Number(storeId),
@@ -276,7 +279,7 @@ const handleUpdateStore = () => {
         const parse = getId ? JSON.parse(getId) : ''
         imageUrl.value = parse.src
         isEditing.value = false
-        applyTheme(theme.value)
+
         Swal.fire('Loja atualizada com sucesso')
         isStoreExists.value = false
       },
@@ -347,7 +350,6 @@ const handleEdit = () => {
               type="string"
               class="full-input"
               placeholder="Telefone do restaurante (apenas números)"
-              borderColor="transparent"
               :error="errors.phoneNumber"
               :handleChange="handlePhoneNumber"
               @input="handlePhoneInput"
@@ -357,7 +359,7 @@ const handleEdit = () => {
                 v-model="cep"
                 id="cep"
                 type="number"
-                class="full-input" 
+                class="full-input"
                 placeholder="CEP (apenas números)"
                 :error="errors.cep"
                 :handleChange="handleCep"
@@ -393,7 +395,7 @@ const handleEdit = () => {
           v-model="neighborhood"
           id="neighborhood"
           type="text"
-          class="full-input"   
+          class="full-input"
           placeholder="Bairro"
           disabled
         />
@@ -419,33 +421,27 @@ const handleEdit = () => {
             v-model="complementAddress"
             id="complementAddress"
             type="text"
-            width="24rem"
-            height="2.8rem"
+            class="full-input"
             placeholder="Complemento (opcional)"
-            borderColor="transparent"
             :handleChange="handleComplementAddress"
           />
         </div>
 
         <SelectStyled
+          :selectedValue="establishment"
           v-model="establishment"
           id="establishment"
-          label=""
-          typeOfSelect="Tipo de cozinha"
-          width="100%"
-          height="2.8rem"
+          typeOfSelect="Tipo de cozinha" 
           :options="estabDropdownOptions"
           :handleChange="handleEstablishment"
         />
         <SelectStyled
-          v-model="theme"
+          :selectedValue="theme"
+          v-model:="theme"
           id="theme"
-          label=""
           typeOfSelect="Tema da Loja"
-          width="100%"
-          height="2.8rem"
           :options="themeOptions"
-          @change="applyTheme(theme)"
+          :handleChange="handleTheme"
         />
         <div class="button-container">
           <ButtonStyled
@@ -474,36 +470,14 @@ const handleEdit = () => {
         </div>
         <div class="data-text-container">
           <TitleStyled :title="`${fullName}`" class="title-styled" />
+          <TextStyled className="gray-text" :text="`CNPJ: ${cnpj}`" />
+          <TextStyled className="gray-text" :text="`Telefone: ${phoneNumber}`" />
           <TextStyled
             className="gray-text"
-            width=" 350px"
-            height="2.5rem"
-            :text="`CNPJ: ${cnpj}`"
-          />
-          <TextStyled
-            className="gray-text"
-            width=" 350px"
-            height="2.5rem"
-            :text="`Telefone: ${phoneNumber}`"
-          />
-          <TextStyled
-            className="gray-text"
-            width=" 350px"
-            height="2.5rem"
             :text="`Endereço: ${address}, ${numberAddress}, ${complementAddress}, ${neighborhood}`"
           />
-          <TextStyled
-            className="gray-text"
-            width=" 350px"
-            height="2.5rem"
-            :text="`CEP: ${cep} - ${city} - ${state}`"
-          />
-          <TextStyled
-            className="gray-text"
-            width=" 350px"
-            height="2.5rem"
-            :text="`Categoria: ${establishment}`"
-          />
+          <TextStyled className="gray-text" :text="`CEP: ${cep} - ${city} - ${state}`" />
+          <TextStyled className="gray-text" :text="`Categoria: ${establishment}`" />
           <div class="button-container">
             <ButtonStyled
               @click="handleEdit"
@@ -526,7 +500,6 @@ const handleEdit = () => {
     </div>
   </template>
 </template>
-
 
 <style scoped>
 .main-container {
@@ -578,10 +551,6 @@ form {
   width: 400px;
 }
 
-.title-styled {
-  width: 350px;
-}
-
 .button-container {
   margin: 30px 0;
   display: flex;
@@ -592,7 +561,7 @@ form {
 </style>
 
 <style>
-  .profile {
+.profile {
   display: flex;
   background-color: var(--white);
   justify-content: space-around;
@@ -603,6 +572,5 @@ form {
   border-radius: 5px;
   padding: 10px;
   gap: 10px;
-
 }
 </style>

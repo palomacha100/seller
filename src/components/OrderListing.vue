@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import TitleStyled from './TitleStyled.vue';
-import ButtonStyled from './ButtonStyled.vue';
-import ContainerStyled from './ContainerStyled.vue';
-import TextStyled from './TextStyled.vue';
+import { ref, computed } from 'vue'
+import TitleStyled from './TitleStyled.vue'
+import ButtonStyled from './ButtonStyled.vue'
+import ContainerStyled from './ContainerStyled.vue'
+import TextStyled from './TextStyled.vue'
 
 interface Order {
-  id: number;
-  customerName: string;
-  status: string;
-  items: Array<{ id: number; name: string; price: string }>;
-  total: string;
-  address: string;
-  expanded: boolean;
+  id: number
+  customerName: string
+  status: string
+  items: Array<{ id: number; name: string; price: string }>
+  total: string
+  address: string
+  expanded: boolean
 }
 
 const orders = ref<Order[]>([
@@ -22,100 +22,116 @@ const orders = ref<Order[]>([
     status: 'novo',
     items: [
       { id: 1, name: 'Item 1', price: 'R$ 10,00' },
-      { id: 2, name: 'Item 2', price: 'R$ 20,00' },
+      { id: 2, name: 'Item 2', price: 'R$ 20,00' }
     ],
     total: 'R$ 30,00',
     address: 'Rua Exemplo, 123',
-    expanded: false,
-  },
-]);
+    expanded: false
+  }
+])
 
-const filter = ref('todos');
+const filter = ref('todos')
 
 const filteredOrders = computed(() => {
-  if (filter.value === 'todos') return orders.value;
-  return orders.value.filter(order => order.status === filter.value);
-});
+  if (filter.value === 'todos') return orders.value
+  return orders.value.filter((order) => order.status === filter.value)
+})
 
 const filterOrders = (status: string) => {
-  filter.value = status;
-};
+  filter.value = status
+}
 
 const toggleOrderDetails = (orderId: number) => {
-  const order = orders.value.find(order => order.id === orderId);
-  if (order) order.expanded = !order.expanded;
-};
+  const order = orders.value.find((order) => order.id === orderId)
+  if (order) order.expanded = !order.expanded
+}
 
 const acceptOrder = (orderId: number) => {
-  const order = orders.value.find(order => order.id === orderId);
+  const order = orders.value.find((order) => order.id === orderId)
   if (order) {
-    order.status = 'preparando';
+    order.status = 'preparando'
   }
-};
+}
 
 const completeOrder = (orderId: number) => {
-  const order = orders.value.find(order => order.id === orderId);
+  const order = orders.value.find((order) => order.id === orderId)
   if (order) {
-    order.status = 'finalizado';
+    order.status = 'finalizado'
   }
-};
+}
 
 const cancelledOrder = (orderId: number) => {
-  const order = orders.value.find(order => order.id === orderId);
+  const order = orders.value.find((order) => order.id === orderId)
   if (order) {
-    order.status = 'cancelado';
+    order.status = 'cancelado'
   }
-};
+}
 
 const rejectOrder = (orderId: number) => {
-  const order = orders.value.find(order => order.id === orderId);
+  const order = orders.value.find((order) => order.id === orderId)
   if (order) {
-    order.status = 'cancelado';
+    order.status = 'cancelado'
   }
-};
+}
 
 const openChat = (orderId: number) => {
-  console.log(`Abrindo chat para o pedido ${orderId}.`);
+  console.log(`Abrindo chat para o pedido ${orderId}.`)
   // Implementar lógica para abrir chat
-};
+}
 
 const getStatusClass = (status: string) => {
   switch (status) {
     case 'novo':
-      return 'green-text';
+      return 'green-text'
     case 'preparando':
-      return 'yellow-text';
+      return 'yellow-text'
     case 'finalizado':
-      return 'gray-text';
+      return 'gray-text'
     case 'cancelado':
-      return 'red-text';
+      return 'red-text'
     default:
-      return 'gray-text';
+      return 'gray-text'
   }
-};
+}
 </script>
 
 <template>
   <div class="order-management-container">
     <ContainerStyled class="title-container">
-      <TitleStyled class="title-styled" title="Gerenciamento de Pedidos"/>
+      <TitleStyled class="title-styled" title="Gerenciamento de Pedidos" />
     </ContainerStyled>
     <ContainerStyled class="buttons-container">
-      <ButtonStyled @click="filterOrders('todos')" label="todos" className="small-blue-button"/>
-      <ButtonStyled @click="filterOrders('novo')" label="novo" className="small-green-button"/>
-      <ButtonStyled @click="filterOrders('preparando')" label="preparando" className="small-yellow-button"/>
-      <ButtonStyled @click="filterOrders('finalizado')" label="finalizado" className="small-gray-button"/>
-      <ButtonStyled @click="filterOrders('cancelado')" label="cancelado" className="small-red-button"/>
+      <ButtonStyled @click="filterOrders('todos')" label="todos" className="small-blue-button" />
+      <ButtonStyled @click="filterOrders('novo')" label="novo" className="small-green-button" />
+      <ButtonStyled
+        @click="filterOrders('preparando')"
+        label="preparando"
+        className="small-yellow-button"
+      />
+      <ButtonStyled
+        @click="filterOrders('finalizado')"
+        label="finalizado"
+        className="small-gray-button"
+      />
+      <ButtonStyled
+        @click="filterOrders('cancelado')"
+        label="cancelado"
+        className="small-red-button"
+      />
     </ContainerStyled>
 
     <div v-for="order in filteredOrders" :key="order.id" class="order-card">
       <div class="order-header">
         <div class="order-info">
           <TextStyled class="gray-text" :text="`Cliente: ${order.customerName}`" />
-          <TextStyled class="gray-text" :text="`Número do pedido: ${order.id}`"/>
-          <TextStyled :className="getStatusClass(order.status)" :text="`Status: ${order.status}`"/>
+          <TextStyled class="gray-text" :text="`Número do pedido: ${order.id}`" />
+          <TextStyled :className="getStatusClass(order.status)" :text="`Status: ${order.status}`" />
         </div>
-        <ButtonStyled className="small-blue-button" @click="toggleOrderDetails(order.id)" label="Exibir detalhes"/>
+        <ButtonStyled
+          className="small-blue-button"
+          @click="toggleOrderDetails(order.id)"
+          label="Exibir detalhes"
+        />
       </div>
 
       <div v-if="order.expanded" class="order-details">
@@ -125,62 +141,81 @@ const getStatusClass = (status: string) => {
         <p>Total: {{ order.total }}</p>
         <p>Endereço: {{ order.address }}</p>
         <div class="order-actions">
-          <ButtonStyled className="small-green-button" v-if="order.status === 'novo'" @click="acceptOrder(order.id)" label="Aceitar"/>
-          <ButtonStyled className="small-red-button" v-if="order.status === 'novo'" @click="rejectOrder(order.id)" label="Recusar"/>
-          <ButtonStyled className="small-green-button" v-if="order.status === 'preparando'" @click="completeOrder(order.id)" label="Finalizar"/>
-          <ButtonStyled className="small-red-button" v-if="order.status === 'preparando'" @click="cancelledOrder(order.id)" label="Cancelar"/>
+          <ButtonStyled
+            className="small-green-button"
+            v-if="order.status === 'novo'"
+            @click="acceptOrder(order.id)"
+            label="Aceitar"
+          />
+          <ButtonStyled
+            className="small-red-button"
+            v-if="order.status === 'novo'"
+            @click="rejectOrder(order.id)"
+            label="Recusar"
+          />
+          <ButtonStyled
+            className="small-green-button"
+            v-if="order.status === 'preparando'"
+            @click="completeOrder(order.id)"
+            label="Finalizar"
+          />
+          <ButtonStyled
+            className="small-red-button"
+            v-if="order.status === 'preparando'"
+            @click="cancelledOrder(order.id)"
+            label="Cancelar"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
- 
-  
-  <style scoped>
-  .order-management-container {
-    width: 1100px;
-    margin: 30px auto;
-  }
-  
-  .filter-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  .order-card {
-    width: 68.75rem;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-  }
-  
-  .order-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .order-info {
-    flex: 1;
-  }
-  
-  .order-details {
-    margin-top: 10px;
-  }
-  
-  .order-item {
-    margin-left: 10px;
-  }
-  
-  .order-actions {
-    display: flex;
-    justify-content:center;
-    margin-top: 10px;
-  }
 
-  .gray-text {
+<style scoped>
+.order-management-container {
+  width: 1100px;
+  margin: 30px auto;
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.order-card {
+  width: 68.75rem;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-info {
+  flex: 1;
+}
+
+.order-details {
+  margin-top: 10px;
+}
+
+.order-item {
+  margin-left: 10px;
+}
+
+.order-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.gray-text {
   color: var(--dark-gray);
   font-weight: 700;
 }
@@ -200,5 +235,3 @@ const getStatusClass = (status: string) => {
   font-weight: 700;
 }
 </style>
-
-  

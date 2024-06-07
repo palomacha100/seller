@@ -81,17 +81,17 @@ class Auth {
         'X-API-KEY': X_API_KEY
       },
       body: JSON.stringify({ refresh_token: refresh })
-    }); 
+    })
 
     if (response.ok) {
-      const data = await response.json();
+      const data = await response.json()
       this.storage.store('email', data.email)
-      this.storage.store('token', data.token);
+      this.storage.store('token', data.token)
       this.storage.store('refresh_token', data.refresh_token)
     } else {
-      return null;
+      return null
     }
-  };
+  }
 
   async signUp(
     email: string,

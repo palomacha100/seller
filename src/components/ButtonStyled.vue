@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
-
 const props = defineProps<{
   label: string
   className: string
@@ -31,7 +29,7 @@ button {
   font-family: 'Poppins';
   font-weight: 700;
 }
- 
+
 .small-green-button,
 .small-red-button,
 .small-blue-button,
@@ -52,34 +50,41 @@ button {
   font-size: 0.75rem;
 }
 
-.small-blue-button, .medium-blue-button {
+.small-blue-button,
+.medium-blue-button {
   background-color: var(--dark-blue);
 }
 
-.small-yellow-button, .medium-yellow-button {
+.small-yellow-button,
+.medium-yellow-button {
   background-color: var(--yellow);
 }
 
-.small-green-button, .medium-green-button {
+.small-green-button,
+.medium-green-button {
   background-color: var(--green);
 }
 
-.small-red-button, .medium-red-button {
+.small-red-button,
+.medium-red-button {
   background-color: var(--red);
 }
 
-.small-gray-button, .medium-gray-button {
+.small-gray-button,
+.medium-gray-button {
   background-color: var(--dark-gray);
 }
 
-.medium-blue-button, 
-.medium-red-button, .medium-green-button, .medium-yellow-button, .medium-gray-button  {
+.medium-blue-button,
+.medium-red-button,
+.medium-green-button,
+.medium-yellow-button,
+.medium-gray-button {
   width: 12rem;
   height: 2.5rem;
   color: white;
   border: none;
 }
-
 
 .login-button {
   background-color: var(--dark-blue);

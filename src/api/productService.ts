@@ -14,7 +14,12 @@ class ProductService extends BaseService {
     }
   }
 
-  async getProductsById(id: number, productId: number, onSuccess: (data: any) => void, onFailure: () => void) {
+  async getProductsById(
+    id: number,
+    productId: number,
+    onSuccess: (data: any) => void,
+    onFailure: () => void
+  ) {
     const response = await this.getEntity(`stores/${id}/products/${productId}`)
     if (response.ok) {
       this.success(response, onSuccess, 'byId')

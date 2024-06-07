@@ -15,7 +15,7 @@ const price = ref<string>('')
 const category = defineModel<string>('category', { default: '' })
 const portion = defineModel<string>('portion', { default: '' })
 const isEditing = ref(false)
-const isProductExists =ref(false)
+const isProductExists = ref(false)
 const route = useRoute()
 
 const product = new ProductService()
@@ -153,8 +153,8 @@ onMounted(() => {
   }
   if (route.query.isEditing === 'true') {
     isEditing.value = true
-    const store = localStorage.getItem('activedStore') || '';
-    const parse = store ? JSON.parse(store)  : ''
+    const store = localStorage.getItem('activedStore') || ''
+    const parse = store ? JSON.parse(store) : ''
     if (parse) {
       product.getProductsById(
         parse.id,
@@ -224,17 +224,14 @@ function priceMask(value: string): string {
     return arrayValue.join('')
   }
 }
-
-
 </script>
 <template>
   <template v-if="isProductExists || isEditing">
-
     <div class="main-container">
       <form>
         <ContainerStyled width="68.75rem" height="3.5rem" backgroundColor="transparent">
-        <TitleStyled title="Edição de produto" />
-      </ContainerStyled>
+          <TitleStyled title="Edição de produto" />
+        </ContainerStyled>
         <TextStyled
           className="gray-bold-text"
           width=" 800px"
@@ -311,7 +308,7 @@ function priceMask(value: string): string {
         </div>
         <div class="button-container">
           <ButtonStyled
-          @click.prevent="isEditing ? handleUpdateProduct() : handleCreateProduct()"
+            @click.prevent="isEditing ? handleUpdateProduct() : handleCreateProduct()"
             type="submit"
             className="login-button"
             :label="isEditing ? 'Atualizar' : 'Enviar'"

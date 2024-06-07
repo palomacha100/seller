@@ -14,28 +14,24 @@ interface Store {
   name: string
   image_url: string
   active: boolean
+  theme: string
 }
 
 const storeService = new StoreService()
 const stores = ref<Store[]>([])
 const searchQuery = ref<string>('')
-const sortOrder = ref<'asc' | 'desc'>('asc')
 const currentPage = ref<number>(1)
 const itemsPerPage = ref<number>(10)
+const activeTab = ref<number | null>(null)
+const tabContainer = ref<HTMLDivElement | null>(null)
+
+
 
 const fetchStores = async () => {
   await storeService.getStores(
     (data: Store[]) => {
+      console.log(data)
       stores.value = data || []
-      stores.value.forEach((store) => {
-        const data = sessionStorage.getItem('active') || ''
-        const parse = data ? JSON.parse(data) : '' 
-        if (parse && store.id == parse) {
-          store.active = true
-        } else {
-          store.active = false
-        }
-      })
     },
     () => {
       console.error('Failed to fetch stores')
@@ -80,7 +76,7 @@ const toggleStatus = async (store: Store) => {
   store.active = !store.active
   if (store.active) {
     localStorage.setItem('activedStore', JSON.stringify(store))
-    sessionStorage.setItem('active', JSON.stringify(store.id)) 
+    sessionStorage.setItem('active', JSON.stringify(store.id))
   } else {
     localStorage.removeItem('activedStore')
   }
@@ -95,16 +91,6 @@ const toggleStatus = async (store: Store) => {
       console.error('Failed to update store status')
     }
   )
-}
-
-const sortByName = () => {
-  if (sortOrder.value === 'asc') {
-    stores.value.sort((a, b) => a.name.localeCompare(b.name))
-    sortOrder.value = 'desc'
-  } else {
-    stores.value.sort((a, b) => b.name.localeCompare(a.name))
-    sortOrder.value = 'asc'
-  }
 }
 
 const filteredStores = computed(() => {
@@ -139,13 +125,37 @@ const addStore = () => {
   router.push({ path: './profile', query: { isNewStore: 'true' } })
 }
 
+const viewStore = (id: number) => {
+  activeTab.value = id
+}
+
+const scrollTabs = (direction: 'left' | 'right') => {
+  if (tabContainer.value) {
+    tabContainer.value.scrollBy({
+      left: direction === 'left' ? -200 : 200,
+      behavior: 'smooth'
+    })
+  }
+}
+
+const activeStore = computed(() => {
+  return stores.value.find((store) => store.id === activeTab.value) || null
+})
+
+const themeActive = computed(() => {
+  console.log(activeStore.value)
+  return {
+    backgroundColor: (activeStore.value && activeStore.value.theme) || 'white'
+  };
+});
+
 onMounted(() => {
   fetchStores()
 })
 </script>
 
 <template>
-  <div class="table-container">
+  <div class="tabs-container">
     <ContainerStyled width="68.75rem" height="3.5rem" backgroundColor="transparent">
       <TitleStyled title="Gerenciamento de lojas" />
     </ContainerStyled>
@@ -157,112 +167,125 @@ onMounted(() => {
         placeholder="Pesquisar pelo nome da loja"
         class="input-header"
       />
-      <ButtonStyled
-        className="medium-blue-button"
-        label="+ Adicionar loja"
-        @click="addStore"
-      />
+      <ButtonStyled className="medium-blue-button" label="+ Adicionar loja" @click="addStore" />
     </ContainerStyled>
 
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th @click="sortByName">
-            Nome
-            <span v-if="sortOrder === 'asc'">▲</span>
-            <span v-if="sortOrder === 'desc'">▼</span>
-          </th>
-          <th>Ações</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="store in paginatedStores" :key="store.id">
-          <td><img :src="store.image_url" alt="Store Image" class="thumbnail" /></td>
-          <td>{{ store.name }}</td>
-          <td>
-            <button class="edit-button" @click="editStore(store.id)">Editar</button>
-            <button class="delete-button" @click="deleteStore(store.id)">Excluir</button>
-          </td>
-          <td>
-            <button
-              @click="toggleStatus(store)"
-              :class="['status-button', store.active ? 'active' : 'inactive']"
-            >
-              {{ store.active ? 'Aberta' : 'Fechada' }}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="tabs-wrapper">
+      <button class="arrow left" @click="scrollTabs('left')">◀</button>
+      <div class="tabs" ref="tabContainer">
+        <div
+          v-for="store in paginatedStores"
+          :key="store.id"
+          :class="['tab', { active: activeTab === store.id }]"
+          @click="viewStore(store.id)"
+        >
+          {{ store.name }}
+        </div>
+      </div>
+      <button class="arrow right" @click="scrollTabs('right')">▶</button>
+    </div>
+
+    <div v-if="activeStore" class="tab-content">
+      <div class="store-details"  :style="themeActive">
+        <img :src="activeStore.image_url" alt="Store Image" class="thumbnail" />
+        <h2>{{ activeStore.name }}</h2>
+        <p>Status: {{ activeStore.active ? 'Aberta' : 'Fechada' }}</p>
+        <div class="actions">
+          <button class="edit-button" @click="editStore(activeStore.id)">Editar</button>
+          <button class="delete-button" @click="deleteStore(activeStore.id)">Excluir</button>
+          <button
+            :class="['status-button', activeStore.active ? 'active' : 'inactive']"
+            @click="toggleStatus(activeStore)"
+          >
+            {{ activeStore.active ? 'Fechar' : 'Abrir' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="pagination">
-      <ButtonStyled className="pagination-button" @click="prevPage" :disabled="currentPage === 1" label="Anterior"/>
+      <ButtonStyled
+        className="pagination-button"
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        label="Anterior"
+      />
       <span>Página {{ currentPage }} de {{ totalPages }}</span>
-      <ButtonStyled className="pagination-button" @click="nextPage" :disabled="currentPage === totalPages" label="Próxima"/>
+      <ButtonStyled
+        className="pagination-button"
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        label="Próxima"
+      />
     </div>
   </div>
 </template>
 
 <style scoped>
-.thumbnail {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 4px;
+.tabs-container {
+  width: 68.75rem;
+  margin: 0 auto;
 }
 
-.table-container {
+.tabs-wrapper {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  width: 68.75rem;
+}
+
+.arrow {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  z-index: 1;
+}
+
+.tabs {
+  display: flex;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  flex: 1;
+  white-space: nowrap;
+  margin: 0 20px; /* Adjust as needed to align with arrows */
+}
+
+.tab {
+  padding: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  flex-shrink: 0;
+}
+
+.tab.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.tab-content {
+  padding: 20px;
+  border: 1px solid #ddd;
+}
+
+.store-details {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 10px;
 }
 
-table {
-  width: 1100px;
-  border-collapse: collapse;
-  margin-top: 0.5rem;
+.thumbnail {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
 }
 
-span {
-  color: var(--dark-gray);
-  font-size: 14px;
-}
-
-th,
-td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-  font-family: 'Poppins';
-  color: var(--dark-gray);
-}
-
-th {
-  cursor: pointer;
-  background-color: var(--light-blue);
-}
-
-.edit-button {
-  background-color: var(--dark-blue);
-  color: white;
-}
-
-.delete-button {
-  background-color: var(--red);
-  color: white;
-}
-
-.status-button.active {
-  background-color: var(--green);
-  color: white;
-}
-
-.status-button.inactive {
-  background-color: var(--dark-gray);
-  color: white;
+.actions {
+  display: flex;
+  gap: 10px;
 }
 
 .pagination {
@@ -270,9 +293,5 @@ th {
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
-  gap: 10px;
 }
-
-
-
 </style>

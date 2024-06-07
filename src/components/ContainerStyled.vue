@@ -1,10 +1,4 @@
-<template>
-  <div :class="className" :style="{ width, height, backgroundColor }"><slot></slot></div>
-</template>
-
 <script setup lang="ts">
-import { defineProps } from 'vue'
-
 const { width, height, backgroundColor } = defineProps({
   width: String,
   height: String,
@@ -12,6 +6,9 @@ const { width, height, backgroundColor } = defineProps({
   className: String
 })
 </script>
+<template>
+  <div :class="className" :style="{ width, height, backgroundColor }"><slot></slot></div>
+</template>
 
 <style scoped>
 div {
@@ -25,7 +22,7 @@ div {
 .title-container {
   width: 68.75rem;
   height: 3.5rem;
-  background-color: transparent
+  background-color: transparent;
 }
 
 .buttons-container {
@@ -35,6 +32,4 @@ div {
   flex-direction: row;
   justify-content: space-between;
 }
-
-
 </style>

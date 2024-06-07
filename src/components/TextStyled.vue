@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
 defineProps<{
   text: string
   width?: string
@@ -20,7 +19,7 @@ div {
   justify-content: start;
   align-items: center;
   height: auto;
-  widows: auto;
+  width: 100%;
 }
 .text-container {
   display: flex;
@@ -30,6 +29,7 @@ div {
 .gray-text p {
   color: var(--dark-gray);
   font-size: 0.875rem;
+  height: 2.5rem;
 }
 .red-text p {
   color: var(--red);

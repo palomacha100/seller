@@ -5,22 +5,17 @@ class StoreService extends BaseService {
     super()
   }
 
-  async getStores(onSuccess: () => void, onFailure: () => void) {
+  async getStores(onSuccess: (data?: any) => void, onFailure: () => void) {
     const response = await this.getEntity('stores')
     if (response.ok) {
       this.success(response, onSuccess, 'getAll')
     } else if (response.status === 401) {
-
-      const refresh_token = this.storage.get('refresh_token') || '[]';
-      const parseRefresh = refresh_token;
-      await this.auth.refreshTokens(parseRefresh);
-      const newResponse = await this
-        .getEntity
-        (
-          'stores'
-        );
+      const refresh_token = this.storage.get('refresh_token') || '[]'
+      const parseRefresh = refresh_token
+      await this.auth.refreshTokens(parseRefresh)
+      const newResponse = await this.getEntity('stores')
       if (newResponse.ok) {
-        this.success(newResponse, onSuccess, 'getAll');
+        this.success(newResponse, onSuccess, 'getAll')
       } else {
         this.failure(newResponse, onFailure)
       }
@@ -72,7 +67,8 @@ class StoreService extends BaseService {
     if (image) {
       formData.append('store[image]', image)
     }
-
+    console.log(data.theme.value)
+    console.log(data.establishment.value)
     formData.append('store[name]', data.fullName.value)
     formData.append('store[cnpj]', data.cnpj.value)
     formData.append('store[phonenumber]', data.phoneNumber.value)
@@ -97,23 +93,18 @@ class StoreService extends BaseService {
     if (response.ok) {
       this.success(response, onSuccess)
     } else if (response.status === 401) {
-      const refresh_token = this.storage.get('refresh_token') || '[]';
-      const parseRefresh = refresh_token;
-      await this.auth.refreshTokens(parseRefresh);
-      const newResponse = await this
-        .getEntity
-        (
-          'theme_options'
-        );
+      const refresh_token = this.storage.get('refresh_token') || '[]'
+      const parseRefresh = refresh_token
+      await this.auth.refreshTokens(parseRefresh)
+      const newResponse = await this.getEntity('theme_options')
       if (newResponse.ok) {
-        this.success(newResponse, onSuccess);
+        this.success(newResponse, onSuccess)
       } else {
         this.failure(newResponse, onFailure)
       }
     } else {
       this.failure(response, onFailure)
     }
-  
   }
 
   async deleteStore(id: number, onSuccess: () => void, onFailure: () => void) {
@@ -151,12 +142,22 @@ class StoreService extends BaseService {
         this.storage.store('store', JSON.stringify(store))
         onSuccess()
       } else if (action === 'getAll' && Array.isArray(json)) {
-        
         const storeData = json.map((fields: any) => ({
           id: fields.id,
           name: fields.name,
           image_url: fields.image_url && `${this.apiUrl}${fields?.image_url}`,
-          active: true
+          active: true,
+          cnpj: fields.cnpj,
+          phonenumber: fields.phonenumber,
+          cep: fields.cep,
+          state: fields.state,
+          city: fields.city,
+          address: fields.address,
+          neighborhood: fields.neighborhood,
+          establishment: fields.establishment,
+          numberaddress: fields.numberaddress,
+          complementaddress: fields.complementadress,
+          theme: fields.theme
         }))
         onSuccess(storeData)
       } else if (action == 'byId') {

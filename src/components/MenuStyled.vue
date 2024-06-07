@@ -71,10 +71,6 @@ const signOut = () => {
                     <li><a class="dropdown-item" href="#">Notificação 2</a></li>
                 </ul>
             </div>
-            <a class="icons" href="shoppingCart">
-              <img src="../assets/shopping-cart.svg" alt="Shopping cart" height="24"/>
-              <span class="notification">1</span>
-        </a>
             <div class="dropdown" @click="toggleAvatarDropdown">
                 <a class="icons dropdown-toggle" href="#">
                     <img class="avatar-image" src="../../images/mood.png" alt="User image"/>

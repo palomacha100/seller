@@ -107,4 +107,17 @@ span {
   display: flex;
   flex-direction: row;
 }
+
+.full-input {
+  width: 100%;
+  height: 5rem;
+  
+}
+
+.full-input input {
+  height: 2.8rem;
+  border-color: transparent;
+}
+
+
 </style>

@@ -305,7 +305,7 @@ const handleEdit = () => {
   <template v-if="isStoreExists || isEditing">
     <div class="main-container">
       <form>
-        <ContainerStyled width="68.75rem" height="4rem" backgroundColor="transparent">
+        <ContainerStyled width="800px" height="4rem" backgroundColor="transparent">
           <TitleStyled title="Edição de perfil" />
         </ContainerStyled>
         <div class="image-data-container">
@@ -327,10 +327,7 @@ const handleEdit = () => {
               v-model="fullName"
               id="fullName"
               type="text"
-              width="100%"
-              height="2.8rem"
-              placeholder="Digite o nome do seu restaurante"
-              borderColor="transparent"
+              class="full-input"
               :error="errors.fullName"
               :handleChange="handleFullName"
             />
@@ -338,10 +335,8 @@ const handleEdit = () => {
               v-model="cnpj"
               id="cnpj"
               type="string"
-              width="24rem"
-              height="2.8rem"
+              class="full-input"
               placeholder="CNPJ do restaurante (apenas números)"
-              borderColor="transparent"
               :error="errors.cnpj"
               :handleChange="handleCnpj"
               @input="handleCnpjInput"
@@ -350,8 +345,7 @@ const handleEdit = () => {
               v-model="phoneNumber"
               id="phoneNumber"
               type="string"
-              width="24rem"
-              height="2.8rem"
+              class="full-input"
               placeholder="Telefone do restaurante (apenas números)"
               borderColor="transparent"
               :error="errors.phoneNumber"
@@ -363,18 +357,14 @@ const handleEdit = () => {
                 v-model="cep"
                 id="cep"
                 type="number"
-                width="24rem"
-                height="2.8rem"
+                class="full-input" 
                 placeholder="CEP (apenas números)"
-                borderColor="transparent"
                 :error="errors.cep"
                 :handleChange="handleCep"
               />
               <ButtonStyled
                 className="transparent-button-blue-text"
                 label="Pesquisar CEP"
-                width="8rem"
-                height="2.8rem"
                 @click="addressSearch"
               />
             </div>
@@ -386,20 +376,16 @@ const handleEdit = () => {
             v-model="state"
             id="state"
             type="text"
+            class="full-input"
             placeholder="Estado"
-            width="24rem"
-            height="2.8rem"
-            borderColor="transparent"
             disabled
           />
           <InputStyled
             v-model="city"
             id="city"
             type="text"
-            width="24rem"
-            height="2.8rem"
+            class="full-input"
             placeholder="Cidade"
-            borderColor="transparent"
             disabled
           />
         </div>
@@ -407,20 +393,16 @@ const handleEdit = () => {
           v-model="neighborhood"
           id="neighborhood"
           type="text"
-          width="100%"
-          height="2.8rem"
+          class="full-input"   
           placeholder="Bairro"
-          borderColor="transparent"
           disabled
         />
         <InputStyled
           v-model="address"
           id="address"
           type="text"
-          width="100%"
-          height="2.8rem"
+          class="full-input"
           placeholder="Endereço"
-          borderColor="transparent"
           disabled
         />
         <div class="address-content">
@@ -428,10 +410,8 @@ const handleEdit = () => {
             v-model="numberAddress"
             id="numberAddress"
             type="number"
-            width="24rem"
-            height="2.8rem"
+            class="full-input"
             placeholder="Número"
-            borderColor="transparent"
             :error="errors.numberAddress"
             :handleChange="handleNumberAddress"
           />
@@ -471,10 +451,8 @@ const handleEdit = () => {
           <ButtonStyled
             @click.prevent="isEditing ? handleUpdateStore() : handleCreateStore()"
             type="submit"
-            className="login-button"
+            className="medium-blue-button"
             :label="isEditing ? 'Atualizar' : 'Enviar'"
-            width="22.5rem"
-            height="2.8rem"
           />
         </div>
       </form>
@@ -530,19 +508,15 @@ const handleEdit = () => {
             <ButtonStyled
               @click="handleEdit"
               type="submit"
-              className="login-button"
+              className="medium-blue-button"
               label="Editar"
-              width="10rem"
-              height="2.5rem"
             />
             <nav>
               <RouterLink :to="{ name: 'listingStores' }">
                 <ButtonStyled
                   type="submit"
-                  className="login-button"
+                  className="medium-blue-button"
                   label="Gerenciar lojas"
-                  width="10rem"
-                  height="2.5rem"
                 />
               </RouterLink>
             </nav>
@@ -601,6 +575,7 @@ form {
 .first-data-content {
   display: flex;
   flex-direction: column;
+  width: 400px;
 }
 
 .title-styled {
@@ -623,7 +598,7 @@ form {
   justify-content: space-around;
   flex-direction: row;
   margin: 30px auto;
-  width: 800px;
+  width: 850px;
   height: auto;
   border-radius: 5px;
   padding: 10px;

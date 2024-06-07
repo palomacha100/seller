@@ -10,6 +10,15 @@ import Swal from 'sweetalert2'
 import { useRoute } from 'vue-router'
 import ContainerStyled from './ContainerStyled.vue'
 
+const route = useRoute();
+const isStoreExists = ref(false)
+const isEditing = ref(false)
+const themeOptions = ref([])
+const store = new StoreService()
+const imageUrl = ref('')
+let image: File
+
+
 const fullName = defineModel<string>('fullName', { default: '' })
 const cnpj = defineModel<string>('cnpj', { default: '' })
 const phoneNumber = defineModel<string>('phoneNumber')
@@ -21,11 +30,8 @@ const address = defineModel<string>('address', { default: '' })
 const numberAddress = defineModel<string>('numberAddress')
 const complementAddress = defineModel<string>('complementAddress', { default: '' })
 const establishment = defineModel<string>('establishment', { default: '' })
-const isStoreExists = ref(false)
-const isEditing = ref(false)
-const route = useRoute()
+const theme = defineModel<string>('theme', { default: 'blue' })
 
-const store = new StoreService()
 
 const errors = reactive({
   fullName: '',
@@ -142,6 +148,10 @@ const addressSearch = (event: Event) => {
     })
 }
 
+const applyTheme = (color: string) => {
+  document.documentElement.style.setProperty('--primary-color', color);
+}
+
 const estabDropdownOptions = [
   { value: 'Cafeteria', label: 'Cafeteria' },
   { value: 'Hamburgueria', label: 'Hamburgueria' },
@@ -159,7 +169,8 @@ const getModelByName = {
   address,
   numberAddress,
   complementAddress,
-  establishment
+  establishment,
+  theme
 }
 
 onMounted(() => {
@@ -174,7 +185,8 @@ onMounted(() => {
     'address',
     'numberAddress',
     'complementAddress',
-    'establishment'
+    'establishment',
+    'theme'
   ]
   formData.forEach((field) => {
     const storeData = localStorage.getItem(field) || ''
@@ -210,6 +222,8 @@ onMounted(() => {
         establishment.value = storeData.establishment
         imageUrl.value = storeData.src
         isStoreExists.value = true
+        theme.value = storeData.theme
+        applyTheme(storeData.theme)
       },
       () => {
         console.error('Failed to fetch stores')
@@ -230,12 +244,13 @@ onMounted(() => {
     complementAddress.value = ''
     establishment.value = ''
     imageUrl.value = ''
+    theme.value = 'blue'
   }
+  store.getTheme((data: any) => {themeOptions.value = data.themes}, 
+  () => {console.log('deu ruim')})
 })
 
-let image: File
 
-const imageUrl = ref('')
 
 const handleCreateStore = () => {
   const boolean = canMoveToTab2()
@@ -249,12 +264,11 @@ const handleCreateStore = () => {
 }
 
 const handleUpdateStore = () => {
-  const boolean = canMoveToTab2()
-  const getId = sessionStorage.getItem('active') || ''
-  const parse = getId ? JSON.parse(getId) : ''
+  const boolean = canMoveToTab2();
+  const storeId = route.query.id || '';
   if (boolean) {
     store.updateStore(
-      parse,
+      Number(storeId),
       getModelByName,
       image,
       () => {
@@ -262,6 +276,7 @@ const handleUpdateStore = () => {
         const parse = getId ? JSON.parse(getId) : ''
         imageUrl.value = parse.src
         isEditing.value = false
+        applyTheme(theme.value)
         Swal.fire('Loja atualizada com sucesso')
         isStoreExists.value = false
       },
@@ -442,6 +457,16 @@ const handleEdit = () => {
           :options="estabDropdownOptions"
           :handleChange="handleEstablishment"
         />
+        <SelectStyled
+          v-model="theme"
+          id="theme"
+          label=""
+          typeOfSelect="Tema da Loja"
+          width="100%"
+          height="2.8rem"
+          :options="themeOptions"
+          @change="applyTheme(theme)"
+        />
         <div class="button-container">
           <ButtonStyled
             @click.prevent="isEditing ? handleUpdateStore() : handleCreateStore()"
@@ -513,7 +538,6 @@ const handleEdit = () => {
             <nav>
               <RouterLink :to="{ name: 'listingStores' }">
                 <ButtonStyled
-                
                   type="submit"
                   className="login-button"
                   label="Gerenciar lojas"
@@ -528,6 +552,7 @@ const handleEdit = () => {
     </div>
   </template>
 </template>
+
 
 <style scoped>
 .main-container {

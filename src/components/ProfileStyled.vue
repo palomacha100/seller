@@ -115,17 +115,21 @@ const handleTheme = (event: Event) => {
 }
 
 const canMoveToTab2 = () => {
-  return (
-    fullName.value !== '' &&
-    cnpj.value !== undefined &&
-    phoneNumber.value !== undefined &&
-    city.value !== '' &&
-    cep.value !== undefined &&
-    state.value !== '' &&
-    neighborhood.value !== '' &&
-    address.value !== '' &&
-    numberAddress.value !== undefined
-  )
+  const requiredFields = [
+    fullName.value,
+    cnpj.value,
+    phoneNumber.value,
+    city.value,
+    cep.value,
+    state.value,
+    neighborhood.value,
+    address.value,
+    numberAddress.value,
+    establishment.value,
+    theme.value
+  ];
+
+  return requiredFields.every(value => value !== '' && value !== undefined);
 }
 
 const addressSearch = (event: Event) => {
@@ -309,7 +313,7 @@ const handleEdit = () => {
     <div class="main-container">
       <form>
         <ContainerStyled width="800px" height="4rem" backgroundColor="transparent">
-          <TitleStyled title="Edição de perfil" />
+          <TitleStyled className="title-styled" title="Edição de perfil" />
         </ContainerStyled>
         <div class="image-data-container">
           <div class="image-styled">
@@ -469,7 +473,7 @@ const handleEdit = () => {
           </div>
         </div>
         <div class="data-text-container">
-          <TitleStyled :title="`${fullName}`" class="title-styled" />
+          <TitleStyled className="title-styled" :title="`${fullName}`" class="title-styled" />
           <TextStyled className="gray-text" :text="`CNPJ: ${cnpj}`" />
           <TextStyled className="gray-text" :text="`Telefone: ${phoneNumber}`" />
           <TextStyled

@@ -143,18 +143,15 @@ const handleFilter = () => {
 <template>
   <div class="table-container">
     <ContainerStyled width="68.75rem" height="3.5rem" backgroundColor="transparent">
-      <TitleStyled title="Gerenciamento de produtos" />
+      <TitleStyled className="title-styled" title="Gerenciamento de produtos" />
     </ContainerStyled>
     <ContainerStyled width="68.75rem" height="3.5rem" :backgroundColor="'var(--light-blue)'">
       <InputStyled
         v-model="searchQuery"
         id="storeSearch"
         type="text"
-        width="57rem"
-        height="2.8rem"
+        class="input-header"
         placeholder="Pesquisar pelo nome do produto"
-        borderColor="transparent"
-        class="custom-height"
         :handleChange="handleFilter"
       />
       <ButtonStyled
@@ -261,6 +258,7 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-family: 'Poppins', sans-serif;
 }
 
 button:hover {

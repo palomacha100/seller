@@ -39,6 +39,20 @@ button {
   height: 2rem;
   color: white;
   border: none;
+  padding: 5px;
+}
+
+.micro-green-button,
+.micro-red-button,
+.micro-blue-button,
+.micro-yellow-button,
+.micro-gray-button {
+  width: 5rem;
+  height: 1.8rem;
+  color: white;
+  border: none;
+  font-weight: 300;
+  padding: 5px
 }
 
 .pagination-button {
@@ -48,10 +62,12 @@ button {
   height: 2rem;
   font-weight: 300;
   font-size: 0.75rem;
+  padding: 5px;
 }
 
 .small-blue-button,
-.medium-blue-button {
+.medium-blue-button,
+.micro-blue-button {
   background-color: var(--dark-blue);
 }
 
@@ -61,10 +77,12 @@ button {
 }
 
 .small-green-button,
-.medium-green-button {
+.medium-green-button,
+.micro-green-button {
   background-color: var(--green);
 }
 
+.micro-red-button,
 .small-red-button,
 .medium-red-button {
   background-color: var(--red);
@@ -84,6 +102,7 @@ button {
   height: 2.5rem;
   color: white;
   border: none;
+  padding: 5px;
 }
 
 .login-button {
@@ -102,11 +121,5 @@ button {
   border: none;
 }
 
-.red-button {
-  background-color: transparent;
-  border-width: 2px;
-  border-color: var(--red);
-  color: var(--red);
-  border-style: solid;
-}
+
 </style>

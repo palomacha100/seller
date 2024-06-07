@@ -1,11 +1,12 @@
 <script setup lang="ts">
 defineProps<{
   title: string
+  className: string
 }>()
 </script>
 
 <template>
-  <div class="title-styled">
+  <div :class="className">
     <h1>{{ title }}</h1>
   </div>
 </template>
@@ -19,5 +20,13 @@ defineProps<{
 .title-styled h1 {
   color: var(--dark-blue);
   font-size: 2rem;
+}
+
+.subtitle h1 {
+  color: black;
+  font-size: 1.5rem;
+  font-weight: bold;
+
+
 }
 </style>

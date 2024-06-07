@@ -6,6 +6,7 @@ import InputStyled from './InputStyled.vue'
 import ContainerStyled from './ContainerStyled.vue'
 import { useRouter } from 'vue-router'
 import ButtonStyled from './ButtonStyled.vue'
+import TextStyled from './TextStyled.vue'
 
 const router = useRouter()
 
@@ -157,7 +158,7 @@ onMounted(() => {
 <template>
   <div class="tabs-container">
     <ContainerStyled width="68.75rem" height="3.5rem" backgroundColor="transparent">
-      <TitleStyled title="Gerenciamento de lojas" />
+      <TitleStyled className="title-styled" title="Gerenciamento de lojas" />
     </ContainerStyled>
     <ContainerStyled width="68.75rem" height="3.5rem" :backgroundColor="'var(--light-blue)'">
       <InputStyled
@@ -185,14 +186,14 @@ onMounted(() => {
       <button class="arrow right" @click="scrollTabs('right')">▶</button>
     </div>
 
-    <div v-if="activeStore" class="tab-content">
-      <div class="store-details"  :style="themeActive">
+    <div v-if="activeStore" class="tab-content" :style="themeActive">
+      <div class="store-details"  >
         <img :src="activeStore.image_url" alt="Store Image" class="thumbnail" />
-        <h2>{{ activeStore.name }}</h2>
+        <TitleStyled className="subtitle" :title="activeStore.name"/>
         <p>Status: {{ activeStore.active ? 'Aberta' : 'Fechada' }}</p>
         <div class="actions">
-          <button class="edit-button" @click="editStore(activeStore.id)">Editar</button>
-          <button class="delete-button" @click="deleteStore(activeStore.id)">Excluir</button>
+          <ButtonStyled className="micro-blue-button" label="Editar" @click="editStore(activeStore.id)"/>
+          <ButtonStyled className="micro-red-button" label="Excluir" @click="deleteStore(activeStore.id)"/>
           <button
             :class="['status-button', activeStore.active ? 'active' : 'inactive']"
             @click="toggleStatus(activeStore)"
@@ -249,7 +250,7 @@ onMounted(() => {
   scroll-behavior: smooth;
   flex: 1;
   white-space: nowrap;
-  margin: 0 20px; /* Adjust as needed to align with arrows */
+  margin: 0 20px;
 }
 
 .tab {
@@ -268,7 +269,7 @@ onMounted(() => {
 
 .tab-content {
   padding: 20px;
-  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
 .store-details {
@@ -281,6 +282,7 @@ onMounted(() => {
   width: 100px;
   height: 100px;
   margin-bottom: 20px;
+  border-radius: 50px;
 }
 
 .actions {

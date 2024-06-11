@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { OrderService } from '@/api/orderService'
 import TitleStyled from './TitleStyled.vue'
 import ButtonStyled from './ButtonStyled.vue'
 import ContainerStyled from './ContainerStyled.vue'
 import TextStyled from './TextStyled.vue'
+
+const {storeId} = defineProps<{
+  storeId: number
+}>()
 
 interface Order {
   id: number
@@ -14,6 +19,8 @@ interface Order {
   address: string
   expanded: boolean
 }
+
+const orderService = new OrderService();
 
 const orders = ref<Order[]>([
   {
@@ -78,6 +85,17 @@ const openChat = (orderId: number) => {
   console.log(`Abrindo chat para o pedido ${orderId}.`)
   // Implementar lógica para abrir chat
 }
+
+onMounted(() => {
+  orderService.sseOrderUpdates(storeId, 
+  (data: any) => {
+    const parse = JSON.parse(data)
+    orders.value = parse.orders
+    console.log(parse)
+    console.log(orders.value)
+  }, () => {}) 
+  }
+)
 
 const getStatusClass = (status: string) => {
   switch (status) {

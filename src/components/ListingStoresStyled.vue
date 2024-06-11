@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { StoreService } from '../api/storeService'
 import TitleStyled from './TitleStyled.vue'
 import InputStyled from './InputStyled.vue'
 import ContainerStyled from './ContainerStyled.vue'
 import { useRouter } from 'vue-router'
 import ButtonStyled from './ButtonStyled.vue'
-import TextStyled from './TextStyled.vue'
+import OrderListing from './OrderListing.vue'
 
 const router = useRouter()
 
@@ -25,8 +25,6 @@ const currentPage = ref<number>(1)
 const itemsPerPage = ref<number>(10)
 const activeTab = ref<number | null>(null)
 const tabContainer = ref<HTMLDivElement | null>(null)
-
-
 
 const fetchStores = async () => {
   await storeService.getStores(
@@ -57,31 +55,10 @@ const editStore = (id: number) => {
 }
 
 const toggleStatus = async (store: Store) => {
-  stores.value.forEach((s) => {
-    if (s.id !== store.id && s.active) {
-      s.active = false
-      storeService.updateStore(
-        s.id,
-        s,
-        null,
-        () => {
-          console.log(`Store ${s.id} deactivated`)
-        },
-        () => {
-          console.error(`Failed to update store ${s.id}`)
-        }
-      )
-    }
-  })
-
   store.active = !store.active
-  if (store.active) {
     localStorage.setItem('activedStore', JSON.stringify(store))
     sessionStorage.setItem('active', JSON.stringify(store.id))
-  } else {
-    localStorage.removeItem('activedStore')
-  }
-  await storeService.updateStore(
+    await storeService.updateStore(
     store.id,
     store,
     null,
@@ -141,6 +118,11 @@ const scrollTabs = (direction: 'left' | 'right') => {
 
 const activeStore = computed(() => {
   return stores.value.find((store) => store.id === activeTab.value) || null
+})
+watch(activeStore, (newStore) => {
+  if (newStore) {
+    localStorage.setItem('activedStore', JSON.stringify(newStore))
+  }
 })
 
 const themeActive = computed(() => {
@@ -203,7 +185,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
+    <OrderListing v-if="activeStore" :storeId="activeStore.id" :key="activeStore.id"/>
     <div class="pagination">
       <ButtonStyled
         className="pagination-button"

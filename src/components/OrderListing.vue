@@ -44,7 +44,7 @@ const acceptOrder = (orderId: number) => {
   const order = orders.value.find((order) => order.id === orderId)
   if (order) {
     orderService.acceptOrder(storeId, orderId, (data: any) => {
-      order.status = data.state
+      order.status = data.order.state
     }, () => {
       console.error('Failed to accept order')
     })
@@ -54,21 +54,36 @@ const acceptOrder = (orderId: number) => {
 const completeOrder = (orderId: number) => {
   const order = orders.value.find((order) => order.id === orderId)
   if (order) {
-    order.status = 'finalizado'
+    orderService.completeOrder(storeId, orderId, (data: any) => {
+      console.log(data)
+      order.status = data.order.state
+    }, () => {
+      console.error('Failed to complete order')
+    })
   }
 }
 
 const cancelledOrder = (orderId: number) => {
   const order = orders.value.find((order) => order.id === orderId)
   if (order) {
-    order.status = 'cancelado'
+    orderService.cancelOrder(storeId, orderId, (data: any) => {
+      console.log(data)
+      order.status = data.order.state
+    }, () => {
+      console.error('Failed to cancel order')
+    })
   }
 }
 
-const rejectOrder = (orderId: number) => {
+const dispatchOrder = (orderId: number) => {
   const order = orders.value.find((order) => order.id === orderId)
   if (order) {
-    order.status = 'cancelado'
+    orderService.dispatchOrder(storeId, orderId, (data: any) => {
+      console.log(data)
+      order.status = data.order.state
+    }, () => {
+      console.error('Failed to dispatch order')
+    })
   }
 }
 
@@ -150,20 +165,20 @@ const getStatusClass = (status: string) => {
             label="Aceitar"
           />
           <ButtonStyled
-            className="small-red-button"
-            v-if="order.status === 'payment_confirmed'"
-            @click="rejectOrder(order.id)"
-            label="Recusar"
-          />
-          <ButtonStyled
             className="small-green-button"
-            v-if="order.status === 'preparando'"
+            v-if="order.status === 'accepted'"
             @click="completeOrder(order.id)"
             label="Finalizar"
           />
           <ButtonStyled
+            className="small-green-button"
+            v-if="order.status === 'ready_to_dispatch'"
+            @click="dispatchOrder(order.id)"
+            label="Entregar"
+          />
+          <ButtonStyled
             className="small-red-button"
-            v-if="order.status === 'preparando'"
+            v-if="order.status === 'accepted' || order.status === 'payment_confirmed'"
             @click="cancelledOrder(order.id)"
             label="Cancelar"
           />

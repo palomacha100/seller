@@ -27,10 +27,8 @@ export default defineComponent({
       </nav>
     </div>
     <TextStyled
-      text="Conecte sua loja a milhões de novos clientes"
+      text="Conecte sua loja a milhões de novos clientes."
       className="main-text"
-      width="50rem"
-      height="2.8rem"
     />
   </div>
 </template>

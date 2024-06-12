@@ -63,6 +63,13 @@ div {
   color: var(--white);
   font-weight: 700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  width: 50rem;
+  height: 2.8rem;
+  @media (max-width: 768px){
+    width: 350px;
+    height: 8rem;
+    word-wrap: wrap;
+  }
 }
 
 .subtitle {

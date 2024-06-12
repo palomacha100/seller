@@ -35,4 +35,8 @@ defineProps<{
 }
 }
 
+div {
+  display: flex;
+  justify-content: center;
+}
 </style>

@@ -35,6 +35,11 @@ div {
   color: var(--red);
   font-size: 0.875rem;
 }
+
+.black-text p {
+  color: var(--black);
+  font-size: 1rem;
+}
 .white-bold-text p {
   color: var(--white);
   font-weight: 700;

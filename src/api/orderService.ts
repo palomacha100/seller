@@ -7,7 +7,7 @@ class OrderService extends BaseService {
     super()
   }
   async sseOrderUpdates(store_id: number, onSuccess: (data: any) => void, onFailure: (error: any) => void) {
-    const response = await fetchEventSource(`${this.apiUrl}/stores/${store_id}/orders/new`, {
+    await fetchEventSource(`${this.apiUrl}/stores/${store_id}/orders/new`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${this.getFallback('token')}`,
@@ -33,13 +33,53 @@ class OrderService extends BaseService {
       onerror(err) {
         console.log(err);
       }
-
     });
-    
-    
   }
 
-}
+  async acceptOrder(store_id: number, order_id: number, onSucces: (data: any) => void, onFailure: (error: any) => void) {
+    const response = await this.changeState(`stores/${store_id}/orders/${order_id}/accept`);
+    if (response.ok) {
+      onSucces(response);
+    } else {
+      onFailure(response);
+    }
+  }
 
+  async cancelOrder(store_id: number, order_id: number, onSucces: (data: any) => void, onFailure: (error: any) => void) {
+    const response = await this.changeState(`stores/${store_id}/orders/${order_id}/cancel`);
+    if (response.ok) {
+      onSucces(response);
+    } else {
+      onFailure(response);
+    }
+  }
+
+  async completeOrder(store_id: number, order_id: number, onSucces: (data: any) => void, onFailure: (error: any) => void) {
+    const response = await this.changeState(`stores/${store_id}/orders/${order_id}/ready`);
+    if (response.ok) {
+      onSucces(response);
+    } else {
+      onFailure(response);
+    }
+  }
+
+  async dispatchOrder(store_id: number, order_id: number, onSucces: (data: any) => void, onFailure: (error: any) => void) {
+    const response = await this.changeState(`stores/${store_id}/orders/${order_id}/dispatch`);
+    if (response.ok) {
+      onSucces(response);
+    } else {
+      onFailure(response);
+    }
+  }
+
+  async prepareOrder(store_id: number, order_id: number, onSucces: (data: any) => void, onFailure: (error: any) => void) {
+    const response = await this.changeState(`stores/${store_id}/orders/${order_id}/prepare`);
+    if (response.ok) {
+      onSucces(response);
+    } else {
+      onFailure(response);
+    }
+  }
+}
 
 export { OrderService }

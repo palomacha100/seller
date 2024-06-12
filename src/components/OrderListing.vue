@@ -22,20 +22,7 @@ interface Order {
 
 const orderService = new OrderService();
 
-const orders = ref<Order[]>([
-  {
-    id: 1,
-    customerName: 'Cliente 1',
-    status: 'novo',
-    items: [
-      { id: 1, name: 'Item 1', price: 'R$ 10,00' },
-      { id: 2, name: 'Item 2', price: 'R$ 20,00' }
-    ],
-    total: 'R$ 30,00',
-    address: 'Rua Exemplo, 123',
-    expanded: false
-  }
-])
+const orders = ref<Order[]>([])
 
 const filter = ref('todos')
 
@@ -56,7 +43,11 @@ const toggleOrderDetails = (orderId: number) => {
 const acceptOrder = (orderId: number) => {
   const order = orders.value.find((order) => order.id === orderId)
   if (order) {
-    order.status = 'preparando'
+    orderService.acceptOrder(storeId, orderId, (data: any) => {
+      order.status = data.state
+    }, () => {
+      console.error('Failed to accept order')
+    })
   }
 }
 
@@ -79,11 +70,6 @@ const rejectOrder = (orderId: number) => {
   if (order) {
     order.status = 'cancelado'
   }
-}
-
-const openChat = (orderId: number) => {
-  console.log(`Abrindo chat para o pedido ${orderId}.`)
-  // Implementar lógica para abrir chat
 }
 
 onMounted(() => {
@@ -116,7 +102,7 @@ const getStatusClass = (status: string) => {
 <template>
   <div class="order-management-container">
     <ContainerStyled class="title-container">
-      <TitleStyled class="title-styled" title="Gerenciamento de Pedidos" />
+      <TitleStyled className="title-container" title="Gerenciamento de Pedidos" />
     </ContainerStyled>
     <ContainerStyled class="buttons-container">
       <ButtonStyled @click="filterOrders('todos')" label="todos" className="small-blue-button" />
@@ -161,13 +147,13 @@ const getStatusClass = (status: string) => {
         <div class="order-actions">
           <ButtonStyled
             className="small-green-button"
-            v-if="order.status === 'novo'"
+            v-if="order.status === 'payment_confirmed'"
             @click="acceptOrder(order.id)"
             label="Aceitar"
           />
           <ButtonStyled
             className="small-red-button"
-            v-if="order.status === 'novo'"
+            v-if="order.status === 'payment_confirmed'"
             @click="rejectOrder(order.id)"
             label="Recusar"
           />

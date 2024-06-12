@@ -77,8 +77,6 @@ onMounted(() => {
   (data: any) => {
     const parse = JSON.parse(data)
     orders.value = parse.orders
-    console.log(parse)
-    console.log(orders.value)
   }, () => {}) 
   }
 )

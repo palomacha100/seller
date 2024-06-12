@@ -31,7 +31,6 @@ const activeStoreTab = ref<string>('orders')
 const fetchStores = async () => {
   await storeService.getStores(
     (data: Store[]) => {
-      console.log(data)
       stores.value = data || []
     },
     () => {
@@ -128,7 +127,6 @@ watch(activeStore, (newStore) => {
 })
 
 const themeActive = computed(() => {
-  console.log(activeStore.value)
   return {
     backgroundColor: (activeStore.value && activeStore.value.theme) || 'white'
   }

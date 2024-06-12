@@ -67,8 +67,6 @@ class StoreService extends BaseService {
     if (image) {
       formData.append('store[image]', image)
     }
-    console.log(data.active.value)
-    console.log(data)
     formData.append('store[name]', data.name)
     formData.append('store[cnpj]', data.cnpj)
     formData.append('store[phonenumber]', data.phonenumber)

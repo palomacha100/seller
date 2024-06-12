@@ -24,3 +24,15 @@ defineProps<{
     />
   </div>
 </template>
+
+<style scoped>
+  @media (max-width: 780px) {
+    .responsive-menu-image img {
+  width: 100%;
+  max-width: 4rem;
+  height: auto;
+  object-fit: contain;
+}
+}
+
+</style>

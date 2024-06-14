@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router'
 import ButtonStyled from './ButtonStyled.vue'
 import OrderListing from './OrderListing.vue'
 import TextStyled from './TextStyled.vue'
+import ListingProductsView from '@/views/ListingProductsView.vue'
 
 const router = useRouter()
 
@@ -180,6 +181,7 @@ onMounted(() => {
         <TextStyled width="auto" class="black-text" :text="`Status: ${activeStore.active ? 'Aberta' : 'Fechada'}`"/>
       </div>
       <div class="store-tabs">
+        <button @click="setActiveStoreTab('products')" :class="{ active: activeStoreTab === 'products' }">Produtos</button>
         <button @click="setActiveStoreTab('orders')" :class="{ active: activeStoreTab === 'orders' }">Pedidos</button>
         <button @click="setActiveStoreTab('history')" :class="{ active: activeStoreTab === 'history' }">Histórico</button>
         <div class="dropdown">
@@ -193,8 +195,10 @@ onMounted(() => {
         </div>
       </div>
       <div class="store-content">
+        <ListingProductsView v-if="activeStoreTab === 'products'" :storeId="activeStore.id" :key="activeStore.id" />
+      </div>
+      <div class="store-content">
         <OrderListing v-if="activeStoreTab === 'orders'" :storeId="activeStore.id" :key="activeStore.id" />
-        <!-- Componente de Histórico será adicionado aqui -->
       </div>
     </div>
     

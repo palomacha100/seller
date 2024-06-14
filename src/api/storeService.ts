@@ -67,15 +67,18 @@ class StoreService extends BaseService {
     if (image) {
       formData.append('store[image]', image)
     }
-    formData.append('store[name]', data.name)
+    console.log(data)
+    console.log(data.fullName)
+    console.log(data.active)
+    formData.append('store[name]', data.fullName)
     formData.append('store[cnpj]', data.cnpj)
-    formData.append('store[phonenumber]', data.phonenumber)
+    formData.append('store[phonenumber]', data.phoneNumber)
     formData.append('store[cep]', data.cep)
     formData.append('store[state]', data.state)
     formData.append('store[city]', data.city)
     formData.append('store[neighborhood]', data.neighborhood)
     formData.append('store[address]', data.address)
-    formData.append('store[numberaddress]', data.numberaddress)
+    formData.append('store[numberaddress]', data.numberAddress)
     formData.append('store[establishment]', data.establishment)
     formData.append('store[theme]', data.theme)
     formData.append('store[active]', data.active)
@@ -87,6 +90,7 @@ class StoreService extends BaseService {
     }
   }
 
+    
   async getTheme(onSuccess: (data?: any) => void, onFailure: () => void) {
     const response = await this.getEntity('theme_options')
     if (response.ok) {

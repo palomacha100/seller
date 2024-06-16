@@ -67,24 +67,34 @@ class StoreService extends BaseService {
     if (image) {
       formData.append('store[image]', image)
     }
-    console.log(data)
-    console.log(data.fullName)
-    console.log(data.active)
-    formData.append('store[name]', data.fullName)
-    formData.append('store[cnpj]', data.cnpj)
-    formData.append('store[phonenumber]', data.phoneNumber)
-    formData.append('store[cep]', data.cep)
-    formData.append('store[state]', data.state)
-    formData.append('store[city]', data.city)
-    formData.append('store[neighborhood]', data.neighborhood)
-    formData.append('store[address]', data.address)
-    formData.append('store[numberaddress]', data.numberAddress)
-    formData.append('store[establishment]', data.establishment)
-    formData.append('store[theme]', data.theme)
-    formData.append('store[active]', data.active)
+    formData.append('store[name]', data.fullName.value)
+    formData.append('store[cnpj]', data.cnpj.value)
+    formData.append('store[phonenumber]', data.phoneNumber.value)
+    formData.append('store[cep]', data.cep.value)
+    formData.append('store[state]', data.state.value)
+    formData.append('store[city]', data.city.value)
+    formData.append('store[neighborhood]', data.neighborhood.value)
+    formData.append('store[address]', data.address.value)
+    formData.append('store[numberaddress]', data.numberAddress.value)
+    formData.append('store[establishment]', data.establishment.value)
+    formData.append('store[theme]', data.theme.value)
+    formData.append('store[active]', data.active.value)
     const response = await this.update(id, 'stores', formData)
     if (response.ok) {
       this.success(response, onSuccess, 'generate')
+    } else {
+      this.failure(response, onFailure)
+    }
+  }
+
+  async openStore(id: number, active: boolean, onSuccess: () => void, onFailure: () => void) {
+    const formData = new FormData()
+    formData.append('store[active]', active ? 'true' : 'false')
+    const response = await this.update(id, 'stores', formData)
+
+
+    if (response.ok) {
+      onSuccess()
     } else {
       this.failure(response, onFailure)
     }

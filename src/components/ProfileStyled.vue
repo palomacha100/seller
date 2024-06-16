@@ -163,19 +163,19 @@ const estabDropdownOptions = [
 ]
 
 const getModelByName = {
-  fullName: fullName.value,
-  cnpj: cnpj.value,
-  phoneNumber: phoneNumber.value,
-  cep: cep.value,
-  state: state.value,
-  city: city.value,
-  neighborhood: neighborhood.value,
-  address: address.value,
-  numberAddress: numberAddress.value,
-  complementAddress: complementAddress.value,
-  establishment: establishment.value,
-  theme: theme.value,
-  active: active.value
+  fullName: fullName,
+  cnpj: cnpj,
+  phoneNumber: phoneNumber,
+  cep: cep,
+  state: state,
+  city: city,
+  neighborhood: neighborhood,
+  address: address,
+  numberAddress: numberAddress,
+  complementAddress: complementAddress,
+  establishment: establishment,
+  theme: theme,
+  active: active
 }
 
 onMounted(() => {

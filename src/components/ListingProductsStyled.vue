@@ -142,8 +142,8 @@ const handleFilter = () => {
 
 <template>
   <div class="table-container">
-    <ContainerStyled width="68.75rem" height="3.5rem" backgroundColor="transparent">
-      <TitleStyled className="title-styled" title="Gerenciamento de produtos" />
+    <ContainerStyled class="title-container">
+      <TitleStyled className="title-container" title="Gerenciamento de Produtos" />
     </ContainerStyled>
     <ContainerStyled width="68.75rem" height="3.5rem" :backgroundColor="'var(--light-blue)'">
       <InputStyled
@@ -155,10 +155,8 @@ const handleFilter = () => {
         :handleChange="handleFilter"
       />
       <ButtonStyled
-        className="login-button"
+        className="medium-blue-button"
         label="+ Adicionar produto"
-        width="10rem"
-        height="2.5rem"
         @click="addProduct"
       />
     </ContainerStyled>

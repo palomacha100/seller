@@ -60,10 +60,9 @@ const toggleStatus = async (store: Store) => {
   store.active = !store.active
   localStorage.setItem('activedStore', JSON.stringify(store))
   sessionStorage.setItem('active', JSON.stringify(store.id))
-  await storeService.updateStore(
+  await storeService.openStore(
     store.id,
-    store,
-    null,
+    store.active,
     () => {
       console.log('Store status updated')
     },

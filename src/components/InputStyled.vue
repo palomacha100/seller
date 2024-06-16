@@ -97,6 +97,7 @@ span {
   display: flex;
   width: 100%;
   justify-content: center;
+  padding: 5px;
 }
 .input-header input {
   

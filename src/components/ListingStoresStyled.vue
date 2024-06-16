@@ -23,8 +23,6 @@ interface Store {
 const storeService = new StoreService()
 const stores = ref<Store[]>([])
 const searchQuery = ref<string>('')
-const currentPage = ref<number>(1)
-const itemsPerPage = ref<number>(10)
 const activeTab = ref<number | null>(null)
 const tabContainer = ref<HTMLDivElement | null>(null)
 const activeStoreTab = ref<string>('orders')
@@ -70,34 +68,6 @@ const toggleStatus = async (store: Store) => {
       console.error('Failed to update store status')
     }
   )
-}
-
-const filteredStores = computed(() => {
-  return stores.value.filter((store) =>
-    store.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-})
-
-const paginatedStores = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value
-  const end = start + itemsPerPage.value
-  return filteredStores.value.slice(start, end)
-})
-
-const totalPages = computed(() => {
-  return Math.ceil(filteredStores.value.length / itemsPerPage.value)
-})
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value += 1
-  }
-}
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1
-  }
 }
 
 const addStore = () => {
@@ -162,7 +132,7 @@ onMounted(() => {
       <button class="arrow left" @click="scrollTabs('left')">◀</button>
       <div class="tabs" ref="tabContainer">
         <div
-          v-for="store in paginatedStores"
+          v-for="store in stores"
           :key="store.id"
           :class="['tab', { active: activeTab === store.id }]"
           @click="viewStore(store.id)"
@@ -199,22 +169,6 @@ onMounted(() => {
       <div class="store-content">
         <OrderListing v-if="activeStoreTab === 'orders'" :storeId="activeStore.id" :key="activeStore.id" />
       </div>
-    </div>
-    
-    <div class="pagination">
-      <ButtonStyled
-        className="pagination-button"
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        label="Anterior"
-      />
-      <span>Página {{ currentPage }} de {{ totalPages }}</span>
-      <ButtonStyled
-        className="pagination-button"
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        label="Próxima"
-      />
     </div>
   </div>
 </template>

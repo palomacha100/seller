@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { ProductService } from '@/api/productService'
 import TitleStyled from './TitleStyled.vue'
 import InputStyled from './InputStyled.vue'
@@ -14,6 +14,8 @@ const productService = new ProductService()
 const products = ref<Product[]>([])
 const searchQuery = ref<string>('')
 const sortOrder = ref<'asc' | 'desc'>('asc')
+const currentPage = ref<number>(1)
+const itemsPerPage = ref<number>(10)
 
 interface Product {
   id: number
@@ -138,7 +140,36 @@ const handleFilter = () => {
     product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 }
+
+const filteredStores = computed(() => {
+  return products.value.filter((product) =>
+    product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
+
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return filteredProducts.value.slice(start, end)
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredStores.value.length / itemsPerPage.value)
+})
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1
+  }
+}
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1
+  }
+}
 </script>
+
 
 <template>
   <div class="table-container">
@@ -152,7 +183,7 @@ const handleFilter = () => {
         type="text"
         class="input-header"
         placeholder="Pesquisar pelo nome do produto"
-        :handleChange="handleFilter"
+        @input="handleFilter"
       />
       <ButtonStyled
         className="medium-blue-button"
@@ -184,8 +215,8 @@ const handleFilter = () => {
           <th>Status</th>
         </tr>
       </thead>
-      <tbody v-if="filteredProducts">
-        <tr v-for="product in filteredProducts" :key="product.id">
+      <tbody v-if="paginatedProducts">
+        <tr v-for="product in paginatedProducts" :key="product.id">
           <td><img :src="product.thumbnail_url" alt="Product Image" class="thumbnail" /></td>
           <td>{{ product.title }}</td>
           <td>{{ product.category }}</td>
@@ -206,7 +237,24 @@ const handleFilter = () => {
       </tbody>
     </table>
   </div>
+
+  <div class="pagination">
+    <ButtonStyled
+      className="pagination-button"
+      @click="prevPage"
+      :disabled="currentPage === 1"
+      label="Anterior"
+    />
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <ButtonStyled
+      className="pagination-button"
+      @click="nextPage"
+      :disabled="currentPage === totalPages"
+      label="Próxima"
+    />
+  </div>
 </template>
+
 
 <style>
 .thumbnail {

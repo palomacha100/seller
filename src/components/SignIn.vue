@@ -122,9 +122,7 @@ function handlePassword() {
     <div class="sign-up-container">
       <TextStyled
         text="Não tem uma conta?"
-        width="11rem"
-        height="2.8rem"
-        className="grey-bold-text"
+        className="gray-text"
       />
       <nav>
         <RouterLink :to="{ name: 'signUp' }">
@@ -165,7 +163,6 @@ span {
 
 .sign-up-container {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
+  flex-direction: column;
 }
 </style>

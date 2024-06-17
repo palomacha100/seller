@@ -9,6 +9,7 @@ import ButtonStyled from './ButtonStyled.vue'
 import OrderListing from './OrderListing.vue'
 import TextStyled from './TextStyled.vue'
 import ListingProductsView from '@/views/ListingProductsView.vue'
+import StatisticsItem from './StatisticsItem.vue'
 
 const router = useRouter()
 
@@ -153,6 +154,7 @@ onMounted(() => {
         <button @click="setActiveStoreTab('products')" :class="{ active: activeStoreTab === 'products' }">Produtos</button>
         <button @click="setActiveStoreTab('orders')" :class="{ active: activeStoreTab === 'orders' }">Pedidos</button>
         <button @click="setActiveStoreTab('history')" :class="{ active: activeStoreTab === 'history' }">Histórico</button>
+        <button @click="setActiveStoreTab('statistics')" :class="{ active: activeStoreTab === 'statistics' }">Estatísticas</button>
         <div class="dropdown">
           <button class="dropbtn">Configurações</button>
           <div class="dropdown-content">
@@ -168,6 +170,9 @@ onMounted(() => {
       </div>
       <div class="store-content">
         <OrderListing v-if="activeStoreTab === 'orders'" :storeId="activeStore.id" :key="activeStore.id" />
+      </div>
+      <div class="store-content">
+        <StatisticsItem v-if="activeStoreTab === 'statistics'" :storeId="activeStore.id" :key="activeStore.id" />
       </div>
     </div>
   </div>

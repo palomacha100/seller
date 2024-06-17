@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
 import SignIn from '@/components/SignIn.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import RememberPasswordView from '@/views/RememberPasswordView.vue'
@@ -18,12 +17,6 @@ const router = createRouter({
       path: '/',
       name: 'welcome',
       component: WelcomeView
-    },
-    {
-      path: '/home',
-      name: 'home',
-      component: HomeView,
-      meta: { requiresAuth: true }
     },
     {
       path: '/signIn',
@@ -53,8 +46,8 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/listingStores',
-      name: 'listingStores',
+      path: '/home',
+      name: 'home',
       component: ListingStoresView,
       meta: { requiresAuth: true }
     },

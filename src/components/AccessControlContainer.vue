@@ -58,4 +58,16 @@ export default defineComponent({
   width: 100vw;
   height: 100vh;
 }
+
+@media (max-width: 768px) {
+  .image-container {
+    display: none;
+  }
+
+  .form-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+}
 </style>

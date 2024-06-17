@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   label: string
-  className: string
+  className: string | string[]
   isDisabled?: boolean
   width?: string
   height?: string
@@ -119,6 +119,12 @@ button {
   background-color: transparent;
   color: var(--dark-blue);
   border: none;
+}
+
+.transparent-button-gray-text {
+  background-color: transparent;
+  color: var(--dark-gray);
+  border: 1px solid var(--light-gray);
 }
 
 

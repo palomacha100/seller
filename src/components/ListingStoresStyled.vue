@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { StoreService } from '../api/storeService'
 import TitleStyled from './TitleStyled.vue'
 import InputStyled from './InputStyled.vue'
 import ContainerStyled from './ContainerStyled.vue'
 import { useRouter } from 'vue-router'
 import ButtonStyled from './ButtonStyled.vue'
+import OrderListing from './OrderListing.vue'
 import TextStyled from './TextStyled.vue'
+import ListingProductsView from '@/views/ListingProductsView.vue'
 
 const router = useRouter()
 
@@ -21,17 +23,13 @@ interface Store {
 const storeService = new StoreService()
 const stores = ref<Store[]>([])
 const searchQuery = ref<string>('')
-const currentPage = ref<number>(1)
-const itemsPerPage = ref<number>(10)
 const activeTab = ref<number | null>(null)
 const tabContainer = ref<HTMLDivElement | null>(null)
-
-
+const activeStoreTab = ref<string>('orders')
 
 const fetchStores = async () => {
   await storeService.getStores(
     (data: Store[]) => {
-      console.log(data)
       stores.value = data || []
     },
     () => {
@@ -57,34 +55,12 @@ const editStore = (id: number) => {
 }
 
 const toggleStatus = async (store: Store) => {
-  stores.value.forEach((s) => {
-    if (s.id !== store.id && s.active) {
-      s.active = false
-      storeService.updateStore(
-        s.id,
-        s,
-        null,
-        () => {
-          console.log(`Store ${s.id} deactivated`)
-        },
-        () => {
-          console.error(`Failed to update store ${s.id}`)
-        }
-      )
-    }
-  })
-
   store.active = !store.active
-  if (store.active) {
-    localStorage.setItem('activedStore', JSON.stringify(store))
-    sessionStorage.setItem('active', JSON.stringify(store.id))
-  } else {
-    localStorage.removeItem('activedStore')
-  }
-  await storeService.updateStore(
+  localStorage.setItem('activedStore', JSON.stringify(store))
+  sessionStorage.setItem('active', JSON.stringify(store.id))
+  await storeService.openStore(
     store.id,
-    store,
-    null,
+    store.active,
     () => {
       console.log('Store status updated')
     },
@@ -92,34 +68,6 @@ const toggleStatus = async (store: Store) => {
       console.error('Failed to update store status')
     }
   )
-}
-
-const filteredStores = computed(() => {
-  return stores.value.filter((store) =>
-    store.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-})
-
-const paginatedStores = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value
-  const end = start + itemsPerPage.value
-  return filteredStores.value.slice(start, end)
-})
-
-const totalPages = computed(() => {
-  return Math.ceil(filteredStores.value.length / itemsPerPage.value)
-})
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value += 1
-  }
-}
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1
-  }
 }
 
 const addStore = () => {
@@ -142,25 +90,34 @@ const scrollTabs = (direction: 'left' | 'right') => {
 const activeStore = computed(() => {
   return stores.value.find((store) => store.id === activeTab.value) || null
 })
+watch(activeStore, (newStore) => {
+  if (newStore) {
+    localStorage.setItem('activedStore', JSON.stringify(newStore))
+  }
+})
 
 const themeActive = computed(() => {
-  console.log(activeStore.value)
   return {
     backgroundColor: (activeStore.value && activeStore.value.theme) || 'white'
-  };
-});
+  }
+})
+
+const setActiveStoreTab = (tab: string) => {
+  activeStoreTab.value = tab
+}
 
 onMounted(() => {
   fetchStores()
 })
 </script>
 
+
 <template>
   <div class="tabs-container">
     <ContainerStyled width="68.75rem" height="3.5rem" backgroundColor="transparent">
       <TitleStyled className="title-styled" title="Gerenciamento de lojas" />
     </ContainerStyled>
-    <ContainerStyled width="68.75rem" height="3.5rem" :backgroundColor="'var(--light-blue)'">
+    <ContainerStyled width="68.75rem" height="5rem" backgroundColor="transparent">
       <InputStyled
         v-model="searchQuery"
         id="storeSearch"
@@ -175,7 +132,7 @@ onMounted(() => {
       <button class="arrow left" @click="scrollTabs('left')">◀</button>
       <div class="tabs" ref="tabContainer">
         <div
-          v-for="store in paginatedStores"
+          v-for="store in stores"
           :key="store.id"
           :class="['tab', { active: activeTab === store.id }]"
           @click="viewStore(store.id)"
@@ -186,38 +143,32 @@ onMounted(() => {
       <button class="arrow right" @click="scrollTabs('right')">▶</button>
     </div>
 
-    <div v-if="activeStore" class="tab-content" :style="themeActive">
-      <div class="store-details"  >
+    <div v-if="activeStore" class="tab-content">
+      <div class="store-details" :style="themeActive">
         <img :src="activeStore.image_url" alt="Store Image" class="thumbnail" />
         <TitleStyled className="subtitle" :title="activeStore.name"/>
-        <p>Status: {{ activeStore.active ? 'Aberta' : 'Fechada' }}</p>
-        <div class="actions">
-          <ButtonStyled className="micro-blue-button" label="Editar" @click="editStore(activeStore.id)"/>
-          <ButtonStyled className="micro-red-button" label="Excluir" @click="deleteStore(activeStore.id)"/>
-          <button
-            :class="['status-button', activeStore.active ? 'active' : 'inactive']"
-            @click="toggleStatus(activeStore)"
-          >
-            {{ activeStore.active ? 'Fechar' : 'Abrir' }}
-          </button>
+        <TextStyled width="auto" class="black-text" :text="`Status: ${activeStore.active ? 'Aberta' : 'Fechada'}`"/>
+      </div>
+      <div class="store-tabs">
+        <button @click="setActiveStoreTab('products')" :class="{ active: activeStoreTab === 'products' }">Produtos</button>
+        <button @click="setActiveStoreTab('orders')" :class="{ active: activeStoreTab === 'orders' }">Pedidos</button>
+        <button @click="setActiveStoreTab('history')" :class="{ active: activeStoreTab === 'history' }">Histórico</button>
+        <div class="dropdown">
+          <button class="dropbtn">Configurações</button>
+          <div class="dropdown-content">
+            <ButtonStyled className="transparent-button-gray-text" label="Editar" @click="editStore(activeStore.id)" />
+            <ButtonStyled :className="['transparent-button-gray-text', activeStore.active ? 'active' : 'inactive']"
+              @click="toggleStatus(activeStore)" :label="activeStore.active ? 'Fechar' : 'Abrir'" />
+            <ButtonStyled className="transparent-button-gray-text" label="Excluir" @click="deleteStore(activeStore.id)" />
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="pagination">
-      <ButtonStyled
-        className="pagination-button"
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        label="Anterior"
-      />
-      <span>Página {{ currentPage }} de {{ totalPages }}</span>
-      <ButtonStyled
-        className="pagination-button"
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        label="Próxima"
-      />
+      <div class="store-content">
+        <ListingProductsView v-if="activeStoreTab === 'products'" :storeId="activeStore.id" :key="activeStore.id" />
+      </div>
+      <div class="store-content">
+        <OrderListing v-if="activeStoreTab === 'orders'" :storeId="activeStore.id" :key="activeStore.id" />
+      </div>
     </div>
   </div>
 </template>
@@ -240,8 +191,14 @@ onMounted(() => {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1rem;
   z-index: 1;
+  color: var(--dark-gray);
+  transition: color 0.3s;
+}
+
+.arrow:hover {
+  opacity: 80%;
 }
 
 .tabs {
@@ -251,6 +208,7 @@ onMounted(() => {
   flex: 1;
   white-space: nowrap;
   margin: 0 20px;
+  gap: 5px;
 }
 
 .tab {
@@ -258,17 +216,20 @@ onMounted(() => {
   cursor: pointer;
   white-space: nowrap;
   border: 1px solid #ddd;
-  border-bottom: none;
   flex-shrink: 0;
+  color: var(--dark-gray);
+  border-radius: 5px;
+  font-size: 14px;
 }
 
 .tab.active {
-  background-color: var(--primary-color);
+  background-color: var(--dark-blue);
   color: white;
+  border-radius: 5px;
 }
 
 .tab-content {
-  padding: 20px;
+  padding: 20px 0;
   border-radius: 5px;
 }
 
@@ -276,6 +237,8 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 10px 0;
+  border-radius: 5px;
 }
 
 .thumbnail {
@@ -290,6 +253,72 @@ onMounted(() => {
   gap: 10px;
 }
 
+.store-tabs {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+
+.store-tabs button {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: var(--dark-gray);
+}
+
+.store-tabs button.active {
+  background-color: var(--dark-blue);
+  color: var(--white);
+  
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9; 
+  min-width: 160px;
+  z-index: 1;
+}
+
+.dropdown-content button {
+ 
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  
+}
+
+.store-content {
+  margin-top: 20px;
+}
+
 .pagination {
   display: flex;
   justify-content: space-between;
@@ -297,3 +326,4 @@ onMounted(() => {
   margin-top: 20px;
 }
 </style>
+

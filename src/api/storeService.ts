@@ -38,15 +38,15 @@ class StoreService extends BaseService {
     if (image) {
       formData.append('store[image]', image)
     }
-    formData.append('store[name]', data.fullName.value)
+    formData.append('store[name]', data.name.value)
     formData.append('store[cnpj]', data.cnpj.value)
-    formData.append('store[phonenumber]', data.phoneNumber.value)
+    formData.append('store[phonenumber]', data.phonenumber.value)
     formData.append('store[cep]', data.cep.value)
     formData.append('store[state]', data.state.value)
     formData.append('store[city]', data.city.value)
     formData.append('store[neighborhood]', data.neighborhood.value)
     formData.append('store[address]', data.address.value)
-    formData.append('store[numberaddress]', data.numberAddress.value)
+    formData.append('store[numberaddress]', data.numberaddress.value)
     formData.append('store[establishment]', data.establishment.value)
     formData.append('store[theme]', data.theme.value)
     const response = await this.create('stores', formData)
@@ -67,8 +67,6 @@ class StoreService extends BaseService {
     if (image) {
       formData.append('store[image]', image)
     }
-    console.log(data.theme.value)
-    console.log(data.establishment.value)
     formData.append('store[name]', data.fullName.value)
     formData.append('store[cnpj]', data.cnpj.value)
     formData.append('store[phonenumber]', data.phoneNumber.value)
@@ -80,6 +78,7 @@ class StoreService extends BaseService {
     formData.append('store[numberaddress]', data.numberAddress.value)
     formData.append('store[establishment]', data.establishment.value)
     formData.append('store[theme]', data.theme.value)
+    formData.append('store[active]', data.active.value)
     const response = await this.update(id, 'stores', formData)
     if (response.ok) {
       this.success(response, onSuccess, 'generate')
@@ -88,6 +87,20 @@ class StoreService extends BaseService {
     }
   }
 
+  async openStore(id: number, active: boolean, onSuccess: () => void, onFailure: () => void) {
+    const formData = new FormData()
+    formData.append('store[active]', active ? 'true' : 'false')
+    const response = await this.update(id, 'stores', formData)
+
+
+    if (response.ok) {
+      onSuccess()
+    } else {
+      this.failure(response, onFailure)
+    }
+  }
+
+    
   async getTheme(onSuccess: (data?: any) => void, onFailure: () => void) {
     const response = await this.getEntity('theme_options')
     if (response.ok) {
@@ -137,7 +150,8 @@ class StoreService extends BaseService {
           establishment: json.establishment,
           numberaddress: json.numberaddress,
           complementaddress: json.complementadress,
-          theme: json.theme
+          theme: json.theme,
+          active: json.active
         }
         this.storage.store('store', JSON.stringify(store))
         onSuccess()
@@ -146,7 +160,7 @@ class StoreService extends BaseService {
           id: fields.id,
           name: fields.name,
           image_url: fields.image_url && `${this.apiUrl}${fields?.image_url}`,
-          active: true,
+          active: fields.active,
           cnpj: fields.cnpj,
           phonenumber: fields.phonenumber,
           cep: fields.cep,
@@ -175,7 +189,8 @@ class StoreService extends BaseService {
           establishment: json.establishment,
           numberaddress: json.numberaddress,
           complementaddress: json.complementadress,
-          theme: json.theme
+          theme: json.theme,
+          active: json.active
         }
         onSuccess(store)
       } else {

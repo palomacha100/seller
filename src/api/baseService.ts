@@ -1,6 +1,8 @@
 import { createStorage, type SimpleStorage } from '@/utils/storage'
 import { Auth } from '@/auth'
 
+const X_API_KEY = import.meta.env.VITE_X_API_KEY
+
 abstract class BaseService {
   protected apiUrl: string
   storage: SimpleStorage
@@ -62,6 +64,20 @@ abstract class BaseService {
       }
     })
     return response
+  }
+
+  async changeState(path: string) {
+    const token = this.getFallback('token');
+    const response = fetch(`${this.apiUrl}/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        'X-API-KEY': X_API_KEY
+      }
+    });
+    return response;
   }
 
   getFallback(key: string): string | null {

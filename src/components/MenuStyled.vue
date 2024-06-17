@@ -7,21 +7,15 @@ import { useRouter } from 'vue-router'
 const auth = new Auth()
 const isLoggedIn = ref(auth.isLoggedIn())
 const currentUser = ref(auth.currentUser())
-
-const showNotificationDropdown = ref(false)
-const showAvatarDropdown = ref(false)
-
-const toggleNotificationDropdown = () => {
-  showNotificationDropdown.value = !showNotificationDropdown.value
-  showAvatarDropdown.value = false
-}
-
-const toggleAvatarDropdown = () => {
-  showAvatarDropdown.value = !showAvatarDropdown.value
-  showNotificationDropdown.value = false
-}
-
 const route = useRouter()
+
+const getUsername = (email: any) => {
+  const username = email.split('@')[0];
+  return username.charAt(0).toUpperCase() + username.slice(1);
+};
+
+
+
 
 const signOut = () => {
   auth.signOut(() => {
@@ -36,62 +30,23 @@ const signOut = () => {
 <template>
   <nav class="navbar">
     <div class="container-fluid">
-      <ImageStyled
+      <ImageStyled class="responsive-menu-image"
         imageUrl="../../images/logo.png"
         altText="Logo com nome do app Link to Food em vermelho"
         width="6rem"
       />
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="home">Início</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="orderListing">Pedidos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="listingStores">Lojas</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Histórico</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Estatísticas</a>
-        </li>
-      </ul>
-
+      <h3>Olá, {{ currentUser && getUsername(currentUser.email) }}</h3>
+      
       <div class="nav-icon">
-        <div class="dropdown" @click="toggleNotificationDropdown">
-          <a class="icons" href="#">
-            <img src="../assets/notification-bell.svg" alt="Notification bell" height="24" />
-            <span class="notification">1</span>
-          </a>
-          <ul class="dropdown-menu" v-if="showNotificationDropdown">
-            <li><a class="dropdown-item" href="#">Notificação 1</a></li>
-            <li><a class="dropdown-item" href="#">Notificação 2</a></li>
-          </ul>
-        </div>
-        <div class="dropdown" @click="toggleAvatarDropdown">
-          <a class="icons dropdown-toggle" href="#">
-            <img class="avatar-image" src="../../images/mood.png" alt="User image" />
-          </a>
-          <ul class="dropdown-menu" v-if="showAvatarDropdown">
-            <li><a class="dropdown-item" href="profile">Meu perfil</a></li>
-            <li><a class="dropdown-item" href="profile">Minha carteira</a></li>
-            <li><a @click="signOut" class="dropdown-item" href="#">Sair</a></li>
-          </ul>
+            <a @click="signOut" class="dropdown-item" href="#">Sair</a>
         </div>
       </div>
-    </div>
   </nav>
 </template>
 
 <style scoped>
 a {
   text-decoration: none;
-}
-img {
-  width: 25px;
-  height: 25px;
 }
 
 .avatar-image {
@@ -105,8 +60,11 @@ img {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 10px 20px;;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  @media (max-width: 780px) {
+    padding: 10px 10px;
+  }
 }
 .navbar {
   background-color: var(--white);
@@ -114,69 +72,43 @@ img {
 
 .navbar-nav {
   display: flex;
-  gap: 30px;
 }
 
 .nav-icon {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
   height: 40px;
-  width: 130px;
+  text-decoration: none;
+  width: 100px;
+  @media (max-width: 780px) {
+    width: auto;
+    margin-left: 5px;
+  }
 }
 
 .nav-icon a {
   align-self: center;
   cursor: pointer;
-}
-
-.nav-link {
-  color: var(--dark-gray);
   text-decoration: none;
+  font-size: 16px;
+  color: var(--red);
+  @media (max-width: 780px) {
+    font-size: 12px;
 }
-
-.nav-link:hover {
-  color: var(--dark-blue);
-}
-
-.dropdown-menu {
-  background-color: var(--white);
-  color: var(--dark-blue);
-  position: absolute;
-  right: 0;
-  background-color: var(--white);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  min-width: 100px;
-  z-index: 1;
-  padding: 5px;
-  margin: 10px;
-}
-
-.dropdown-item {
-  color: var(--dark-blue);
-  text-decoration: none;
-}
-
-.dropdown-item:hover {
-  color: var(--white);
-}
-
-.dropdown li:hover {
-  background-color: var(--dark-blue);
-  border-radius: 2px;
-}
-
-.notification {
-  font-size: 20px;
-  text-decoration: none;
-  color: var(--dark-blue);
-  font-weight: 700;
 }
 
 .navbar-collapse {
   display: flex;
   justify-content: space-around;
+}
+
+h3 {
+  color: var(--dark-gray);
+  font-size: 16px;
+  @media (max-width: 780px) {
+    font-size: 12px;
+}
 }
 </style>

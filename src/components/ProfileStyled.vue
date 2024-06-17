@@ -30,6 +30,7 @@ const numberAddress = defineModel<string>('numberAddress')
 const complementAddress = defineModel<string>('complementAddress', { default: '' })
 const establishment = defineModel<string>('establishment', { default: '' })
 const theme = defineModel<string>('theme', { default: 'blue' })
+const active = defineModel<boolean>('active', { default: true})
 
 const errors = reactive({
   fullName: '',
@@ -162,18 +163,19 @@ const estabDropdownOptions = [
 ]
 
 const getModelByName = {
-  fullName,
-  cnpj,
-  phoneNumber,
-  cep,
-  state,
-  city,
-  neighborhood,
-  address,
-  numberAddress,
-  complementAddress,
-  establishment,
-  theme
+  fullName: fullName,
+  cnpj: cnpj,
+  phoneNumber: phoneNumber,
+  cep: cep,
+  state: state,
+  city: city,
+  neighborhood: neighborhood,
+  address: address,
+  numberAddress: numberAddress,
+  complementAddress: complementAddress,
+  establishment: establishment,
+  theme: theme,
+  active: active
 }
 
 onMounted(() => {
@@ -195,7 +197,7 @@ onMounted(() => {
     const storeData = localStorage.getItem(field) || ''
     const storeSeller = storeData ? storeData : null
     if (storeSeller !== null) {
-      getModelByName[field as keyof typeof getModelByName].value = storeSeller
+      getModelByName[field] = storeSeller
     }
   })
   const storeData = localStorage.getItem('store') || ''
@@ -227,6 +229,7 @@ onMounted(() => {
         imageUrl.value = storeDataTwo.src
         isStoreExists.value = true
         theme.value = storeDataTwo.theme
+        active.value = storeDataTwo.active
       },
       () => {
         console.error('Failed to fetch stores')

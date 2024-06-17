@@ -20,8 +20,6 @@ const signOut = () => {
 
 <template>
   <main>
-    <h3>Olá, {{ currentUser && currentUser.email }}</h3>
-
     <br />
     <nav>
       <a @click="signOut">Sair</a>

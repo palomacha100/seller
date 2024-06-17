@@ -95,10 +95,12 @@ span {
 
 .input-header {
   display: flex;
+  width: 100%;
   justify-content: center;
+  padding: 5px;
 }
 .input-header input {
-  width: 55rem;
+  
   height: 2.5rem;
   border-color: transparent;
 }

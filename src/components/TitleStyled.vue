@@ -26,7 +26,19 @@ defineProps<{
   color: black;
   font-size: 1.5rem;
   font-weight: bold;
-
-
 }
+
+.title-container {
+  align-items: center;
+  width: 100%;
+}
+
+.title-container h1 {
+  color: var(--dark-blue);
+  font-size: 1.5rem;
+
+  
+}
+
+
 </style>

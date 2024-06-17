@@ -1,8 +1,8 @@
 :root {
-  --primary-color: #2c5c8f;
   --dark-blue: #2c5c8f;
   --white: #fff;
   --dark-gray: #48484d;
+  --light-gray: #a4a4a8;
   --red: #cc4b4e;
   --yellow: #f29f05;
   --light-blue: #b8c9e6;
@@ -10,6 +10,7 @@
   --purple: #504c9c;
   --medium-blue: #1bded8;
   --hover-blue: #142a42;
+  --black: #000;
 }
 
 *,
@@ -28,5 +29,4 @@ li {
 body {
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
-  background-color: rgba(237, 228, 161, 0.2);
 }

@@ -31,9 +31,10 @@ function onSubmit() {
       title: 'Email enviado',
       text: 'Verifique sua caixa de entrada',
       icon: 'success',
-      confirmButtonText: 'Ok'
+      confirmButtonText: 'Ok',
+      confirmButtonColor: '#2c5c8f'
     })
-      router.push('/')
+      router.push('/signIn')
   }
 }
       
@@ -63,7 +64,7 @@ function onSubmit() {
         type="submit"
         v-show="!awaiting"
         className="login-button"
-        label="Cadastrar"
+        label="Enviar"
         width="22.5rem"
         height="2.8rem"
       />

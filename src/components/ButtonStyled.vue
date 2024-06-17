@@ -119,6 +119,7 @@ button {
   background-color: transparent;
   color: var(--dark-blue);
   border: none;
+ 
 }
 
 .transparent-button-gray-text {

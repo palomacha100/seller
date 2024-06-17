@@ -129,8 +129,6 @@ function onSubmit() {
         <ButtonStyled
           className="transparent-button-blue-text"
           label="Voltar ao login"
-          width="8rem"
-          height="2.8rem"
         />
       </RouterLink>
     </nav>

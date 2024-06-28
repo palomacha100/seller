@@ -111,8 +111,10 @@ const handleEstablishment = (event: Event) => {
 }
 
 const handleTheme = (event: Event) => {
+  localStorage.setItem('theme', (event.target as HTMLSelectElement).value)
   theme.value = (event.target as HTMLSelectElement).value
-  localStorage.setItem('theme', theme.value)
+  console.log(theme.value)
+
 }
 
 const canMoveToTab2 = () => {
@@ -210,11 +212,9 @@ onMounted(() => {
   }
   if (route.query.isEditing === 'true') {
     isEditing.value = true
-    console.log('aqui')
     store.getStoresById(
       Number(route.query.id),
       (storeDataTwo: any) => {
-        console.log(storeDataTwo)
         fullName.value = storeDataTwo.name
         cnpj.value = storeDataTwo.cnpj
         phoneNumber.value = storeDataTwo.phonenumber
@@ -444,7 +444,7 @@ const handleEdit = () => {
         />
         <SelectStyled
           :selectedValue="theme"
-          v-model:="theme"
+          v-model="theme"
           id="theme"
           typeOfSelect="Tema da Loja"
           :options="themeOptions"
@@ -493,7 +493,7 @@ const handleEdit = () => {
               label="Editar"
             />
             <nav>
-              <RouterLink :to="{ name: 'listingStores' }">
+              <RouterLink :to="{ name: 'home' }">
                 <ButtonStyled
                   type="submit"
                   className="medium-blue-button"

@@ -6,6 +6,7 @@ import ButtonStyled from './ButtonStyled.vue'
 import InputStyled from './InputStyled.vue'
 import TextStyled from './TextStyled.vue'
 import AccessControlContainer from './AccessControlContainer.vue'
+import Swal from 'sweetalert2'
 
 const router = useRouter()
 
@@ -33,8 +34,16 @@ const onSubmit = () => {
     password.value || '',
     () => {
       awaiting.value = false
-
-      router.push('/home')
+      Swal.fire({
+        position: "top-end",
+        text: "Login efetuado com sucesso!",
+        showConfirmButton: false,
+        timer: 1500,
+        width: "15rem",
+       
+    
+      });
+      router.push('/listingStores')
     },
     () => {
       awaiting.value = false

@@ -23,8 +23,8 @@ class Auth {
     })
   }
   failure(response: Response, onFailure: (error: string) => void) {
-    response.json().then((json) => {
-      onFailure('Email já cadastrado')
+    response.json().then(() => {
+      onFailure('Não foi possível completar o cadastro. Por favor, verifique suas informações e tente novamente.')
     })
   }
   currentUser() {

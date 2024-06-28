@@ -1,21 +1,18 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import { Auth } from '../auth'
 import InputStyled from './InputStyled.vue'
 import ButtonStyled from './ButtonStyled.vue'
 import AccessControlContainer from './AccessControlContainer.vue'
 import TextStyled from './TextStyled.vue'
+import Swal from 'sweetalert2'
 
 const router = useRouter()
 
 const email = defineModel<string>('email', { default: '' })
 const errorEmail = ref<string>('')
-const registerError = ref<string>('')
 
 const awaiting = ref<boolean>(false)
-
-const auth = new Auth()
 
 function handleEmail() {
   const re = /\S+@\S+\.\S+/
@@ -29,23 +26,18 @@ function handleEmail() {
 function onSubmit() {
   if (email.value == '') {
     return (errorEmail.value = 'É necessário informar um email')
+  } else {
+    Swal.fire({
+      title: 'Email enviado',
+      text: 'Verifique sua caixa de entrada',
+      icon: 'success',
+      confirmButtonText: 'Ok',
+      confirmButtonColor: '#2c5c8f'
+    })
+      router.push('/signIn')
   }
-
-  awaiting.value = true
-  auth.rememberPassword(
-    email.value || '',
-
-    () => {
-      awaiting.value = false
-      router.push('/')
-    },
-    (error = '') => {
-      awaiting.value = false
-      registerError.value = error
-      console.log('não foi dessa vez!')
-    }
-  )
 }
+      
 </script>
 <template>
   <AccessControlContainer>
@@ -72,7 +64,7 @@ function onSubmit() {
         type="submit"
         v-show="!awaiting"
         className="login-button"
-        label="Cadastrar"
+        label="Enviar"
         width="22.5rem"
         height="2.8rem"
       />
@@ -82,8 +74,6 @@ function onSubmit() {
         <ButtonStyled
           className="transparent-button-blue-text"
           label="Voltar ao login"
-          width="8rem"
-          height="2.8rem"
         />
       </RouterLink>
     </nav>

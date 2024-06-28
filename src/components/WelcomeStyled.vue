@@ -22,7 +22,7 @@ export default defineComponent({
       />
       <nav>
         <RouterLink :to="{ name: 'signIn' }">
-          <ButtonStyled className="login-button" label="Começar" width="9.75rem" height="3rem" />
+          <ButtonStyled className="medium-blue-button" label="Começar" />
         </RouterLink>
       </nav>
     </div>

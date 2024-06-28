@@ -35,7 +35,6 @@ const fetchProducts = async (storeId: number) => {
     storeId,
     (data: Product[]) => {
       products.value = data.data || []
-      console.log(data)
       if (products.value.length > 0) {
         products.value.forEach((product) => {
           product.active = true

@@ -119,12 +119,36 @@ button {
   background-color: transparent;
   color: var(--dark-blue);
   border: none;
+ 
 }
 
 .transparent-button-gray-text {
   background-color: transparent;
   color: var(--dark-gray);
   border: 1px solid var(--light-gray);
+}
+
+@media (max-width: 768px) {
+  .medium-blue-button,
+  .medium-red-button,
+  .medium-yellow-button,
+  .medium-gray-button {
+    width: 6rem;
+
+  }
+
+  .micro-blue-button,
+  .micro-red-button,
+  .micro-yellow-button,
+  .micro-gray-button {
+    width: 4rem;
+    height: 1.8rem;
+  }
+
+  .pagination-button {
+    width: 6rem;
+    height: 2rem;
+  }
 }
 
 

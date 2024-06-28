@@ -9,6 +9,7 @@ import ButtonStyled from './ButtonStyled.vue'
 import OrderListing from './OrderListing.vue'
 import TextStyled from './TextStyled.vue'
 import ListingProductsView from '@/views/ListingProductsView.vue'
+import GraphicItem from './GraphicItem.vue'
 
 const router = useRouter()
 
@@ -37,6 +38,12 @@ const fetchStores = async () => {
     }
   )
 }
+
+const filteredStores = computed(() => {
+  return stores.value.filter(store => 
+    store.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
 
 const deleteStore = async (id: number) => {
   await storeService.deleteStore(
@@ -109,6 +116,8 @@ const setActiveStoreTab = (tab: string) => {
 onMounted(() => {
   fetchStores()
 })
+
+
 </script>
 
 
@@ -132,7 +141,7 @@ onMounted(() => {
       <button class="arrow left" @click="scrollTabs('left')">◀</button>
       <div class="tabs" ref="tabContainer">
         <div
-          v-for="store in stores"
+          v-for="store in filteredStores"
           :key="store.id"
           :class="['tab', { active: activeTab === store.id }]"
           @click="viewStore(store.id)"
@@ -153,6 +162,7 @@ onMounted(() => {
         <button @click="setActiveStoreTab('products')" :class="{ active: activeStoreTab === 'products' }">Produtos</button>
         <button @click="setActiveStoreTab('orders')" :class="{ active: activeStoreTab === 'orders' }">Pedidos</button>
         <button @click="setActiveStoreTab('history')" :class="{ active: activeStoreTab === 'history' }">Histórico</button>
+        <button @click="setActiveStoreTab('statistics')" :class="{ active: activeStoreTab === 'statistics' }">Estatísticas</button>
         <div class="dropdown">
           <button class="dropbtn">Configurações</button>
           <div class="dropdown-content">
@@ -168,6 +178,10 @@ onMounted(() => {
       </div>
       <div class="store-content">
         <OrderListing v-if="activeStoreTab === 'orders'" :storeId="activeStore.id" :key="activeStore.id" />
+      </div>
+      <div class="store-content">
+       
+        <GraphicItem v-if="activeStoreTab === 'statistics'" :storeId="activeStore.id" :key="activeStore.id" />
       </div>
     </div>
   </div>
@@ -257,6 +271,7 @@ onMounted(() => {
   display: flex;
   gap: 10px;
   margin-top: 20px;
+  justify-content: center;
 }
 
 

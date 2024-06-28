@@ -9,7 +9,7 @@ import ButtonStyled from './ButtonStyled.vue'
 import OrderListing from './OrderListing.vue'
 import TextStyled from './TextStyled.vue'
 import ListingProductsView from '@/views/ListingProductsView.vue'
-import StatisticsItem from './StatisticsItem.vue'
+import GraphicItem from './GraphicItem.vue'
 
 const router = useRouter()
 
@@ -38,6 +38,12 @@ const fetchStores = async () => {
     }
   )
 }
+
+const filteredStores = computed(() => {
+  return stores.value.filter(store => 
+    store.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
 
 const deleteStore = async (id: number) => {
   await storeService.deleteStore(
@@ -110,6 +116,8 @@ const setActiveStoreTab = (tab: string) => {
 onMounted(() => {
   fetchStores()
 })
+
+
 </script>
 
 
@@ -133,7 +141,7 @@ onMounted(() => {
       <button class="arrow left" @click="scrollTabs('left')">◀</button>
       <div class="tabs" ref="tabContainer">
         <div
-          v-for="store in stores"
+          v-for="store in filteredStores"
           :key="store.id"
           :class="['tab', { active: activeTab === store.id }]"
           @click="viewStore(store.id)"
@@ -172,7 +180,8 @@ onMounted(() => {
         <OrderListing v-if="activeStoreTab === 'orders'" :storeId="activeStore.id" :key="activeStore.id" />
       </div>
       <div class="store-content">
-        <StatisticsItem v-if="activeStoreTab === 'statistics'" :storeId="activeStore.id" :key="activeStore.id" />
+       
+        <GraphicItem v-if="activeStoreTab === 'statistics'" :storeId="activeStore.id" :key="activeStore.id" />
       </div>
     </div>
   </div>
@@ -262,6 +271,7 @@ onMounted(() => {
   display: flex;
   gap: 10px;
   margin-top: 20px;
+  justify-content: center;
 }
 
 

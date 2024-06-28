@@ -77,7 +77,7 @@ class StoreService extends BaseService {
     formData.append('store[address]', data.address.value)
     formData.append('store[numberaddress]', data.numberAddress.value)
     formData.append('store[establishment]', data.establishment.value)
-    formData.append('store[theme]', data.theme.value)
+    formData.append('store[theme]', data.theme)
     formData.append('store[active]', data.active.value)
     const response = await this.update(id, 'stores', formData)
     if (response.ok) {
